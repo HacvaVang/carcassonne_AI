@@ -9,6 +9,7 @@ class Region:
         self.meeples : list[Meeple] = list()
         self.terrain = terrain
         self.intial_pos = tile_pos
+        self.completed_flag = False
         
     def addTile(self, tile_pos: tuple, region : list):
         self.tiles[tile_pos] = region
@@ -25,6 +26,9 @@ class Region:
             self.tiles[key] = self.tiles.get(key, []) + value
         self.meeples = self.meeples + region.meeples
         self.count = len(list(self.tiles.items()))
+        
+    def addMeeple(self, meeple : Meeple):
+        self.meeples.append(meeple)
     
     def has_owner(self):
         return bool(self.meeples)
@@ -37,6 +41,7 @@ class Region:
             player = getattr(meeple, "player", None)
             if not player:
                 continue
+            player.return_meeple()
             counts[player] = counts.get(player, 0) + 1
         if not counts:
             return []
@@ -47,7 +52,7 @@ class Region:
         [mepple.render(screen, True) for mepple in self.meeples]
         # for tile_pos, region in self.tiles.items():
         #     font = pygame.font.SysFont(None, 36)
-        #     coors = [Neighbor.directions[key] for key in region] 
+        #     coors = [Neighbor.render_pos[key] for key in region] 
         #     text = font.render(f"{idx}", True, (0, 0, 0))
         #     for coordinate in coors:
         #         text_pos = (
@@ -60,14 +65,13 @@ class Region:
         return f"tiles: {self.tiles}, count: {self.count}, terrain: {self.terrain}, mepple: {self.meeples}"
         
 class CityRegion(Region):
-    def __init__(self, tile_pos : tuple, region: list, tile : Tile, terrain : Terrain):
-        super().__init__(tile_pos, region, terrain)
+    def __init__(self, tile_pos : tuple, region: list, tile : Tile):
+        super().__init__(tile_pos, region, Terrain.City)
         self.shield = 1 if tile.shield else 0
-        self.completed = False
 
     def get_region_points(self):
         total = self.shield + self.count
-        return total * 2 if self.completed else total
+        return total * 2 if self.completed_flag else total
 
     def addRegion(self, region):
         for key, value in region.tiles.items():
@@ -103,13 +107,11 @@ class CityRegion(Region):
                 if not visited_mask[neighbor_tile]:
                     visited_mask[neighbor_tile] = 1
                     queue.append(neighbor_tile)
-                    
-        self.completed = flag
-        return flag
+        self.completed_flag = flag
         
 class RoadRegion(Region):
-    def __init__(self, tile_pos : tuple, region: list, terrain : Terrain):
-        super().__init__(tile_pos, region, terrain)
+    def __init__(self, tile_pos : tuple, region: list):
+        super().__init__(tile_pos, region, Terrain.Road)
 
     def get_region_points(self):
         return self.count
@@ -134,26 +136,26 @@ class RoadRegion(Region):
         result = road_traversal(start, self.intial_pos, self.intial_pos)
         match result:
             case 0:
-                return road_traversal(end, self.intial_pos, self.intial_pos) == 0
+                self.completed_flag = road_traversal(end, self.intial_pos, self.intial_pos) == 0
             case -1:
-                return False
+                self.completed_flag = False
             case 1:
-                return True
+                self.completed_flag = True
 
 class GrassRegion(Region):
-    def __init__(self, tile_pos : tuple, region: list, terrain : Terrain):
-        super().__init__(tile_pos, region, terrain)
+    def __init__(self, tile_pos : tuple, region: list):
+        super().__init__(tile_pos, region, Terrain.Grass)
         self.finished_cities = 0
     
     def get_region_points(self):
         return self.finished_cities * 3
         
 class MonasteryRegion(Region):
-    def __init__(self, tile_pos : tuple, region: list, terrain : Terrain):
-        super().__init__(tile_pos, region, terrain)
+    def __init__(self, tile_pos : tuple, region: list):
+        super().__init__(tile_pos, region, Terrain.Monastery)
         
     def is_completed(self):
-        return self.count == 9
+        self.completed_flag = (self.count == 9)
     
     def get_region_points(self):
         return self.count
@@ -161,5 +163,5 @@ class MonasteryRegion(Region):
     def update(self, tile_pos):
         x, y = tile_pos
         x_, y_ = self.intial_pos
-        if abs(x - x_) <= 1 and abs(y - y_) <= 1:
+        if abs(x - x_) <= 1 and abs(y - y_) <= 1 and not self.tiles.get(tile_pos, None):
             self.addTile(tile_pos, [8])

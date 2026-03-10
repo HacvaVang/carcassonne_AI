@@ -47,7 +47,7 @@ class Tile:
                 self.region = {
                     Terrain.Grass : [[0, 1, 2, 3, 4, 5, 6, 7]],
                     Terrain.Monastery : [[8]],
-                    Terrain.Road : [[8, 5]]
+                    Terrain.Road : [[5, 8]]
                 }
                 
             case 'B':

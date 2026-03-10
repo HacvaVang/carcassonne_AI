@@ -7,6 +7,8 @@ class Player():
     
     def add_points(self, points):
         self.score += points
+        
+    def return_meeple(self):
         self.meeples += 1
 
     def place_meeple(self):

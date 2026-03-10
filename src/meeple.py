@@ -3,20 +3,13 @@ from settings import *
 from src.assetloader import *
 from src.player import Player
 class Meeple:
-    def __init__(self, pos, player : Player=None, ):
+    def __init__(self, player : Player, pos : tuple):
         self.player = player
-        self.player.place_meeple()
-        self.position = pos
         self.image = get_image(player.color, "Meeple")
-        
-    def add_points(self, points):
-        return self.player.add_points(points)
+        self.rect = self.image.get_rect(center=pos)
         
     def render(self, screen, is_gardener):
-        print(self.position)
-        # Placeholder rendering logic
         if is_gardener:
-            screen.blit(self.image, self.position)
+            screen.blit(self.image, self.rect)
         else:
             pygame.draw.circle(screen, self.player.color, self.position, 15)
-        

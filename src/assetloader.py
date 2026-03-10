@@ -55,7 +55,6 @@ def get_image(type, assets):
     if entry and 'image' in entry:
         return entry['image']
 
-    # missing image -> create a visible placeholder
     surf = pygame.Surface((50, 50), pygame.SRCALPHA)
     surf.fill((200, 0, 0))
     return surf
@@ -76,4 +75,4 @@ def load_all_tiles(dict_images, subfolder='', size = 80):
         dict_images[key] = {
             'image': load_image_safe(relpath, scale = (size, size)),
         }
-    print(dict_images)
+    # print(dict_images)

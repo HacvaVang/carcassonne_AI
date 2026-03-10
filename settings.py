@@ -14,11 +14,18 @@ FPS = 60
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 ASSETS_DIR = os.path.join(BASE_DIR, 'assets')
 
+filepath  = ""
+
+
 class Terrain(Enum):
     Grass = 1
     Road = 2
     City = 3
     Monastery = 4 
+
+class GamePhase(Enum):
+    PlaceTile = 1
+    PlaceMeeple = 2
 
 class Neighbor():
     render_pos = {
