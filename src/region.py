@@ -50,16 +50,16 @@ class Region:
 
     def render(self, screen, image, idx):
         [mepple.render(screen, True) for mepple in self.meeples]
-        # for tile_pos, region in self.tiles.items():
-        #     font = pygame.font.SysFont(None, 36)
-        #     coors = [Neighbor.render_pos[key] for key in region] 
-        #     text = font.render(f"{idx}", True, (0, 0, 0))
-        #     for coordinate in coors:
-        #         text_pos = (
-        #             (tile_pos[0] + coordinate[0]) * image.get_width() + SCREEN_WIDTH // 2,
-        #             (tile_pos[1] + coordinate[1]) * image.get_height() + SCREEN_HEIGHT // 2
-        #         )
-        #         screen.blit(text, text_pos)
+        for tile_pos, region in self.tiles.items():
+            font = pygame.font.SysFont(None, 20)
+            coors = [Neighbor.render_pos[key] for key in region] 
+            text = font.render(f"{idx}", True, (0, 0, 0))
+            for coordinate in coors:
+                text_pos = (
+                    (tile_pos[0] + coordinate[0]) * image.get_width() + SCREEN_WIDTH // 2,
+                    (tile_pos[1] + coordinate[1]) * image.get_height() + SCREEN_HEIGHT // 2
+                )
+                screen.blit(text, text_pos)
 
     def __repr__(self):
         return f"tiles: {self.tiles}, count: {self.count}, terrain: {self.terrain}, mepple: {self.meeples}"
@@ -136,10 +136,14 @@ class RoadRegion(Region):
         result = road_traversal(start, self.intial_pos, self.intial_pos)
         match result:
             case 0:
-                self.completed_flag = road_traversal(end, self.intial_pos, self.intial_pos) == 0
+                # print("half!")
+                self.completed_flag = (road_traversal(end, self.intial_pos, self.intial_pos) == 0)
+                # if self.completed_flag:
+                    # print("done!")
             case -1:
                 self.completed_flag = False
             case 1:
+                # print("round")
                 self.completed_flag = True
 
 class GrassRegion(Region):

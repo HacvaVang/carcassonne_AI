@@ -2,7 +2,7 @@ import pygame
 class HUD:
     """Heads-Up Display for showing game info like scores, turn order, etc."""
     def __init__(self):
-        self.font = pygame.font.SysFont(None, 24)
+        self.font = pygame.font.SysFont(None, 36)
 
     def render(self, screen, game):
         """Draw the HUD elements onto the screen."""
@@ -10,7 +10,7 @@ class HUD:
         y = 10
         for idx, player in enumerate(game.players):
             prefix = "-> " if idx == getattr(game, 'current_player', 0) else "   "
-            text_str = f"{prefix}{player.name}: {player.score}"
+            text_str = f"{prefix}{player.name}: {player.score} / ({player.meeples})"
             text = self.font.render(text_str, True, player.color)
             screen.blit(text, (10, y))
             y += 30

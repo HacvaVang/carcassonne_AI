@@ -1,0 +1,1013 @@
+2026-03-11 01:01:43,158 [INFO] game: Starting new game
+2026-03-11 01:01:43,323 [DEBUG] game: Starting tile is D
+2026-03-11 01:01:43,324 [DEBUG] game: Drew first tile: V
+2026-03-11 01:01:46,937 [DEBUG] game: Rotated tile V (rotation count=1)
+2026-03-11 01:01:47,937 [DEBUG] game: Placed tile V at (1, 0)
+2026-03-11 01:01:49,824 [DEBUG] game: Player Player 1 is attempting to place a meeple
+2026-03-11 01:01:49,824 [DEBUG] game: Placed meeple for player Player 1 at (752, 409)
+2026-03-11 01:01:49,825 [DEBUG] game: Current player is now Player 2
+2026-03-11 01:01:49,825 [DEBUG] game: Drew tile for next turn: W
+2026-03-11 01:02:18,124 [DEBUG] game: Rotated tile W (rotation count=1)
+2026-03-11 01:02:18,369 [DEBUG] game: Rotated tile W (rotation count=2)
+2026-03-11 01:02:18,546 [DEBUG] game: Rotated tile W (rotation count=3)
+2026-03-11 01:02:18,871 [DEBUG] game: Placed tile W at (1, -1)
+2026-03-11 01:02:23,640 [DEBUG] game: Player Player 2 is attempting to place a meeple
+2026-03-11 01:02:23,641 [DEBUG] game: Placed meeple for player Player 2 at (831, 313)
+2026-03-11 01:02:23,642 [DEBUG] game: Current player is now Player 3
+2026-03-11 01:02:23,643 [DEBUG] game: Drew tile for next turn: E
+2026-03-11 01:02:24,995 [DEBUG] game: Rotated tile E (rotation count=1)
+2026-03-11 01:02:25,143 [DEBUG] game: Rotated tile E (rotation count=2)
+2026-03-11 01:02:25,770 [DEBUG] game: Placed tile E at (0, -1)
+2026-03-11 01:02:26,758 [DEBUG] game: Player Player 3 is attempting to place a meeple
+2026-03-11 01:02:26,758 [DEBUG] game: Placed meeple for player Player 3 at (695, 348)
+2026-03-11 01:02:26,759 [DEBUG] game: Scoring region tiles: {(0, -1): [5], (0, 0): [1]}, count: 2, terrain: Terrain.City, mepple: [<src.meeple.Meeple object at 0x7178a4a9e780>] for 4 points to [<src.player.Player object at 0x7178a9152540>]
+2026-03-11 01:02:26,760 [DEBUG] game: Player Player 3 now has 4 points
+2026-03-11 01:02:26,761 [DEBUG] game: Current player is now Player 4
+2026-03-11 01:02:26,761 [DEBUG] game: Drew tile for next turn: O
+2026-03-11 01:02:34,193 [DEBUG] game: Placed tile O at (-1, 0)
+2026-03-11 01:02:35,969 [DEBUG] game: Player Player 4 is attempting to place a meeple
+2026-03-11 01:02:35,970 [DEBUG] game: Placed meeple for player Player 4 at (551, 407)
+2026-03-11 01:02:35,970 [DEBUG] game: Current player is now Player 1
+2026-03-11 01:02:35,972 [DEBUG] game: Drew tile for next turn: V
+2026-03-11 01:02:37,374 [DEBUG] game: Rotated tile V (rotation count=1)
+2026-03-11 01:02:37,550 [DEBUG] game: Rotated tile V (rotation count=2)
+2026-03-11 01:02:37,822 [DEBUG] game: Rotated tile V (rotation count=3)
+2026-03-11 01:02:38,434 [DEBUG] game: Placed tile V at (1, -2)
+2026-03-11 01:02:40,498 [DEBUG] game: Player Player 1 is attempting to place a meeple
+2026-03-11 01:02:40,498 [DEBUG] game: Placed meeple for player Player 1 at (832, 215)
+2026-03-11 01:02:40,499 [DEBUG] game: Current player is now Player 2
+2026-03-11 01:02:40,500 [DEBUG] game: Drew tile for next turn: O
+2026-03-11 01:02:41,804 [DEBUG] game: Rotated tile O (rotation count=1)
+2026-03-11 01:02:41,965 [DEBUG] game: Rotated tile O (rotation count=2)
+2026-03-11 01:02:44,299 [DEBUG] game: Rotated tile O (rotation count=3)
+2026-03-11 01:02:45,850 [DEBUG] game: Placed tile O at (-1, 1)
+2026-03-11 01:02:47,920 [DEBUG] game: Player Player 2 is attempting to place a meeple
+2026-03-11 01:02:47,921 [DEBUG] game: Placed meeple for player Player 2 at (591, 547)
+2026-03-11 01:02:47,922 [DEBUG] game: Current player is now Player 3
+2026-03-11 01:02:47,922 [DEBUG] game: Drew tile for next turn: V
+2026-03-11 01:02:49,940 [DEBUG] game: Placed tile V at (0, 1)
+2026-03-11 01:02:52,480 [DEBUG] game: Player Player 3 is attempting to place a meeple
+2026-03-11 01:02:52,480 [DEBUG] game: Player Player 3 passed meeple placement
+2026-03-11 01:02:52,481 [DEBUG] game: Current player is now Player 4
+2026-03-11 01:02:52,482 [DEBUG] game: Drew tile for next turn: O
+2026-03-11 01:02:53,576 [DEBUG] game: Rotated tile O (rotation count=1)
+2026-03-11 01:02:53,931 [DEBUG] game: Rotated tile O (rotation count=2)
+2026-03-11 01:02:54,416 [DEBUG] game: Rotated tile O (rotation count=3)
+2026-03-11 01:02:54,560 [DEBUG] game: Rotated tile O (rotation count=0)
+2026-03-11 01:02:54,721 [DEBUG] game: Rotated tile O (rotation count=1)
+2026-03-11 01:02:57,257 [DEBUG] game: Placed tile O at (-2, 1)
+2026-03-11 01:03:00,434 [DEBUG] game: Player Player 4 is attempting to place a meeple
+2026-03-11 01:03:00,435 [DEBUG] game: Placed meeple for player Player 4 at (518, 538)
+2026-03-11 01:03:00,435 [DEBUG] game: Current player is now Player 1
+2026-03-11 01:03:00,436 [DEBUG] game: Drew tile for next turn: V
+2026-03-11 01:03:26,624 [DEBUG] game: Rotated tile V (rotation count=1)
+2026-03-11 01:03:27,093 [DEBUG] game: Placed tile V at (2, -1)
+2026-03-11 01:03:32,128 [DEBUG] game: Player Player 1 is attempting to place a meeple
+2026-03-11 01:03:32,129 [DEBUG] game: Placed meeple for player Player 1 at (852, 309)
+2026-03-11 01:03:32,129 [DEBUG] game: Current player is now Player 2
+2026-03-11 01:03:32,130 [DEBUG] game: Drew tile for next turn: K
+2026-03-11 01:03:44,546 [DEBUG] game: Placed tile K at (2, -2)
+2026-03-11 01:03:49,414 [DEBUG] game: Player Player 2 is attempting to place a meeple
+2026-03-11 01:03:49,415 [DEBUG] game: Player Player 2 passed meeple placement
+2026-03-11 01:03:49,415 [DEBUG] game: Current player is now Player 3
+2026-03-11 01:03:49,416 [DEBUG] game: Drew tile for next turn: J
+2026-03-11 01:03:55,575 [DEBUG] game: Rotated tile J (rotation count=1)
+2026-03-11 01:03:55,737 [DEBUG] game: Rotated tile J (rotation count=2)
+2026-03-11 01:03:56,189 [DEBUG] game: Placed tile J at (2, -3)
+2026-03-11 01:03:59,608 [DEBUG] game: Player Player 3 is attempting to place a meeple
+2026-03-11 01:03:59,608 [DEBUG] game: Placed meeple for player Player 3 at (891, 150)
+2026-03-11 01:03:59,609 [DEBUG] game: Scoring region tiles: {(2, -3): [5], (2, -2): [1]}, count: 2, terrain: Terrain.City, mepple: [<src.meeple.Meeple object at 0x7178a4a9ff80>] for 4 points to [<src.player.Player object at 0x7178a9152540>]
+2026-03-11 01:03:59,609 [DEBUG] game: Player Player 3 now has 8 points
+2026-03-11 01:03:59,609 [DEBUG] game: Current player is now Player 4
+2026-03-11 01:03:59,610 [DEBUG] game: Drew tile for next turn: A
+2026-03-11 01:05:44,058 [DEBUG] game: Rotated tile A (rotation count=1)
+2026-03-11 01:05:45,129 [DEBUG] game: Rotated tile A (rotation count=2)
+2026-03-11 01:05:46,338 [DEBUG] game: Placed tile A at (0, 2)
+2026-03-11 01:05:46,339 [DEBUG] game: Scoring region tiles: {(0, 2): [1, 8], (0, 1): [5, 7], (-1, 1): [3, 1], (-1, 0): [5, 3], (1, -1): [5, 8], (1, 0): [7, 1], (0, 0): [3, 7]}, count: 7, terrain: Terrain.Road, mepple: [<src.meeple.Meeple object at 0x7178a4a9ccb0>, <src.meeple.Meeple object at 0x7178a61c5df0>] for 7 points to [<src.player.Player object at 0x7178a4c15bb0>, <src.player.Player object at 0x7178a6216d20>]
+2026-03-11 01:05:46,340 [DEBUG] game: Player Player 1 now has 7 points
+2026-03-11 01:05:46,340 [DEBUG] game: Player Player 2 now has 7 points
+2026-03-11 01:05:49,392 [DEBUG] game: Player Player 4 is attempting to place a meeple
+2026-03-11 01:05:49,392 [DEBUG] game: Placed meeple for player Player 4 at (695, 609)
+2026-03-11 01:05:49,393 [DEBUG] game: Current player is now Player 1
+2026-03-11 01:05:49,393 [DEBUG] game: Drew tile for next turn: C
+2026-03-11 01:05:51,824 [DEBUG] game: Placed tile C at (-2, 0)
+2026-03-11 01:05:53,814 [DEBUG] game: Player Player 1 is attempting to place a meeple
+2026-03-11 01:05:54,152 [DEBUG] game: Player Player 1 is attempting to place a meeple
+2026-03-11 01:05:54,538 [DEBUG] game: Player Player 1 is attempting to place a meeple
+2026-03-11 01:05:54,538 [DEBUG] game: Player Player 1 passed meeple placement
+2026-03-11 01:05:54,538 [DEBUG] game: Current player is now Player 2
+2026-03-11 01:05:54,539 [DEBUG] game: Drew tile for next turn: E
+2026-03-11 01:05:55,052 [DEBUG] game: Rotated tile E (rotation count=1)
+2026-03-11 01:05:55,471 [DEBUG] game: Placed tile E at (-3, 0)
+2026-03-11 01:05:56,843 [DEBUG] game: Player Player 2 is attempting to place a meeple
+2026-03-11 01:05:56,844 [DEBUG] game: Player Player 2 passed meeple placement
+2026-03-11 01:05:56,844 [DEBUG] game: Current player is now Player 3
+2026-03-11 01:05:56,844 [DEBUG] game: Drew tile for next turn: V
+2026-03-11 01:06:44,400 [DEBUG] game: Rotated tile V (rotation count=1)
+2026-03-11 01:06:45,921 [DEBUG] game: Rotated tile V (rotation count=2)
+2026-03-11 01:06:46,115 [DEBUG] game: Rotated tile V (rotation count=3)
+2026-03-11 01:08:58,340 [INFO] game: Starting new game
+2026-03-11 01:08:58,496 [DEBUG] game: Starting tile is D
+2026-03-11 01:08:58,497 [DEBUG] game: Drew first tile: C
+2026-03-11 01:09:02,406 [DEBUG] game: Placed tile C at (0, -1)
+2026-03-11 01:09:06,355 [DEBUG] game: Player Player 1 is attempting to place a meeple
+2026-03-11 01:09:06,356 [DEBUG] game: Placed meeple for player Player 1 at (683, 269)
+2026-03-11 01:09:06,356 [DEBUG] game: Current player is now Player 2
+2026-03-11 01:09:06,357 [DEBUG] game: Drew tile for next turn: I
+2026-03-11 01:09:16,475 [DEBUG] game: Placed tile I at (1, -1)
+2026-03-11 01:09:18,213 [DEBUG] game: Player Player 2 is attempting to place a meeple
+2026-03-11 01:09:18,214 [DEBUG] game: Placed meeple for player Player 2 at (790, 268)
+2026-03-11 01:09:18,214 [DEBUG] game: Current player is now Player 3
+2026-03-11 01:09:18,214 [DEBUG] game: Drew tile for next turn: V
+2026-03-11 01:09:19,485 [DEBUG] game: Placed tile V at (1, 0)
+2026-03-11 01:09:20,709 [DEBUG] game: Player Player 3 is attempting to place a meeple
+2026-03-11 01:09:20,710 [DEBUG] game: Placed meeple for player Player 3 at (788, 450)
+2026-03-11 01:09:20,710 [DEBUG] game: Current player is now Player 4
+2026-03-11 01:09:20,711 [DEBUG] game: Drew tile for next turn: V
+2026-03-11 01:09:24,139 [DEBUG] game: Rotated tile V (rotation count=1)
+2026-03-11 01:09:24,494 [DEBUG] game: Placed tile V at (1, 1)
+2026-03-11 01:09:25,862 [DEBUG] game: Player Player 4 is attempting to place a meeple
+2026-03-11 01:09:25,862 [DEBUG] game: Player Player 4 passed meeple placement
+2026-03-11 01:09:25,863 [DEBUG] game: Current player is now Player 1
+2026-03-11 01:09:25,863 [DEBUG] game: Drew tile for next turn: V
+2026-03-11 01:09:33,456 [DEBUG] game: Rotated tile V (rotation count=1)
+2026-03-11 01:09:33,878 [DEBUG] game: Rotated tile V (rotation count=2)
+2026-03-11 01:09:34,056 [DEBUG] game: Rotated tile V (rotation count=3)
+2026-03-11 01:09:34,201 [DEBUG] game: Rotated tile V (rotation count=0)
+2026-03-11 01:09:34,556 [DEBUG] game: Rotated tile V (rotation count=1)
+2026-03-11 01:09:34,941 [DEBUG] game: Rotated tile V (rotation count=2)
+2026-03-11 01:09:35,101 [DEBUG] game: Rotated tile V (rotation count=3)
+2026-03-11 01:09:35,261 [DEBUG] game: Rotated tile V (rotation count=0)
+2026-03-11 01:09:38,061 [DEBUG] game: Rotated tile V (rotation count=1)
+2026-03-11 01:09:38,237 [DEBUG] game: Rotated tile V (rotation count=2)
+2026-03-11 01:09:38,381 [DEBUG] game: Rotated tile V (rotation count=3)
+2026-03-11 01:09:39,721 [DEBUG] game: Placed tile V at (2, -1)
+2026-03-11 01:09:40,704 [DEBUG] game: Player Player 1 is attempting to place a meeple
+2026-03-11 01:09:40,705 [DEBUG] game: Placed meeple for player Player 1 at (932, 307)
+2026-03-11 01:09:40,705 [DEBUG] game: Current player is now Player 2
+2026-03-11 01:09:40,706 [DEBUG] game: Drew tile for next turn: J
+2026-03-11 01:09:44,638 [DEBUG] game: Rotated tile J (rotation count=1)
+2026-03-11 01:09:45,314 [DEBUG] game: Placed tile J at (-1, -1)
+2026-03-11 01:09:45,977 [DEBUG] game: Player Player 2 is attempting to place a meeple
+2026-03-11 01:09:45,977 [DEBUG] game: Placed meeple for player Player 2 at (588, 350)
+2026-03-11 01:09:45,978 [DEBUG] game: Current player is now Player 3
+2026-03-11 01:09:45,978 [DEBUG] game: Drew tile for next turn: V
+2026-03-11 01:09:48,180 [DEBUG] game: Rotated tile V (rotation count=1)
+2026-03-11 01:09:48,340 [DEBUG] game: Rotated tile V (rotation count=2)
+2026-03-11 01:09:48,870 [DEBUG] game: Placed tile V at (-1, 0)
+2026-03-11 01:09:50,403 [DEBUG] game: Player Player 3 is attempting to place a meeple
+2026-03-11 01:09:50,404 [DEBUG] game: Player Player 3 passed meeple placement
+2026-03-11 01:09:50,404 [DEBUG] game: Current player is now Player 4
+2026-03-11 01:09:50,405 [DEBUG] game: Drew tile for next turn: W
+2026-03-11 01:09:51,402 [DEBUG] game: Placed tile W at (-2, -1)
+2026-03-11 01:09:55,263 [DEBUG] game: Player Player 4 is attempting to place a meeple
+2026-03-11 01:09:55,264 [DEBUG] game: Placed meeple for player Player 4 at (487, 354)
+2026-03-11 01:09:55,265 [DEBUG] game: Current player is now Player 1
+2026-03-11 01:09:55,265 [DEBUG] game: Drew tile for next turn: W
+2026-03-11 01:09:58,245 [DEBUG] game: Placed tile W at (0, 1)
+2026-03-11 01:09:58,245 [DEBUG] game: Scoring region tiles: {(0, 1): [3, 8], (-2, -1): [3, 8], (-1, 0): [1, 3], (-1, -1): [5, 7], (1, 1): [7, 1], (1, 0): [5, 7], (0, 0): [3, 7]}, count: 7, terrain: Terrain.Road, mepple: [<src.meeple.Meeple object at 0x712812b82840>, <src.meeple.Meeple object at 0x7128172409b0>] for 7 points to [<src.player.Player object at 0x712812d7e780>, <src.player.Player object at 0x712812b65820>]
+2026-03-11 01:09:58,246 [DEBUG] game: Player Player 2 now has 7 points
+2026-03-11 01:09:58,246 [DEBUG] game: Player Player 3 now has 7 points
+2026-03-11 01:10:04,025 [DEBUG] game: Player Player 1 is attempting to place a meeple
+2026-03-11 01:10:04,026 [DEBUG] game: Placed meeple for player Player 1 at (657, 512)
+2026-03-11 01:10:04,027 [DEBUG] game: Current player is now Player 2
+2026-03-11 01:10:04,028 [DEBUG] game: Drew tile for next turn: E
+2026-03-11 01:10:05,152 [DEBUG] game: Rotated tile E (rotation count=1)
+2026-03-11 01:10:05,313 [DEBUG] game: Rotated tile E (rotation count=2)
+2026-03-11 01:10:14,294 [DEBUG] game: Placed tile E at (0, -2)
+2026-03-11 01:10:14,294 [DEBUG] game: Scoring region tiles: {(0, -2): [5], (-1, -1): [3], (1, -1): [7], (0, -1): [1, 3, 5, 7], (0, 0): [1]}, count: 5, terrain: Terrain.City, mepple: [<src.meeple.Meeple object at 0x712812b676b0>, <src.meeple.Meeple object at 0x712812b67920>] for 12 points to [<src.player.Player object at 0x712812c3e060>, <src.player.Player object at 0x712812d7e780>]
+2026-03-11 01:10:14,295 [DEBUG] game: Player Player 1 now has 12 points
+2026-03-11 01:10:14,295 [DEBUG] game: Player Player 2 now has 19 points
+2026-03-11 01:10:23,826 [DEBUG] game: Player Player 2 is attempting to place a meeple
+2026-03-11 01:10:23,827 [DEBUG] game: Placed meeple for player Player 2 at (718, 235)
+2026-03-11 01:10:23,827 [DEBUG] game: Current player is now Player 3
+2026-03-11 01:10:23,828 [DEBUG] game: Drew tile for next turn: O
+2026-03-11 01:10:25,738 [DEBUG] game: Rotated tile O (rotation count=1)
+2026-03-11 01:10:25,918 [DEBUG] game: Rotated tile O (rotation count=2)
+2026-03-11 01:10:27,065 [DEBUG] game: Rotated tile O (rotation count=3)
+2026-03-11 01:10:27,871 [DEBUG] game: Rotated tile O (rotation count=0)
+2026-03-11 01:10:29,324 [DEBUG] game: Rotated tile O (rotation count=1)
+2026-03-11 01:10:29,517 [DEBUG] game: Rotated tile O (rotation count=2)
+2026-03-11 01:10:30,113 [DEBUG] game: Rotated tile O (rotation count=3)
+2026-03-11 01:10:30,482 [DEBUG] game: Rotated tile O (rotation count=0)
+2026-03-11 01:10:32,354 [DEBUG] game: Placed tile O at (-3, -1)
+2026-03-11 01:10:41,834 [DEBUG] game: Player Player 3 is attempting to place a meeple
+2026-03-11 01:10:41,834 [DEBUG] game: Placed meeple for player Player 3 at (348, 303)
+2026-03-11 01:10:41,835 [DEBUG] game: Current player is now Player 4
+2026-03-11 01:10:41,835 [DEBUG] game: Drew tile for next turn: V
+2026-03-11 01:10:43,124 [DEBUG] game: Rotated tile V (rotation count=1)
+2026-03-11 01:10:43,801 [DEBUG] game: Placed tile V at (-2, 0)
+2026-03-11 01:13:00,834 [DEBUG] game: Player Player 4 is attempting to place a meeple
+2026-03-11 01:13:00,835 [DEBUG] game: Placed meeple for player Player 4 at (453, 414)
+2026-03-11 01:13:00,835 [DEBUG] game: Current player is now Player 1
+2026-03-11 01:13:00,835 [DEBUG] game: Drew tile for next turn: A
+2026-03-11 01:15:11,215 [DEBUG] game: Rotated tile A (rotation count=1)
+2026-03-11 01:15:11,411 [DEBUG] game: Rotated tile A (rotation count=2)
+2026-03-11 01:15:11,595 [DEBUG] game: Rotated tile A (rotation count=3)
+2026-03-11 01:15:12,380 [DEBUG] game: Rotated tile A (rotation count=0)
+2026-03-11 01:15:12,523 [DEBUG] game: Rotated tile A (rotation count=1)
+2026-03-11 01:15:12,701 [DEBUG] game: Rotated tile A (rotation count=2)
+2026-03-11 01:15:19,045 [DEBUG] game: Placed tile A at (2, 0)
+2026-03-11 01:15:20,441 [DEBUG] game: Player Player 1 is attempting to place a meeple
+2026-03-11 01:15:20,442 [DEBUG] game: Placed meeple for player Player 1 at (889, 413)
+2026-03-11 01:15:20,442 [DEBUG] game: Current player is now Player 2
+2026-03-11 01:15:20,442 [DEBUG] game: Drew tile for next turn: O
+2026-03-11 01:15:23,768 [DEBUG] game: Rotated tile O (rotation count=1)
+2026-03-11 01:15:23,930 [DEBUG] game: Rotated tile O (rotation count=2)
+2026-03-11 01:15:24,091 [DEBUG] game: Rotated tile O (rotation count=3)
+2026-03-11 01:15:24,753 [DEBUG] game: Placed tile O at (-3, 0)
+2026-03-11 01:15:24,754 [DEBUG] game: Scoring region tiles: {(-3, 0): [3, 1], (-3, -1): [5, 3], (-2, -1): [7, 8, 5, 8], (-2, 0): [7, 1]}, count: 4, terrain: Terrain.Road, mepple: [<src.meeple.Meeple object at 0x712812b82540>, <src.meeple.Meeple object at 0x712813755cd0>] for 4 points to [<src.player.Player object at 0x712812b65850>]
+2026-03-11 01:15:24,755 [DEBUG] game: Player Player 4 now has 4 points
+2026-03-11 01:15:30,708 [DEBUG] game: Player Player 2 is attempting to place a meeple
+2026-03-11 01:15:30,709 [DEBUG] game: Placed meeple for player Player 2 at (386, 459)
+2026-03-11 01:15:30,709 [DEBUG] game: Current player is now Player 3
+2026-03-11 01:15:30,710 [DEBUG] game: Drew tile for next turn: E
+2026-03-11 01:15:35,921 [DEBUG] game: Placed tile E at (-3, 1)
+2026-03-11 01:15:36,375 [DEBUG] game: Player Player 3 is attempting to place a meeple
+2026-03-11 01:15:36,375 [DEBUG] game: Player Player 3 passed meeple placement
+2026-03-11 01:15:36,376 [DEBUG] game: Current player is now Player 4
+2026-03-11 01:15:36,376 [DEBUG] game: Drew tile for next turn: V
+2026-03-11 01:15:38,387 [DEBUG] game: Rotated tile V (rotation count=1)
+2026-03-11 01:15:43,034 [DEBUG] game: Placed tile V at (0, 2)
+2026-03-11 01:15:44,790 [DEBUG] game: Player Player 4 is attempting to place a meeple
+2026-03-11 01:15:44,791 [DEBUG] game: Placed meeple for player Player 4 at (648, 610)
+2026-03-11 01:15:44,791 [DEBUG] game: Current player is now Player 1
+2026-03-11 01:15:44,791 [DEBUG] game: Drew tile for next turn: A
+2026-03-11 01:15:47,243 [DEBUG] game: Rotated tile A (rotation count=1)
+2026-03-11 01:15:47,827 [DEBUG] game: Placed tile A at (3, -1)
+2026-03-11 01:15:47,827 [DEBUG] game: Scoring region tiles: {(3, -1): [7, 8], (2, 0): [1, 8], (2, -1): [3, 5]}, count: 3, terrain: Terrain.Road, mepple: [<src.meeple.Meeple object at 0x7128137f3080>] for 3 points to [<src.player.Player object at 0x712812c3e060>]
+2026-03-11 01:15:47,828 [DEBUG] game: Player Player 1 now has 15 points
+2026-03-11 01:15:49,720 [DEBUG] game: Player Player 1 is attempting to place a meeple
+2026-03-11 01:15:49,720 [DEBUG] game: Placed meeple for player Player 1 at (995, 318)
+2026-03-11 01:15:49,721 [DEBUG] game: Current player is now Player 2
+2026-03-11 01:15:49,721 [DEBUG] game: Drew tile for next turn: O
+2026-03-11 01:16:13,817 [DEBUG] game: Rotated tile O (rotation count=1)
+2026-03-11 01:16:13,979 [DEBUG] game: Rotated tile O (rotation count=2)
+2026-03-11 01:16:16,942 [DEBUG] game: Rotated tile O (rotation count=3)
+2026-03-11 01:16:17,824 [DEBUG] game: Rotated tile O (rotation count=0)
+2026-03-11 01:16:18,807 [DEBUG] game: Rotated tile O (rotation count=1)
+2026-03-11 01:16:19,424 [DEBUG] game: Placed tile O at (-4, 0)
+2026-03-11 01:16:31,935 [DEBUG] game: Player Player 2 is attempting to place a meeple
+2026-03-11 01:16:31,936 [DEBUG] game: Placed meeple for player Player 2 at (318, 437)
+2026-03-11 01:16:31,936 [DEBUG] game: Current player is now Player 3
+2026-03-11 01:16:31,936 [DEBUG] game: Drew tile for next turn: K
+2026-03-11 01:16:33,245 [DEBUG] game: Rotated tile K (rotation count=1)
+2026-03-11 01:16:33,923 [DEBUG] game: Rotated tile K (rotation count=2)
+2026-03-11 01:18:31,155 [DEBUG] game: Placed tile K at (-1, 2)
+2026-03-11 01:18:31,479 [DEBUG] game: Player Player 3 is attempting to place a meeple
+2026-03-11 01:18:31,480 [DEBUG] game: Player Player 3 passed meeple placement
+2026-03-11 01:18:31,480 [DEBUG] game: Current player is now Player 4
+2026-03-11 01:18:31,481 [DEBUG] game: Drew tile for next turn: None
+2026-03-11 01:33:41,517 [INFO] game: Starting new game
+2026-03-11 01:33:41,697 [DEBUG] game: Starting tile is D
+2026-03-11 01:33:41,698 [DEBUG] game: Drew first tile: J
+2026-03-11 01:33:43,283 [DEBUG] game: Rotated tile J (rotation count=1)
+2026-03-11 01:33:43,852 [DEBUG] game: Placed tile J at (1, 0)
+2026-03-11 01:33:45,706 [DEBUG] game: Player Player 1 is attempting to place a meeple
+2026-03-11 01:33:45,707 [DEBUG] game: Placed meeple for player Player 1 at (793, 446)
+2026-03-11 01:33:45,707 [DEBUG] game: Current player is now Player 2
+2026-03-11 01:33:45,708 [DEBUG] game: Drew tile for next turn: I
+2026-03-11 01:33:46,771 [DEBUG] game: Placed tile I at (2, 0)
+2026-03-11 01:33:49,434 [DEBUG] game: Player Player 2 is attempting to place a meeple
+2026-03-11 01:33:49,435 [DEBUG] game: Placed meeple for player Player 2 at (854, 412)
+2026-03-11 01:33:49,435 [DEBUG] game: Scoring region tiles: {(2, 0): [7], (1, 0): [3]}, count: 2, terrain: Terrain.City, mepple: [<src.meeple.Meeple object at 0x7ae132b51f10>] for 4 points to [<src.player.Player object at 0x7ae1314a9430>]
+2026-03-11 01:33:49,437 [DEBUG] game: Player Player 2 now has 4 points
+2026-03-11 01:33:49,438 [DEBUG] game: Current player is now Player 3
+2026-03-11 01:33:49,438 [DEBUG] game: Drew tile for next turn: E
+2026-03-11 01:33:51,642 [DEBUG] game: Rotated tile E (rotation count=1)
+2026-03-11 01:33:51,804 [DEBUG] game: Rotated tile E (rotation count=2)
+2026-03-11 01:33:52,207 [DEBUG] game: Placed tile E at (2, -1)
+2026-03-11 01:33:53,881 [DEBUG] game: Player Player 3 is attempting to place a meeple
+2026-03-11 01:33:53,882 [DEBUG] game: Placed meeple for player Player 3 at (891, 349)
+2026-03-11 01:33:53,882 [DEBUG] game: Scoring region tiles: {(2, -1): [5], (2, 0): [1]}, count: 2, terrain: Terrain.City, mepple: [<src.meeple.Meeple object at 0x7ae1314aa900>] for 4 points to [<src.player.Player object at 0x7ae1314a9100>]
+2026-03-11 01:33:53,882 [DEBUG] game: Player Player 3 now has 4 points
+2026-03-11 01:33:53,883 [DEBUG] game: Current player is now Player 4
+2026-03-11 01:33:53,883 [DEBUG] game: Drew tile for next turn: O
+2026-03-11 01:33:55,004 [DEBUG] game: Rotated tile O (rotation count=1)
+2026-03-11 01:33:55,199 [DEBUG] game: Rotated tile O (rotation count=2)
+2026-03-11 01:33:55,734 [DEBUG] game: Rotated tile O (rotation count=3)
+2026-03-11 01:33:56,754 [DEBUG] game: Placed tile O at (0, -1)
+2026-03-11 01:33:57,675 [DEBUG] game: Player Player 4 is attempting to place a meeple
+2026-03-11 01:33:57,676 [DEBUG] game: Placed meeple for player Player 4 at (685, 346)
+2026-03-11 01:33:57,676 [DEBUG] game: Current player is now Player 1
+2026-03-11 01:33:57,677 [DEBUG] game: Drew tile for next turn: O
+2026-03-11 01:33:58,306 [DEBUG] game: Rotated tile O (rotation count=1)
+2026-03-11 01:33:58,690 [DEBUG] game: Rotated tile O (rotation count=2)
+2026-03-11 01:33:59,030 [DEBUG] game: Rotated tile O (rotation count=3)
+2026-03-11 01:33:59,207 [DEBUG] game: Rotated tile O (rotation count=0)
+2026-03-11 01:33:59,367 [DEBUG] game: Rotated tile O (rotation count=1)
+2026-03-11 01:34:00,203 [DEBUG] game: Placed tile O at (-1, -1)
+2026-03-11 01:34:02,279 [DEBUG] game: Player Player 1 is attempting to place a meeple
+2026-03-11 01:34:02,280 [DEBUG] game: Placed meeple for player Player 1 at (555, 309)
+2026-03-11 01:34:02,280 [DEBUG] game: Current player is now Player 2
+2026-03-11 01:34:02,280 [DEBUG] game: Drew tile for next turn: A
+2026-03-11 01:34:02,874 [DEBUG] game: Rotated tile A (rotation count=1)
+2026-03-11 01:34:03,100 [DEBUG] game: Rotated tile A (rotation count=2)
+2026-03-11 01:34:04,262 [DEBUG] game: Rotated tile A (rotation count=3)
+2026-03-11 01:34:04,825 [DEBUG] game: Rotated tile A (rotation count=0)
+2026-03-11 01:34:05,227 [DEBUG] game: Rotated tile A (rotation count=1)
+2026-03-11 01:34:06,052 [DEBUG] game: Placed tile A at (1, -1)
+2026-03-11 01:34:08,673 [DEBUG] game: Player Player 2 is attempting to place a meeple
+2026-03-11 01:34:08,673 [DEBUG] game: Placed meeple for player Player 2 at (792, 314)
+2026-03-11 01:34:08,674 [DEBUG] game: Current player is now Player 3
+2026-03-11 01:34:08,674 [DEBUG] game: Drew tile for next turn: V
+2026-03-11 01:34:14,329 [DEBUG] game: Rotated tile V (rotation count=1)
+2026-03-11 01:34:14,506 [DEBUG] game: Rotated tile V (rotation count=2)
+2026-03-11 01:34:14,652 [DEBUG] game: Rotated tile V (rotation count=3)
+2026-03-11 01:34:14,974 [DEBUG] game: Placed tile V at (0, -2)
+2026-03-11 01:34:18,970 [DEBUG] game: Player Player 3 is attempting to place a meeple
+2026-03-11 01:34:18,970 [DEBUG] game: Placed meeple for player Player 3 at (732, 213)
+2026-03-11 01:34:18,971 [DEBUG] game: Current player is now Player 4
+2026-03-11 01:34:18,971 [DEBUG] game: Drew tile for next turn: C
+2026-03-11 01:34:36,189 [DEBUG] game: Rotated tile C (rotation count=1)
+2026-03-11 01:34:36,614 [DEBUG] game: Rotated tile C (rotation count=2)
+2026-03-11 01:34:36,807 [DEBUG] game: Rotated tile C (rotation count=3)
+2026-03-11 01:34:36,952 [DEBUG] game: Rotated tile C (rotation count=0)
+2026-03-11 01:37:39,523 [INFO] game: Starting new game
+2026-03-11 01:37:39,700 [DEBUG] game: Starting tile is D
+2026-03-11 01:37:39,701 [DEBUG] game: Drew first tile: E
+2026-03-11 01:37:40,706 [DEBUG] game: Rotated tile E (rotation count=1)
+2026-03-11 01:37:40,835 [DEBUG] game: Rotated tile E (rotation count=2)
+2026-03-11 01:37:40,996 [DEBUG] game: Placed tile E at (0, -1)
+2026-03-11 01:37:41,269 [DEBUG] game: Player Player 1 is attempting to place a meeple
+2026-03-11 01:37:41,270 [DEBUG] game: Player Player 1 passed meeple placement
+2026-03-11 01:37:41,271 [DEBUG] game: Current player is now Player 2
+2026-03-11 01:37:41,271 [DEBUG] game: Drew tile for next turn: O
+2026-03-11 01:41:46,027 [INFO] game: Starting new game
+2026-03-11 01:41:46,186 [DEBUG] game: Starting tile is D
+2026-03-11 01:41:46,186 [DEBUG] game: Drew first tile: A
+2026-03-11 01:41:47,321 [DEBUG] game: Rotated tile A (rotation count=1)
+2026-03-11 01:41:47,560 [DEBUG] game: Placed tile A at (1, 0)
+2026-03-11 01:41:48,248 [DEBUG] game: Player Player 1 is attempting to place a meeple
+2026-03-11 01:41:48,249 [DEBUG] game: Placed meeple for player Player 1 at (788, 408)
+2026-03-11 01:41:48,249 [DEBUG] game: Current player is now Player 2
+2026-03-11 01:41:48,250 [DEBUG] game: Drew tile for next turn: V
+2026-03-11 01:41:49,087 [DEBUG] game: Rotated tile V (rotation count=1)
+2026-03-11 01:41:49,393 [DEBUG] game: Rotated tile V (rotation count=2)
+2026-03-11 01:41:49,604 [DEBUG] game: Rotated tile V (rotation count=3)
+2026-03-11 01:41:49,879 [DEBUG] game: Placed tile V at (-1, 0)
+2026-03-11 01:41:50,958 [DEBUG] game: Player Player 2 is attempting to place a meeple
+2026-03-11 01:41:50,958 [DEBUG] game: Placed meeple for player Player 2 at (631, 411)
+2026-03-11 01:41:50,958 [DEBUG] game: Current player is now Player 3
+2026-03-11 01:41:50,959 [DEBUG] game: Drew tile for next turn: J
+2026-03-11 01:41:51,752 [DEBUG] game: Rotated tile J (rotation count=1)
+2026-03-11 01:41:51,896 [DEBUG] game: Rotated tile J (rotation count=2)
+2026-03-11 01:41:52,269 [DEBUG] game: Placed tile J at (0, -1)
+2026-03-11 01:41:53,101 [DEBUG] game: Player Player 3 is attempting to place a meeple
+2026-03-11 01:41:53,102 [DEBUG] game: Placed meeple for player Player 3 at (692, 350)
+2026-03-11 01:41:53,103 [DEBUG] game: Scoring region tiles: {(0, -1): [5], (0, 0): [1]}, count: 2, terrain: Terrain.City, mepple: [<src.meeple.Meeple object at 0x78ec32c61f10>] for 4 points to [<src.player.Player object at 0x78ec2e5a1070>]
+2026-03-11 01:41:53,107 [DEBUG] game: Player Player 3 now has 4 points
+2026-03-11 01:41:53,107 [DEBUG] game: Current player is now Player 4
+2026-03-11 01:41:53,108 [DEBUG] game: Drew tile for next turn: O
+2026-03-11 01:41:56,487 [DEBUG] game: Rotated tile O (rotation count=1)
+2026-03-11 01:41:57,714 [DEBUG] game: Placed tile O at (0, -2)
+2026-03-11 01:41:59,035 [DEBUG] game: Player Player 4 is attempting to place a meeple
+2026-03-11 01:41:59,035 [DEBUG] game: Placed meeple for player Player 4 at (695, 170)
+2026-03-11 01:41:59,036 [DEBUG] game: Current player is now Player 1
+2026-03-11 01:41:59,036 [DEBUG] game: Drew tile for next turn: I
+2026-03-11 01:42:00,951 [DEBUG] game: Placed tile I at (1, -2)
+2026-03-11 01:42:01,917 [DEBUG] game: Player Player 1 is attempting to place a meeple
+2026-03-11 01:42:01,917 [DEBUG] game: Placed meeple for player Player 1 at (791, 167)
+2026-03-11 01:42:01,917 [DEBUG] game: Current player is now Player 2
+2026-03-11 01:42:01,918 [DEBUG] game: Drew tile for next turn: V
+2026-03-11 01:42:02,515 [DEBUG] game: Rotated tile V (rotation count=1)
+2026-03-11 01:42:03,289 [DEBUG] game: Rotated tile V (rotation count=2)
+2026-03-11 01:42:03,550 [DEBUG] game: Rotated tile V (rotation count=3)
+2026-03-11 01:42:04,293 [DEBUG] game: Rotated tile V (rotation count=0)
+2026-03-11 01:42:04,473 [DEBUG] game: Rotated tile V (rotation count=1)
+2026-03-11 01:42:04,650 [DEBUG] game: Rotated tile V (rotation count=2)
+2026-03-11 01:42:04,892 [DEBUG] game: Placed tile V at (-1, -1)
+2026-03-11 01:42:05,833 [DEBUG] game: Player Player 2 is attempting to place a meeple
+2026-03-11 01:42:05,834 [DEBUG] game: Placed meeple for player Player 2 at (595, 269)
+2026-03-11 01:42:05,834 [DEBUG] game: Current player is now Player 3
+2026-03-11 01:42:05,834 [DEBUG] game: Drew tile for next turn: V
+2026-03-11 01:42:07,728 [DEBUG] game: Rotated tile V (rotation count=1)
+2026-03-11 01:42:07,891 [DEBUG] game: Rotated tile V (rotation count=2)
+2026-03-11 01:42:08,297 [DEBUG] game: Placed tile V at (-1, 1)
+2026-03-11 01:42:09,808 [DEBUG] game: Player Player 3 is attempting to place a meeple
+2026-03-11 01:42:09,809 [DEBUG] game: Player Player 3 passed meeple placement
+2026-03-11 01:42:09,809 [DEBUG] game: Current player is now Player 4
+2026-03-11 01:42:09,810 [DEBUG] game: Drew tile for next turn: K
+2026-03-11 01:42:10,986 [DEBUG] game: Rotated tile K (rotation count=1)
+2026-03-11 01:42:11,132 [DEBUG] game: Rotated tile K (rotation count=2)
+2026-03-11 01:42:11,746 [DEBUG] game: Placed tile K at (1, -3)
+2026-03-11 01:42:19,950 [DEBUG] game: Player Player 4 is attempting to place a meeple
+2026-03-11 01:42:19,950 [DEBUG] game: Placed meeple for player Player 4 at (792, 154)
+2026-03-11 01:42:19,951 [DEBUG] game: Scoring region tiles: {(1, -3): [5], (1, -2): [1]}, count: 2, terrain: Terrain.City, mepple: [<src.meeple.Meeple object at 0x78ec2e5a1100>] for 4 points to [<src.player.Player object at 0x78ec2e5a1400>]
+2026-03-11 01:42:19,952 [DEBUG] game: Player Player 4 now has 4 points
+2026-03-11 01:42:19,953 [DEBUG] game: Current player is now Player 1
+2026-03-11 01:42:19,953 [DEBUG] game: Drew tile for next turn: V
+2026-03-11 01:48:29,631 [INFO] game: Starting new game
+2026-03-11 01:48:29,800 [DEBUG] game: Starting tile is D
+2026-03-11 01:48:29,801 [DEBUG] game: Added meeple placeholder (690, 410) for terrain Terrain.Road at tile (0, 0) (region=[3, 7])
+2026-03-11 01:48:29,801 [DEBUG] game: Added meeple placeholder (690, 370) for terrain Terrain.City at tile (0, 0) (region=[1])
+2026-03-11 01:48:29,801 [DEBUG] game: Added meeple placeholder (690, 385) for terrain Terrain.Grass at tile (0, 0) (region=[0, 2])
+2026-03-11 01:48:29,801 [DEBUG] game: Added meeple placeholder (690, 440) for terrain Terrain.Grass at tile (0, 0) (region=[4, 5, 6])
+2026-03-11 01:48:29,802 [DEBUG] game: Drew first tile: W
+2026-03-11 01:48:30,746 [DEBUG] game: Rotated tile W (rotation count=1)
+2026-03-11 01:48:31,182 [DEBUG] game: Added meeple placeholder (820, 410) for terrain Terrain.Grass at tile (1, 0) (region=[2, 3, 4])
+2026-03-11 01:48:31,183 [DEBUG] game: Added meeple placeholder (765, 435) for terrain Terrain.Grass at tile (1, 0) (region=[6])
+2026-03-11 01:48:31,184 [DEBUG] game: Added meeple placeholder (765, 385) for terrain Terrain.Grass at tile (1, 0) (region=[0])
+2026-03-11 01:48:31,184 [DEBUG] game: Added meeple placeholder (770, 410) for terrain Terrain.Road at tile (1, 0) (region=[7, 8])
+2026-03-11 01:48:31,184 [DEBUG] game: Added meeple placeholder (790, 430) for terrain Terrain.Road at tile (1, 0) (region=[5, 8])
+2026-03-11 01:48:31,185 [DEBUG] game: Added meeple placeholder (790, 390) for terrain Terrain.Road at tile (1, 0) (region=[1, 8])
+2026-03-11 01:48:31,185 [DEBUG] game: Placed tile W at (1, 0)
+2026-03-11 01:48:39,730 [DEBUG] game: Player Player 1 is attempting to place a meeple
+2026-03-11 01:48:39,731 [DEBUG] game: Meeple click at (773, 408) is within 35.0px of placeholder (765, 435)
+2026-03-11 01:48:39,731 [DEBUG] game: Placing meeple for player Player 1 in region tiles: {(1, 0): [1, 8]}, count: 1, terrain: Terrain.Road, mepple: [] (tile=(1, 0), placeholder=(770, 410))
+2026-03-11 01:48:39,732 [DEBUG] game: Placed meeple for player Player 1 at (773, 408)
+2026-03-11 01:48:39,732 [DEBUG] game: Current player is now Player 2
+2026-03-11 01:48:39,732 [DEBUG] game: Drew tile for next turn: C
+2026-03-11 01:48:40,926 [DEBUG] game: Added meeple placeholder (690, 310) for terrain Terrain.City at tile (0, -1) (region=[1, 3, 5, 7])
+2026-03-11 01:48:40,927 [DEBUG] game: Placed tile C at (0, -1)
+2026-03-11 01:48:41,652 [DEBUG] game: Player Player 2 is attempting to place a meeple
+2026-03-11 01:48:41,653 [DEBUG] game: Meeple click at (689, 308) is within 35.0px of placeholder (690, 310)
+2026-03-11 01:48:41,653 [DEBUG] game: Placing meeple for player Player 2 in region tiles: {(0, -1): [1, 3, 5, 7], (0, 0): [1]}, count: 2, terrain: Terrain.City, mepple: [] (tile=(0, -1), placeholder=(690, 310))
+2026-03-11 01:48:41,654 [DEBUG] game: Placed meeple for player Player 2 at (689, 308)
+2026-03-11 01:48:41,654 [DEBUG] game: Current player is now Player 3
+2026-03-11 01:48:41,655 [DEBUG] game: Drew tile for next turn: E
+2026-03-11 01:48:43,286 [DEBUG] game: Rotated tile E (rotation count=1)
+2026-03-11 01:48:43,657 [DEBUG] game: Added meeple placeholder (584, 310) for terrain Terrain.Grass at tile (-1, -1) (region=[2, 4, 5, 6, 7, 0, 1])
+2026-03-11 01:48:43,657 [DEBUG] game: Placed tile E at (-1, -1)
+2026-03-11 01:48:44,499 [DEBUG] game: Player Player 3 is attempting to place a meeple
+2026-03-11 01:48:44,500 [DEBUG] game: Meeple click at (580, 314) is within 35.0px of placeholder (584, 310)
+2026-03-11 01:48:44,500 [DEBUG] game: Placing meeple for player Player 3 in region tiles: {(-1, -1): [2, 4, 5, 6, 7, 0, 1]}, count: 1, terrain: Terrain.Grass, mepple: [] (tile=(-1, -1), placeholder=(584, 310))
+2026-03-11 01:48:44,500 [DEBUG] game: Placed meeple for player Player 3 at (580, 314)
+2026-03-11 01:48:44,501 [DEBUG] game: Current player is now Player 4
+2026-03-11 01:48:44,502 [DEBUG] game: Drew tile for next turn: O
+2026-03-11 01:48:46,310 [DEBUG] game: Added meeple placeholder (790, 310) for terrain Terrain.Grass at tile (1, -1) (region=[2, 6])
+2026-03-11 01:48:46,311 [DEBUG] game: Added meeple placeholder (815, 335) for terrain Terrain.Grass at tile (1, -1) (region=[4])
+2026-03-11 01:48:46,312 [DEBUG] game: Placed tile O at (1, -1)
+2026-03-11 01:48:50,250 [DEBUG] game: Player Player 4 is attempting to place a meeple
+2026-03-11 01:48:50,250 [DEBUG] game: Player Player 4 is attempting to place a meeple
+2026-03-11 01:48:50,265 [DEBUG] game: Player Player 4 is attempting to place a meeple
+2026-03-11 01:48:50,266 [DEBUG] game: Player Player 4 is attempting to place a meeple
+2026-03-11 01:48:50,281 [DEBUG] game: Player Player 4 is attempting to place a meeple
+2026-03-11 01:48:50,313 [DEBUG] game: Player Player 4 is attempting to place a meeple
+2026-03-11 01:48:50,701 [DEBUG] game: Player Player 4 is attempting to place a meeple
+2026-03-11 01:48:50,716 [DEBUG] game: Player Player 4 is attempting to place a meeple
+2026-03-11 01:48:50,717 [DEBUG] game: Player Player 4 is attempting to place a meeple
+2026-03-11 01:48:51,106 [DEBUG] game: Player Player 4 is attempting to place a meeple
+2026-03-11 01:48:51,122 [DEBUG] game: Player Player 4 is attempting to place a meeple
+2026-03-11 01:48:51,138 [DEBUG] game: Player Player 4 is attempting to place a meeple
+2026-03-11 01:48:51,138 [DEBUG] game: Player Player 4 is attempting to place a meeple
+2026-03-11 01:48:51,169 [DEBUG] game: Player Player 4 is attempting to place a meeple
+2026-03-11 01:48:51,267 [DEBUG] game: Player Player 4 is attempting to place a meeple
+2026-03-11 01:48:51,268 [DEBUG] game: Player Player 4 is attempting to place a meeple
+2026-03-11 01:48:51,284 [DEBUG] game: Player Player 4 is attempting to place a meeple
+2026-03-11 01:48:51,284 [DEBUG] game: Player Player 4 is attempting to place a meeple
+2026-03-11 01:48:51,285 [DEBUG] game: Player Player 4 is attempting to place a meeple
+2026-03-11 01:48:51,299 [DEBUG] game: Player Player 4 is attempting to place a meeple
+2026-03-11 01:48:51,751 [DEBUG] game: Player Player 4 is attempting to place a meeple
+2026-03-11 01:48:51,751 [DEBUG] game: Player Player 4 is attempting to place a meeple
+2026-03-11 01:48:51,766 [DEBUG] game: Player Player 4 is attempting to place a meeple
+2026-03-11 01:48:51,815 [DEBUG] game: Player Player 4 is attempting to place a meeple
+2026-03-11 01:48:51,911 [DEBUG] game: Player Player 4 is attempting to place a meeple
+2026-03-11 01:48:51,927 [DEBUG] game: Player Player 4 is attempting to place a meeple
+2026-03-11 01:48:51,927 [DEBUG] game: Player Player 4 is attempting to place a meeple
+2026-03-11 01:48:51,928 [DEBUG] game: Player Player 4 is attempting to place a meeple
+2026-03-11 01:48:51,943 [DEBUG] game: Player Player 4 is attempting to place a meeple
+2026-03-11 01:48:51,958 [DEBUG] game: Player Player 4 is attempting to place a meeple
+2026-03-11 01:48:51,959 [DEBUG] game: Player Player 4 is attempting to place a meeple
+2026-03-11 01:48:52,023 [DEBUG] game: Player Player 4 is attempting to place a meeple
+2026-03-11 01:48:52,361 [DEBUG] game: Player Player 4 is attempting to place a meeple
+2026-03-11 01:48:52,393 [DEBUG] game: Player Player 4 is attempting to place a meeple
+2026-03-11 01:48:52,394 [DEBUG] game: Player Player 4 is attempting to place a meeple
+2026-03-11 01:48:52,410 [DEBUG] game: Player Player 4 is attempting to place a meeple
+2026-03-11 01:48:52,425 [DEBUG] game: Player Player 4 is attempting to place a meeple
+2026-03-11 01:48:52,426 [DEBUG] game: Player Player 4 is attempting to place a meeple
+2026-03-11 01:48:52,427 [DEBUG] game: Player Player 4 is attempting to place a meeple
+2026-03-11 01:48:52,442 [DEBUG] game: Player Player 4 is attempting to place a meeple
+2026-03-11 01:49:16,355 [DEBUG] game: Player Player 4 is attempting to place a meeple
+2026-03-11 01:49:16,356 [DEBUG] game: Meeple click at (816, 339) is within 35.0px of placeholder (815, 335)
+2026-03-11 01:49:16,356 [DEBUG] game: Placing meeple for player Player 4 in region tiles: {(1, -1): [4], (1, 0): [2, 3, 4]}, count: 2, terrain: Terrain.Grass, mepple: [] (tile=(1, -1), placeholder=(815, 335))
+2026-03-11 01:49:16,357 [DEBUG] game: Placed meeple for player Player 4 at (816, 339)
+2026-03-11 01:49:16,357 [DEBUG] game: Current player is now Player 1
+2026-03-11 01:49:16,358 [DEBUG] game: Drew tile for next turn: V
+2026-03-11 01:53:39,786 [INFO] game: Starting new game
+2026-03-11 01:53:39,937 [DEBUG] game: Starting tile is D
+2026-03-11 01:53:39,938 [DEBUG] game: Drew first tile: O
+2026-03-11 01:53:41,297 [DEBUG] game: Rotated tile O (rotation count=1)
+2026-03-11 01:53:41,493 [DEBUG] game: Rotated tile O (rotation count=2)
+2026-03-11 01:53:41,881 [DEBUG] game: Placed tile O at (0, -1)
+2026-03-11 01:53:43,175 [DEBUG] game: Player Player 1 is attempting to place a meeple
+2026-03-11 01:53:43,176 [DEBUG] game: Placed meeple for player Player 1 at (731, 305)
+2026-03-11 01:53:43,176 [DEBUG] game: Current player is now Player 2
+2026-03-11 01:53:43,177 [DEBUG] game: Drew tile for next turn: C
+2026-03-11 01:53:43,866 [DEBUG] game: Placed tile C at (1, -1)
+2026-03-11 01:53:45,118 [DEBUG] game: Player Player 2 is attempting to place a meeple
+2026-03-11 01:53:45,118 [DEBUG] game: Player Player 2 passed meeple placement
+2026-03-11 01:53:45,119 [DEBUG] game: Current player is now Player 3
+2026-03-11 01:53:45,119 [DEBUG] game: Drew tile for next turn: V
+2026-03-11 01:53:46,927 [DEBUG] game: Placed tile V at (0, -2)
+2026-03-11 01:53:48,673 [DEBUG] game: Player Player 3 is attempting to place a meeple
+2026-03-11 01:53:48,674 [DEBUG] game: Placed meeple for player Player 3 at (694, 250)
+2026-03-11 01:53:48,674 [DEBUG] game: Current player is now Player 4
+2026-03-11 01:53:48,675 [DEBUG] game: Drew tile for next turn: J
+2026-03-11 01:53:50,662 [DEBUG] game: Rotated tile J (rotation count=1)
+2026-03-11 01:53:50,824 [DEBUG] game: Rotated tile J (rotation count=2)
+2026-03-11 01:53:52,162 [DEBUG] game: Rotated tile J (rotation count=3)
+2026-03-11 01:53:52,630 [DEBUG] game: Rotated tile J (rotation count=0)
+2026-03-11 01:53:53,624 [DEBUG] game: Rotated tile J (rotation count=1)
+2026-03-11 01:53:53,784 [DEBUG] game: Rotated tile J (rotation count=2)
+2026-03-11 01:53:53,944 [DEBUG] game: Rotated tile J (rotation count=3)
+2026-03-11 01:53:54,233 [DEBUG] game: Placed tile J at (2, -1)
+2026-03-11 01:53:55,809 [DEBUG] game: Player Player 4 is attempting to place a meeple
+2026-03-11 01:53:55,809 [DEBUG] game: Placed meeple for player Player 4 at (890, 269)
+2026-03-11 01:53:55,810 [DEBUG] game: Current player is now Player 1
+2026-03-11 01:53:55,810 [DEBUG] game: Drew tile for next turn: A
+2026-03-11 01:53:57,022 [DEBUG] game: Rotated tile A (rotation count=1)
+2026-03-11 01:53:57,168 [DEBUG] game: Rotated tile A (rotation count=2)
+2026-03-11 01:53:57,328 [DEBUG] game: Rotated tile A (rotation count=3)
+2026-03-11 01:53:58,266 [DEBUG] game: Placed tile A at (-1, -1)
+2026-03-11 01:54:36,230 [INFO] game: Starting new game
+2026-03-11 01:54:36,387 [DEBUG] game: Starting tile is D
+2026-03-11 01:54:36,387 [DEBUG] game: Drew first tile: E
+2026-03-11 01:54:37,100 [DEBUG] game: Rotated tile E (rotation count=1)
+2026-03-11 01:54:37,277 [DEBUG] game: Rotated tile E (rotation count=2)
+2026-03-11 01:54:37,535 [DEBUG] game: Placed tile E at (0, -1)
+2026-03-11 01:54:39,232 [DEBUG] game: Player Player 1 is attempting to place a meeple
+2026-03-11 01:54:39,233 [DEBUG] game: Placed meeple for player Player 1 at (687, 353)
+2026-03-11 01:54:39,233 [DEBUG] game: Scoring region tiles: {(0, -1): [5], (0, 0): [1]}, count: 2, terrain: Terrain.City, mepple: [<src.meeple.Meeple object at 0x7a416189ee70>] for 4 points to [<src.player.Player object at 0x7a4163062db0>]
+2026-03-11 01:54:39,233 [DEBUG] game: Player Player 1 now has 4 points
+2026-03-11 01:54:39,234 [DEBUG] game: Current player is now Player 2
+2026-03-11 01:54:39,234 [DEBUG] game: Drew tile for next turn: A
+2026-03-11 01:54:40,940 [DEBUG] game: Rotated tile A (rotation count=1)
+2026-03-11 01:54:41,295 [DEBUG] game: Placed tile A at (1, 0)
+2026-03-11 01:54:41,729 [DEBUG] game: Player Player 2 is attempting to place a meeple
+2026-03-11 01:54:41,730 [DEBUG] game: Placed meeple for player Player 2 at (783, 409)
+2026-03-11 01:54:41,731 [DEBUG] game: Current player is now Player 3
+2026-03-11 01:54:41,731 [DEBUG] game: Drew tile for next turn: V
+2026-03-11 01:54:43,234 [DEBUG] game: Rotated tile V (rotation count=1)
+2026-03-11 01:54:43,396 [DEBUG] game: Rotated tile V (rotation count=2)
+2026-03-11 01:54:43,753 [DEBUG] game: Placed tile V at (-1, 0)
+2026-03-11 01:54:44,660 [DEBUG] game: Player Player 3 is attempting to place a meeple
+2026-03-11 01:54:44,660 [DEBUG] game: Placed meeple for player Player 3 at (592, 370)
+2026-03-11 01:54:44,661 [DEBUG] game: Current player is now Player 4
+2026-03-11 01:54:44,661 [DEBUG] game: Drew tile for next turn: O
+2026-03-11 01:54:46,569 [DEBUG] game: Rotated tile O (rotation count=1)
+2026-03-11 01:54:47,069 [DEBUG] game: Rotated tile O (rotation count=2)
+2026-03-11 01:54:47,262 [DEBUG] game: Rotated tile O (rotation count=3)
+2026-03-11 01:54:47,438 [DEBUG] game: Rotated tile O (rotation count=0)
+2026-03-11 01:54:51,132 [DEBUG] game: Rotated tile O (rotation count=1)
+2026-03-11 01:54:54,574 [INFO] game: Starting new game
+2026-03-11 01:54:54,725 [DEBUG] game: Starting tile is D
+2026-03-11 01:54:54,726 [DEBUG] game: Drew first tile: C
+2026-03-11 01:54:56,215 [DEBUG] game: Placed tile C at (0, -1)
+2026-03-11 01:54:57,133 [DEBUG] game: Player Player 1 is attempting to place a meeple
+2026-03-11 01:54:57,134 [DEBUG] game: Placed meeple for player Player 1 at (693, 266)
+2026-03-11 01:54:57,134 [DEBUG] game: Current player is now Player 2
+2026-03-11 01:54:57,135 [DEBUG] game: Drew tile for next turn: O
+2026-03-11 01:54:57,969 [DEBUG] game: Placed tile O at (1, -1)
+2026-03-11 01:54:59,568 [DEBUG] game: Player Player 2 is attempting to place a meeple
+2026-03-11 01:54:59,569 [DEBUG] game: Placed meeple for player Player 2 at (791, 343)
+2026-03-11 01:54:59,569 [DEBUG] game: Current player is now Player 3
+2026-03-11 01:54:59,569 [DEBUG] game: Drew tile for next turn: V
+2026-03-11 01:55:01,691 [DEBUG] game: Rotated tile V (rotation count=1)
+2026-03-11 01:55:01,885 [DEBUG] game: Rotated tile V (rotation count=2)
+2026-03-11 01:55:02,030 [DEBUG] game: Rotated tile V (rotation count=3)
+2026-03-11 01:55:02,257 [DEBUG] game: Placed tile V at (-1, 0)
+2026-03-11 01:55:02,835 [DEBUG] game: Player Player 3 is attempting to place a meeple
+2026-03-11 01:55:02,836 [DEBUG] game: Placed meeple for player Player 3 at (635, 405)
+2026-03-11 01:55:02,837 [DEBUG] game: Current player is now Player 4
+2026-03-11 01:55:02,837 [DEBUG] game: Drew tile for next turn: O
+2026-03-11 01:55:04,012 [DEBUG] game: Rotated tile O (rotation count=1)
+2026-03-11 01:55:04,158 [DEBUG] game: Rotated tile O (rotation count=2)
+2026-03-11 01:55:04,674 [DEBUG] game: Rotated tile O (rotation count=3)
+2026-03-11 01:55:06,485 [DEBUG] game: Placed tile O at (1, -2)
+2026-03-11 01:55:07,998 [DEBUG] game: Player Player 4 is attempting to place a meeple
+2026-03-11 01:55:07,999 [DEBUG] game: Placed meeple for player Player 4 at (766, 183)
+2026-03-11 01:55:07,999 [DEBUG] game: Current player is now Player 1
+2026-03-11 01:55:08,000 [DEBUG] game: Drew tile for next turn: J
+2026-03-11 01:55:10,234 [DEBUG] game: Rotated tile J (rotation count=1)
+2026-03-11 01:55:12,780 [DEBUG] game: Rotated tile J (rotation count=2)
+2026-03-11 01:55:14,188 [DEBUG] game: Placed tile J at (1, 0)
+2026-03-11 01:55:15,092 [DEBUG] game: Player Player 1 is attempting to place a meeple
+2026-03-11 01:55:15,093 [DEBUG] game: Placed meeple for player Player 1 at (790, 452)
+2026-03-11 01:55:15,093 [DEBUG] game: Current player is now Player 2
+2026-03-11 01:55:15,094 [DEBUG] game: Drew tile for next turn: A
+2026-03-11 01:55:17,145 [DEBUG] game: Rotated tile A (rotation count=1)
+2026-03-11 01:55:17,599 [DEBUG] game: Placed tile A at (2, -1)
+2026-03-11 01:55:19,673 [DEBUG] game: Player Player 2 is attempting to place a meeple
+2026-03-11 01:55:19,673 [DEBUG] game: Placed meeple for player Player 2 at (894, 314)
+2026-03-11 01:55:19,674 [DEBUG] game: Current player is now Player 3
+2026-03-11 01:55:19,674 [DEBUG] game: Drew tile for next turn: V
+2026-03-11 01:55:21,472 [DEBUG] game: Rotated tile V (rotation count=1)
+2026-03-11 01:55:24,340 [DEBUG] game: Placed tile V at (-1, 1)
+2026-03-11 01:55:25,461 [DEBUG] game: Player Player 3 is attempting to place a meeple
+2026-03-11 01:55:25,462 [DEBUG] game: Placed meeple for player Player 3 at (569, 480)
+2026-03-11 01:55:25,462 [DEBUG] game: Current player is now Player 4
+2026-03-11 01:55:25,463 [DEBUG] game: Drew tile for next turn: E
+2026-03-11 01:55:26,562 [DEBUG] game: Rotated tile E (rotation count=1)
+2026-03-11 01:55:27,094 [DEBUG] game: Placed tile E at (-1, -1)
+2026-03-11 01:55:27,951 [DEBUG] game: Player Player 4 is attempting to place a meeple
+2026-03-11 01:55:27,952 [DEBUG] game: Player Player 4 passed meeple placement
+2026-03-11 01:55:27,953 [DEBUG] game: Current player is now Player 1
+2026-03-11 01:55:27,954 [DEBUG] game: Drew tile for next turn: O
+2026-03-11 01:55:28,937 [DEBUG] game: Rotated tile O (rotation count=1)
+2026-03-11 01:55:29,098 [DEBUG] game: Rotated tile O (rotation count=2)
+2026-03-11 01:55:34,653 [DEBUG] game: Placed tile O at (0, -2)
+2026-03-11 01:55:34,653 [DEBUG] game: Scoring region tiles: {(0, -2): [3, 5], (-1, -1): [3], (1, -2): [5, 7], (1, -1): [7, 1], (0, -1): [1, 3, 5, 7], (0, 0): [1]}, count: 6, terrain: Terrain.City, mepple: [<src.meeple.Meeple object at 0x766e0498f020>] for 20 points to [<src.player.Player object at 0x766e0467ad20>]
+2026-03-11 01:55:34,654 [DEBUG] game: Player Player 1 now has 20 points
+2026-03-11 01:55:38,364 [DEBUG] game: Player Player 1 is attempting to place a meeple
+2026-03-11 01:55:38,365 [DEBUG] game: Placed meeple for player Player 1 at (689, 175)
+2026-03-11 01:55:38,366 [DEBUG] game: Current player is now Player 2
+2026-03-11 01:55:38,367 [DEBUG] game: Drew tile for next turn: I
+2026-03-11 01:55:41,295 [DEBUG] game: Rotated tile I (rotation count=1)
+2026-03-11 01:55:41,666 [DEBUG] game: Placed tile I at (1, 1)
+2026-03-11 01:55:41,667 [DEBUG] game: Scoring region tiles: {(1, 1): [1], (1, 0): [5]}, count: 2, terrain: Terrain.City, mepple: [<src.meeple.Meeple object at 0x766e0539b980>] for 4 points to [<src.player.Player object at 0x766e0467ad20>]
+2026-03-11 01:55:41,667 [DEBUG] game: Player Player 1 now has 24 points
+2026-03-11 01:55:42,584 [DEBUG] game: Player Player 2 is attempting to place a meeple
+2026-03-11 01:55:42,585 [DEBUG] game: Placed meeple for player Player 2 at (835, 508)
+2026-03-11 01:55:42,586 [DEBUG] game: Current player is now Player 3
+2026-03-11 01:55:42,586 [DEBUG] game: Drew tile for next turn: E
+2026-03-11 01:55:43,431 [DEBUG] game: Rotated tile E (rotation count=1)
+2026-03-11 01:55:43,586 [DEBUG] game: Rotated tile E (rotation count=2)
+2026-03-11 01:55:43,880 [DEBUG] game: Rotated tile E (rotation count=3)
+2026-03-11 01:55:44,170 [DEBUG] game: Placed tile E at (2, 1)
+2026-03-11 01:55:44,171 [DEBUG] game: Scoring region tiles: {(2, 1): [7], (1, 1): [3]}, count: 2, terrain: Terrain.City, mepple: [<src.meeple.Meeple object at 0x766e0467b170>] for 4 points to [<src.player.Player object at 0x766e04947980>]
+2026-03-11 01:55:44,171 [DEBUG] game: Player Player 2 now has 4 points
+2026-03-11 01:55:45,027 [DEBUG] game: Player Player 3 is attempting to place a meeple
+2026-03-11 01:55:45,027 [DEBUG] game: Player Player 3 passed meeple placement
+2026-03-11 01:55:45,027 [DEBUG] game: Current player is now Player 4
+2026-03-11 01:55:45,028 [DEBUG] game: Drew tile for next turn: V
+2026-03-11 01:55:46,190 [DEBUG] game: Rotated tile V (rotation count=1)
+2026-03-11 01:55:46,434 [DEBUG] game: Rotated tile V (rotation count=2)
+2026-03-11 01:55:46,692 [DEBUG] game: Placed tile V at (-2, 1)
+2026-03-11 01:55:47,371 [DEBUG] game: Player Player 4 is attempting to place a meeple
+2026-03-11 01:55:47,371 [DEBUG] game: Player Player 4 passed meeple placement
+2026-03-11 01:55:47,372 [DEBUG] game: Current player is now Player 1
+2026-03-11 01:55:47,372 [DEBUG] game: Drew tile for next turn: V
+2026-03-11 01:55:50,606 [DEBUG] game: Placed tile V at (-2, 0)
+2026-03-11 01:55:50,854 [DEBUG] game: Player Player 1 is attempting to place a meeple
+2026-03-11 01:55:50,854 [DEBUG] game: Player Player 1 passed meeple placement
+2026-03-11 01:55:50,855 [DEBUG] game: Current player is now Player 2
+2026-03-11 01:55:50,855 [DEBUG] game: Drew tile for next turn: K
+2026-03-11 01:55:53,243 [DEBUG] game: Rotated tile K (rotation count=1)
+2026-03-11 01:55:53,566 [DEBUG] game: Placed tile K at (2, -2)
+2026-03-11 01:55:54,557 [DEBUG] game: Player Player 2 is attempting to place a meeple
+2026-03-11 01:55:54,558 [DEBUG] game: Placed meeple for player Player 2 at (929, 216)
+2026-03-11 01:55:54,558 [DEBUG] game: Current player is now Player 3
+2026-03-11 01:55:54,559 [DEBUG] game: Drew tile for next turn: A
+2026-03-11 01:55:55,790 [DEBUG] game: Rotated tile A (rotation count=1)
+2026-03-11 01:55:55,920 [DEBUG] game: Rotated tile A (rotation count=2)
+2026-03-11 01:55:56,066 [DEBUG] game: Rotated tile A (rotation count=3)
+2026-03-11 01:55:59,709 [DEBUG] game: Placed tile A at (-3, 0)
+2026-03-11 01:55:59,710 [DEBUG] game: Scoring region tiles: {(-3, 0): [3, 8], (-2, 0): [5, 7], (-2, 1): [1, 3], (-1, 1): [7, 1], (2, -1): [7, 8], (1, 0): [7, 1], (1, -1): [5, 3], (-1, 0): [3, 5], (0, 0): [3, 7]}, count: 9, terrain: Terrain.Road, mepple: [<src.meeple.Meeple object at 0x766e046972f0>, <src.meeple.Meeple object at 0x766e0719a9c0>] for 9 points to [<src.player.Player object at 0x766e04947980>, <src.player.Player object at 0x766e04695d90>]
+2026-03-11 01:55:59,710 [DEBUG] game: Player Player 2 now has 13 points
+2026-03-11 01:55:59,710 [DEBUG] game: Player Player 3 now has 9 points
+2026-03-11 01:56:45,241 [DEBUG] game: Player Player 3 is attempting to place a meeple
+2026-03-11 01:56:52,584 [DEBUG] game: Player Player 3 is attempting to place a meeple
+2026-03-11 01:56:52,585 [DEBUG] game: Player Player 3 passed meeple placement
+2026-03-11 01:56:52,585 [DEBUG] game: Current player is now Player 4
+2026-03-11 01:56:52,585 [DEBUG] game: Drew tile for next turn: W
+2026-03-11 01:56:56,175 [DEBUG] game: Placed tile W at (2, -3)
+2026-03-11 01:56:57,020 [DEBUG] game: Player Player 4 is attempting to place a meeple
+2026-03-11 01:56:57,020 [DEBUG] game: Placed meeple for player Player 4 at (850, 105)
+2026-03-11 01:56:57,021 [DEBUG] game: Current player is now Player 1
+2026-03-11 01:56:57,021 [DEBUG] game: Drew tile for next turn: V
+2026-03-11 01:56:57,783 [DEBUG] game: Rotated tile V (rotation count=1)
+2026-03-11 01:56:57,911 [DEBUG] game: Rotated tile V (rotation count=2)
+2026-03-11 01:56:58,089 [DEBUG] game: Rotated tile V (rotation count=3)
+2026-03-11 01:56:58,645 [DEBUG] game: Placed tile V at (1, -3)
+2026-03-11 01:57:09,220 [DEBUG] game: Player Player 1 is attempting to place a meeple
+2026-03-11 01:57:09,993 [DEBUG] game: Player Player 1 is attempting to place a meeple
+2026-03-11 01:57:10,379 [DEBUG] game: Player Player 1 is attempting to place a meeple
+2026-03-11 01:57:10,639 [DEBUG] game: Player Player 1 is attempting to place a meeple
+2026-03-11 01:57:10,850 [DEBUG] game: Player Player 1 is attempting to place a meeple
+2026-03-11 01:57:11,109 [DEBUG] game: Player Player 1 is attempting to place a meeple
+2026-03-11 01:57:11,351 [DEBUG] game: Player Player 1 is attempting to place a meeple
+2026-03-11 01:57:11,997 [DEBUG] game: Player Player 1 is attempting to place a meeple
+2026-03-11 01:57:12,321 [DEBUG] game: Player Player 1 is attempting to place a meeple
+2026-03-11 01:57:12,481 [DEBUG] game: Player Player 1 is attempting to place a meeple
+2026-03-11 01:57:12,822 [DEBUG] game: Player Player 1 is attempting to place a meeple
+2026-03-11 01:57:13,033 [DEBUG] game: Player Player 1 is attempting to place a meeple
+2026-03-11 01:57:13,260 [DEBUG] game: Player Player 1 is attempting to place a meeple
+2026-03-11 01:57:13,438 [DEBUG] game: Player Player 1 is attempting to place a meeple
+2026-03-11 01:57:13,650 [DEBUG] game: Player Player 1 is attempting to place a meeple
+2026-03-11 01:57:13,895 [DEBUG] game: Player Player 1 is attempting to place a meeple
+2026-03-11 01:57:14,103 [DEBUG] game: Player Player 1 is attempting to place a meeple
+2026-03-11 01:57:14,296 [DEBUG] game: Player Player 1 is attempting to place a meeple
+2026-03-11 01:57:14,502 [DEBUG] game: Player Player 1 is attempting to place a meeple
+2026-03-11 01:57:14,675 [DEBUG] game: Player Player 1 is attempting to place a meeple
+2026-03-11 01:57:14,866 [DEBUG] game: Player Player 1 is attempting to place a meeple
+2026-03-11 01:57:15,026 [DEBUG] game: Player Player 1 is attempting to place a meeple
+2026-03-11 01:57:15,201 [DEBUG] game: Player Player 1 is attempting to place a meeple
+2026-03-11 01:57:15,406 [DEBUG] game: Player Player 1 is attempting to place a meeple
+2026-03-11 01:57:15,594 [DEBUG] game: Player Player 1 is attempting to place a meeple
+2026-03-11 01:57:15,848 [DEBUG] game: Player Player 1 is attempting to place a meeple
+2026-03-11 01:57:15,990 [DEBUG] game: Player Player 1 is attempting to place a meeple
+2026-03-11 01:57:26,909 [DEBUG] game: Player Player 1 is attempting to place a meeple
+2026-03-11 01:57:26,910 [DEBUG] game: Player Player 1 passed meeple placement
+2026-03-11 01:57:26,910 [DEBUG] game: Current player is now Player 2
+2026-03-11 01:57:26,911 [DEBUG] game: Drew tile for next turn: V
+2026-03-11 02:01:44,911 [INFO] game: Starting new game
+2026-03-11 02:01:45,071 [DEBUG] game: Starting tile is D
+2026-03-11 02:01:45,072 [DEBUG] game: Drew first tile: O
+2026-03-11 02:01:46,159 [DEBUG] game: Rotated tile O (rotation count=1)
+2026-03-11 02:01:46,322 [DEBUG] game: Rotated tile O (rotation count=2)
+2026-03-11 02:01:46,580 [DEBUG] game: Placed tile O at (0, -1)
+2026-03-11 02:01:47,209 [DEBUG] game: Player Player 1 is attempting to place a meeple
+2026-03-11 02:01:47,210 [DEBUG] game: Placed meeple for player Player 1 at (731, 317)
+2026-03-11 02:01:47,211 [DEBUG] game: Current player is now Player 2
+2026-03-11 02:01:47,212 [DEBUG] game: Drew tile for next turn: W
+2026-03-11 02:01:48,663 [DEBUG] game: Placed tile W at (1, 0)
+2026-03-11 02:01:49,584 [DEBUG] game: Player Player 2 is attempting to place a meeple
+2026-03-11 02:01:49,584 [DEBUG] game: Placed meeple for player Player 2 at (749, 412)
+2026-03-11 02:01:49,584 [DEBUG] game: Current player is now Player 3
+2026-03-11 02:01:49,585 [DEBUG] game: Drew tile for next turn: V
+2026-03-11 02:01:50,322 [DEBUG] game: Rotated tile V (rotation count=1)
+2026-03-11 02:01:50,496 [DEBUG] game: Rotated tile V (rotation count=2)
+2026-03-11 02:01:50,797 [DEBUG] game: Placed tile V at (-1, 0)
+2026-03-11 02:01:52,619 [DEBUG] game: Player Player 3 is attempting to place a meeple
+2026-03-11 02:01:52,620 [DEBUG] game: Placed meeple for player Player 3 at (620, 383)
+2026-03-11 02:01:52,621 [DEBUG] game: Current player is now Player 4
+2026-03-11 02:01:52,622 [DEBUG] game: Drew tile for next turn: A
+2026-03-11 02:01:53,953 [DEBUG] game: Rotated tile A (rotation count=1)
+2026-03-11 02:01:54,386 [DEBUG] game: Placed tile A at (2, 0)
+2026-03-11 02:01:55,896 [DEBUG] game: Player Player 4 is attempting to place a meeple
+2026-03-11 02:01:55,896 [DEBUG] game: Placed meeple for player Player 4 at (894, 412)
+2026-03-11 02:01:55,897 [DEBUG] game: Current player is now Player 1
+2026-03-11 02:01:55,897 [DEBUG] game: Drew tile for next turn: E
+2026-03-11 02:01:58,576 [DEBUG] game: Rotated tile E (rotation count=1)
+2026-03-11 02:01:58,738 [DEBUG] game: Rotated tile E (rotation count=2)
+2026-03-11 02:01:58,914 [DEBUG] game: Rotated tile E (rotation count=3)
+2026-03-11 02:02:00,456 [DEBUG] game: Placed tile E at (1, -1)
+2026-03-11 02:02:00,457 [DEBUG] game: Scoring region tiles: {(1, -1): [7], (0, -1): [3, 5], (0, 0): [1]}, count: 3, terrain: Terrain.City, mepple: [<src.meeple.Meeple object at 0x703a8fc67650>] for 8 points to [<src.player.Player object at 0x703a914c0b30>]
+2026-03-11 02:02:00,458 [DEBUG] game: Player Player 1 now has 8 points
+2026-03-11 02:03:01,344 [INFO] game: Starting new game
+2026-03-11 02:03:01,508 [DEBUG] game: Starting tile is D
+2026-03-11 02:03:01,509 [DEBUG] game: Drew first tile: V
+2026-03-11 02:03:02,222 [DEBUG] game: Rotated tile V (rotation count=1)
+2026-03-11 02:03:02,576 [DEBUG] game: Placed tile V at (1, 0)
+2026-03-11 02:03:03,416 [DEBUG] game: Player Player 1 is attempting to place a meeple
+2026-03-11 02:03:03,417 [DEBUG] game: Placed meeple for player Player 1 at (757, 412)
+2026-03-11 02:03:03,418 [DEBUG] game: Current player is now Player 2
+2026-03-11 02:03:03,419 [DEBUG] game: Drew tile for next turn: W
+2026-03-11 02:03:04,676 [DEBUG] game: Placed tile W at (1, -1)
+2026-03-11 02:03:05,430 [DEBUG] game: Player Player 2 is attempting to place a meeple
+2026-03-11 02:03:05,431 [DEBUG] game: Placed meeple for player Player 2 at (753, 300)
+2026-03-11 02:03:05,431 [DEBUG] game: Current player is now Player 3
+2026-03-11 02:03:05,432 [DEBUG] game: Drew tile for next turn: E
+2026-03-11 02:03:06,078 [DEBUG] game: Rotated tile E (rotation count=1)
+2026-03-11 02:03:06,240 [DEBUG] game: Rotated tile E (rotation count=2)
+2026-03-11 02:03:08,162 [DEBUG] game: Rotated tile E (rotation count=3)
+2026-03-11 02:03:08,565 [DEBUG] game: Placed tile E at (1, -2)
+2026-03-11 02:03:09,243 [DEBUG] game: Player Player 3 is attempting to place a meeple
+2026-03-11 02:03:09,244 [DEBUG] game: Placed meeple for player Player 3 at (743, 207)
+2026-03-11 02:03:09,244 [DEBUG] game: Current player is now Player 4
+2026-03-11 02:03:09,244 [DEBUG] game: Drew tile for next turn: V
+2026-03-11 02:03:10,860 [DEBUG] game: Rotated tile V (rotation count=1)
+2026-03-11 02:03:11,200 [DEBUG] game: Rotated tile V (rotation count=2)
+2026-03-11 02:03:11,491 [DEBUG] game: Placed tile V at (-1, 0)
+2026-03-11 02:03:12,888 [DEBUG] game: Player Player 4 is attempting to place a meeple
+2026-03-11 02:03:12,888 [DEBUG] game: Player Player 4 passed meeple placement
+2026-03-11 02:03:12,889 [DEBUG] game: Current player is now Player 1
+2026-03-11 02:03:12,889 [DEBUG] game: Drew tile for next turn: I
+2026-03-11 02:03:13,712 [DEBUG] game: Rotated tile I (rotation count=1)
+2026-03-11 02:03:13,874 [DEBUG] game: Rotated tile I (rotation count=2)
+2026-03-11 02:03:14,055 [DEBUG] game: Rotated tile I (rotation count=3)
+2026-03-11 02:03:16,921 [DEBUG] game: Rotated tile I (rotation count=0)
+2026-03-11 02:03:17,083 [DEBUG] game: Rotated tile I (rotation count=1)
+2026-03-11 02:03:17,244 [DEBUG] game: Rotated tile I (rotation count=2)
+2026-03-11 02:03:21,144 [DEBUG] game: Rotated tile I (rotation count=3)
+2026-03-11 02:03:21,341 [DEBUG] game: Rotated tile I (rotation count=0)
+2026-03-11 02:03:21,583 [DEBUG] game: Rotated tile I (rotation count=1)
+2026-03-11 02:03:21,892 [DEBUG] game: Placed tile I at (0, -2)
+2026-03-11 02:03:21,892 [DEBUG] game: Scoring region tiles: {(0, -2): [3], (1, -2): [7]}, count: 2, terrain: Terrain.City, mepple: [<src.meeple.Meeple object at 0x7db3ef943110>] for 4 points to [<src.player.Player object at 0x7db3ef9611f0>]
+2026-03-11 02:03:21,893 [DEBUG] game: Player Player 3 now has 4 points
+2026-03-11 02:03:25,214 [DEBUG] game: Player Player 1 is attempting to place a meeple
+2026-03-11 02:03:25,215 [DEBUG] game: Placed meeple for player Player 1 at (692, 168)
+2026-03-11 02:03:25,216 [DEBUG] game: Current player is now Player 2
+2026-03-11 02:03:25,216 [DEBUG] game: Drew tile for next turn: V
+2026-03-11 02:03:28,026 [DEBUG] game: Placed tile V at (-1, -1)
+2026-03-11 02:03:28,856 [DEBUG] game: Player Player 2 is attempting to place a meeple
+2026-03-11 02:03:28,856 [DEBUG] game: Player Player 2 passed meeple placement
+2026-03-11 02:03:28,857 [DEBUG] game: Current player is now Player 3
+2026-03-11 02:03:28,857 [DEBUG] game: Drew tile for next turn: J
+2026-03-11 02:03:30,379 [DEBUG] game: Rotated tile J (rotation count=1)
+2026-03-11 02:03:30,521 [DEBUG] game: Rotated tile J (rotation count=2)
+2026-03-11 02:03:30,806 [DEBUG] game: Placed tile J at (0, -3)
+2026-03-11 02:03:30,807 [DEBUG] game: Scoring region tiles: {(0, -3): [5], (0, -2): [1]}, count: 2, terrain: Terrain.City, mepple: [<src.meeple.Meeple object at 0x7db3ef963110>] for 4 points to [<src.player.Player object at 0x7db3f05f79b0>]
+2026-03-11 02:03:30,807 [DEBUG] game: Player Player 1 now has 4 points
+2026-03-11 02:03:32,199 [DEBUG] game: Player Player 3 is attempting to place a meeple
+2026-03-11 02:03:32,200 [DEBUG] game: Placed meeple for player Player 3 at (653, 105)
+2026-03-11 02:03:32,201 [DEBUG] game: Current player is now Player 4
+2026-03-11 02:03:32,201 [DEBUG] game: Drew tile for next turn: A
+2026-03-11 02:03:34,610 [DEBUG] game: Rotated tile A (rotation count=1)
+2026-03-11 02:03:36,980 [DEBUG] game: Rotated tile A (rotation count=2)
+2026-03-11 02:03:37,159 [DEBUG] game: Rotated tile A (rotation count=3)
+2026-03-11 02:03:38,364 [DEBUG] game: Rotated tile A (rotation count=0)
+2026-03-11 02:03:38,557 [DEBUG] game: Rotated tile A (rotation count=1)
+2026-03-11 02:03:38,909 [DEBUG] game: Placed tile A at (2, -1)
+2026-03-11 02:03:39,828 [DEBUG] game: Player Player 4 is attempting to place a meeple
+2026-03-11 02:03:39,829 [DEBUG] game: Placed meeple for player Player 4 at (895, 308)
+2026-03-11 02:03:39,829 [DEBUG] game: Current player is now Player 1
+2026-03-11 02:03:39,829 [DEBUG] game: Drew tile for next turn: O
+2026-03-11 02:03:44,182 [DEBUG] game: Placed tile O at (-2, -1)
+2026-03-11 02:03:45,025 [DEBUG] game: Player Player 1 is attempting to place a meeple
+2026-03-11 02:03:45,026 [DEBUG] game: Placed meeple for player Player 1 at (458, 304)
+2026-03-11 02:03:45,027 [DEBUG] game: Current player is now Player 2
+2026-03-11 02:03:45,027 [DEBUG] game: Drew tile for next turn: V
+2026-03-11 02:03:46,355 [DEBUG] game: Rotated tile V (rotation count=1)
+2026-03-11 02:03:46,860 [DEBUG] game: Placed tile V at (-2, 0)
+2026-03-11 02:03:47,524 [DEBUG] game: Player Player 2 is attempting to place a meeple
+2026-03-11 02:03:47,525 [DEBUG] game: Player Player 2 passed meeple placement
+2026-03-11 02:03:47,525 [DEBUG] game: Current player is now Player 3
+2026-03-11 02:03:47,526 [DEBUG] game: Drew tile for next turn: E
+2026-03-11 02:03:48,237 [DEBUG] game: Rotated tile E (rotation count=1)
+2026-03-11 02:03:48,564 [DEBUG] game: Placed tile E at (-3, -1)
+2026-03-11 02:03:49,671 [DEBUG] game: Player Player 3 is attempting to place a meeple
+2026-03-11 02:03:49,672 [DEBUG] game: Placed meeple for player Player 3 at (417, 288)
+2026-03-11 02:03:49,672 [DEBUG] game: Current player is now Player 4
+2026-03-11 02:03:49,673 [DEBUG] game: Drew tile for next turn: O
+2026-03-11 02:03:51,780 [DEBUG] game: Rotated tile O (rotation count=1)
+2026-03-11 02:03:51,925 [DEBUG] game: Rotated tile O (rotation count=2)
+2026-03-11 02:03:52,612 [DEBUG] game: Rotated tile O (rotation count=3)
+2026-03-11 02:03:53,582 [DEBUG] game: Rotated tile O (rotation count=0)
+2026-03-11 02:03:53,922 [DEBUG] game: Rotated tile O (rotation count=1)
+2026-03-11 02:03:54,087 [DEBUG] game: Rotated tile O (rotation count=2)
+2026-03-11 02:03:54,509 [DEBUG] game: Placed tile O at (-2, -2)
+2026-03-11 02:03:58,132 [DEBUG] game: Player Player 4 is attempting to place a meeple
+2026-03-11 02:03:58,133 [DEBUG] game: Player Player 4 passed meeple placement
+2026-03-11 02:03:58,133 [DEBUG] game: Current player is now Player 1
+2026-03-11 02:03:58,134 [DEBUG] game: Drew tile for next turn: O
+2026-03-11 02:04:06,815 [DEBUG] game: Placed tile O at (0, -4)
+2026-03-11 02:04:07,846 [DEBUG] game: Player Player 1 is attempting to place a meeple
+2026-03-11 02:04:07,847 [DEBUG] game: Player Player 1 passed meeple placement
+2026-03-11 02:04:07,847 [DEBUG] game: Current player is now Player 2
+2026-03-11 02:04:07,848 [DEBUG] game: Drew tile for next turn: V
+2026-03-11 02:04:09,798 [DEBUG] game: Rotated tile V (rotation count=1)
+2026-03-11 02:04:09,962 [DEBUG] game: Rotated tile V (rotation count=2)
+2026-03-11 02:04:10,403 [DEBUG] game: Rotated tile V (rotation count=3)
+2026-03-11 02:04:11,319 [DEBUG] game: Placed tile V at (-3, 0)
+2026-03-11 02:04:12,008 [DEBUG] game: Player Player 2 is attempting to place a meeple
+2026-03-11 02:04:12,008 [DEBUG] game: Player Player 2 passed meeple placement
+2026-03-11 02:04:12,009 [DEBUG] game: Current player is now Player 3
+2026-03-11 02:04:12,010 [DEBUG] game: Drew tile for next turn: C
+2026-03-11 02:04:13,546 [DEBUG] game: Placed tile C at (-1, -4)
+2026-03-11 02:04:13,868 [DEBUG] game: Player Player 3 is attempting to place a meeple
+2026-03-11 02:04:13,869 [DEBUG] game: Player Player 3 passed meeple placement
+2026-03-11 02:04:13,869 [DEBUG] game: Current player is now Player 4
+2026-03-11 02:04:13,870 [DEBUG] game: Drew tile for next turn: W
+2026-03-11 02:04:15,084 [DEBUG] game: Rotated tile W (rotation count=1)
+2026-03-11 02:04:16,054 [DEBUG] game: Placed tile W at (-3, 1)
+2026-03-11 02:04:16,054 [DEBUG] game: Scoring region tiles: {(-3, 1): [1, 8], (-3, 0): [3, 5], (-2, 0): [7, 1], (-2, -1): [5, 3], (-1, -1): [5, 7], (-1, 0): [1, 3], (1, -1): [5, 8], (1, 0): [7, 1], (0, 0): [3, 7]}, count: 9, terrain: Terrain.Road, mepple: [<src.meeple.Meeple object at 0x7db3f23ba9c0>] for 9 points to [<src.player.Player object at 0x7db3f05f79b0>]
+2026-03-11 02:04:16,055 [DEBUG] game: Player Player 1 now has 13 points
+2026-03-11 02:04:20,167 [DEBUG] game: Player Player 4 is attempting to place a meeple
+2026-03-11 02:04:20,168 [DEBUG] game: Placed meeple for player Player 4 at (355, 505)
+2026-03-11 02:04:20,168 [DEBUG] game: Current player is now Player 1
+2026-03-11 02:04:20,168 [DEBUG] game: Drew tile for next turn: V
+2026-03-11 02:04:21,023 [DEBUG] game: Rotated tile V (rotation count=1)
+2026-03-11 02:04:21,378 [DEBUG] game: Placed tile V at (-3, 2)
+2026-03-11 02:04:21,840 [DEBUG] game: Player Player 1 is attempting to place a meeple
+2026-03-11 02:04:21,840 [DEBUG] game: Player Player 1 passed meeple placement
+2026-03-11 02:04:21,841 [DEBUG] game: Current player is now Player 2
+2026-03-11 02:04:21,841 [DEBUG] game: Drew tile for next turn: A
+2026-03-11 02:04:23,736 [DEBUG] game: Placed tile A at (2, 0)
+2026-03-11 02:04:24,320 [DEBUG] game: Player Player 2 is attempting to place a meeple
+2026-03-11 02:04:24,321 [DEBUG] game: Placed meeple for player Player 2 at (895, 413)
+2026-03-11 02:04:24,321 [DEBUG] game: Current player is now Player 3
+2026-03-11 02:04:24,322 [DEBUG] game: Drew tile for next turn: K
+2026-03-11 02:04:30,241 [DEBUG] game: Rotated tile K (rotation count=1)
+2026-03-11 02:04:30,413 [DEBUG] game: Rotated tile K (rotation count=2)
+2026-03-11 02:04:30,760 [DEBUG] game: Rotated tile K (rotation count=3)
+2026-03-11 02:04:31,352 [DEBUG] game: Rotated tile K (rotation count=0)
+2026-03-11 02:04:31,552 [DEBUG] game: Rotated tile K (rotation count=1)
+2026-03-11 02:04:32,653 [DEBUG] game: Placed tile K at (-2, -4)
+2026-03-11 02:04:33,155 [DEBUG] game: Player Player 3 is attempting to place a meeple
+2026-03-11 02:04:33,155 [DEBUG] game: Player Player 3 passed meeple placement
+2026-03-11 02:04:33,156 [DEBUG] game: Current player is now Player 4
+2026-03-11 02:04:33,157 [DEBUG] game: Drew tile for next turn: None
+2026-03-11 02:04:35,763 [INFO] game: Starting new game
+2026-03-11 02:04:35,920 [DEBUG] game: Starting tile is D
+2026-03-11 02:04:35,922 [DEBUG] game: Drew first tile: V
+2026-03-11 02:04:36,671 [DEBUG] game: Placed tile V at (1, 0)
+2026-03-11 02:04:36,994 [DEBUG] game: Player Player 1 is attempting to place a meeple
+2026-03-11 02:04:36,995 [DEBUG] game: Player Player 1 passed meeple placement
+2026-03-11 02:04:36,995 [DEBUG] game: Current player is now Player 2
+2026-03-11 02:04:36,995 [DEBUG] game: Drew tile for next turn: W
+2026-03-11 02:04:38,475 [DEBUG] game: Placed tile W at (-1, 0)
+2026-03-11 02:04:39,093 [DEBUG] game: Player Player 2 is attempting to place a meeple
+2026-03-11 02:04:39,094 [DEBUG] game: Placed meeple for player Player 2 at (633, 407)
+2026-03-11 02:04:39,095 [DEBUG] game: Current player is now Player 3
+2026-03-11 02:04:39,095 [DEBUG] game: Drew tile for next turn: E
+2026-03-11 02:04:39,737 [DEBUG] game: Rotated tile E (rotation count=1)
+2026-03-11 02:04:39,881 [DEBUG] game: Rotated tile E (rotation count=2)
+2026-03-11 02:04:40,185 [DEBUG] game: Placed tile E at (0, -1)
+2026-03-11 02:04:40,766 [DEBUG] game: Player Player 3 is attempting to place a meeple
+2026-03-11 02:04:40,767 [DEBUG] game: Placed meeple for player Player 3 at (690, 355)
+2026-03-11 02:04:40,767 [DEBUG] game: Scoring region tiles: {(0, -1): [5], (0, 0): [1]}, count: 2, terrain: Terrain.City, mepple: [<src.meeple.Meeple object at 0x79f2a0383410>] for 4 points to [<src.player.Player object at 0x79f2a03a1c70>]
+2026-03-11 02:04:40,768 [DEBUG] game: Player Player 3 now has 4 points
+2026-03-11 02:04:40,769 [DEBUG] game: Current player is now Player 4
+2026-03-11 02:04:40,769 [DEBUG] game: Drew tile for next turn: C
+2026-03-11 02:04:42,088 [DEBUG] game: Rotated tile C (rotation count=1)
+2026-03-11 02:04:46,303 [INFO] game: Starting new game
+2026-03-11 02:04:46,455 [DEBUG] game: Starting tile is D
+2026-03-11 02:04:46,456 [DEBUG] game: Drew first tile: J
+2026-03-11 02:04:47,282 [DEBUG] game: Rotated tile J (rotation count=1)
+2026-03-11 02:04:48,045 [DEBUG] game: Placed tile J at (1, 0)
+2026-03-11 02:04:48,717 [DEBUG] game: Player Player 1 is attempting to place a meeple
+2026-03-11 02:04:48,717 [DEBUG] game: Placed meeple for player Player 1 at (836, 411)
+2026-03-11 02:04:48,718 [DEBUG] game: Current player is now Player 2
+2026-03-11 02:04:48,719 [DEBUG] game: Drew tile for next turn: O
+2026-03-11 02:04:49,605 [DEBUG] game: Rotated tile O (rotation count=1)
+2026-03-11 02:04:49,766 [DEBUG] game: Rotated tile O (rotation count=2)
+2026-03-11 02:04:50,106 [DEBUG] game: Placed tile O at (0, -1)
+2026-03-11 02:04:52,429 [DEBUG] game: Player Player 2 is attempting to place a meeple
+2026-03-11 02:04:52,429 [DEBUG] game: Placed meeple for player Player 2 at (736, 309)
+2026-03-11 02:04:52,430 [DEBUG] game: Current player is now Player 3
+2026-03-11 02:04:52,431 [DEBUG] game: Drew tile for next turn: V
+2026-03-11 02:04:53,972 [DEBUG] game: Placed tile V at (0, -2)
+2026-03-11 02:04:54,766 [DEBUG] game: Player Player 3 is attempting to place a meeple
+2026-03-11 02:04:54,766 [DEBUG] game: Placed meeple for player Player 3 at (691, 242)
+2026-03-11 02:04:54,767 [DEBUG] game: Current player is now Player 4
+2026-03-11 02:04:54,767 [DEBUG] game: Drew tile for next turn: I
+2026-03-11 02:04:56,410 [DEBUG] game: Placed tile I at (1, -1)
+2026-03-11 02:04:56,410 [DEBUG] game: Scoring region tiles: {(1, -1): [7], (0, -1): [3, 5], (0, 0): [1]}, count: 3, terrain: Terrain.City, mepple: [<src.meeple.Meeple object at 0x7209465a7e30>] for 8 points to [<src.player.Player object at 0x720946557fe0>]
+2026-03-11 02:04:56,411 [DEBUG] game: Player Player 2 now has 8 points
+2026-03-11 02:04:57,250 [DEBUG] game: Player Player 4 is attempting to place a meeple
+2026-03-11 02:04:57,251 [DEBUG] game: Placed meeple for player Player 4 at (796, 271)
+2026-03-11 02:04:57,251 [DEBUG] game: Current player is now Player 1
+2026-03-11 02:04:57,251 [DEBUG] game: Drew tile for next turn: W
+2026-03-11 02:04:58,508 [DEBUG] game: Rotated tile W (rotation count=1)
+2026-03-11 02:04:58,735 [DEBUG] game: Rotated tile W (rotation count=2)
+2026-03-11 02:04:58,945 [DEBUG] game: Rotated tile W (rotation count=3)
+2026-03-11 02:04:59,237 [DEBUG] game: Rotated tile W (rotation count=0)
+2026-03-11 02:04:59,412 [DEBUG] game: Rotated tile W (rotation count=1)
+2026-03-11 02:04:59,589 [DEBUG] game: Rotated tile W (rotation count=2)
+2026-03-11 02:05:00,334 [DEBUG] game: Placed tile W at (-1, -1)
+2026-03-11 02:05:00,978 [DEBUG] game: Player Player 1 is attempting to place a meeple
+2026-03-11 02:05:00,979 [DEBUG] game: Placed meeple for player Player 1 at (592, 270)
+2026-03-11 02:05:00,979 [DEBUG] game: Current player is now Player 2
+2026-03-11 02:05:00,979 [DEBUG] game: Drew tile for next turn: O
+2026-03-11 02:05:03,414 [DEBUG] game: Placed tile O at (-1, -2)
+2026-03-11 02:05:03,414 [DEBUG] game: Scoring region tiles: {(-1, -2): [5, 3], (-1, -1): [3, 8, 1, 8], (0, -2): [5, 7], (0, -1): [1, 7]}, count: 4, terrain: Terrain.Road, mepple: [<src.meeple.Meeple object at 0x7209465f1ee0>, <src.meeple.Meeple object at 0x7209459a1eb0>] for 4 points to [<src.player.Player object at 0x7209459a2090>, <src.player.Player object at 0x720945b3a120>]
+2026-03-11 02:05:03,415 [DEBUG] game: Player Player 3 now has 4 points
+2026-03-11 02:05:03,415 [DEBUG] game: Player Player 1 now has 4 points
+2026-03-11 02:05:05,681 [DEBUG] game: Player Player 2 is attempting to place a meeple
+2026-03-11 02:05:05,682 [DEBUG] game: Placed meeple for player Player 2 at (548, 212)
+2026-03-11 02:05:05,682 [DEBUG] game: Current player is now Player 3
+2026-03-11 02:05:05,683 [DEBUG] game: Drew tile for next turn: A
+2026-03-11 02:05:12,700 [DEBUG] game: Rotated tile A (rotation count=1)
+2026-03-11 02:05:12,893 [DEBUG] game: Rotated tile A (rotation count=2)
+2026-03-11 02:05:13,200 [DEBUG] game: Rotated tile A (rotation count=3)
+2026-03-11 02:05:13,633 [DEBUG] game: Placed tile A at (-2, -1)
+2026-03-11 02:05:14,649 [DEBUG] game: Player Player 3 is attempting to place a meeple
+2026-03-11 02:05:14,650 [DEBUG] game: Placed meeple for player Player 3 at (492, 311)
+2026-03-11 02:05:14,651 [DEBUG] game: Current player is now Player 4
+2026-03-11 02:05:14,651 [DEBUG] game: Drew tile for next turn: C
+2026-03-11 02:05:19,851 [DEBUG] game: Placed tile C at (-1, -3)
+2026-03-11 02:05:20,732 [DEBUG] game: Player Player 4 is attempting to place a meeple
+2026-03-11 02:05:20,733 [DEBUG] game: Player Player 4 passed meeple placement
+2026-03-11 02:05:20,733 [DEBUG] game: Current player is now Player 1
+2026-03-11 02:05:20,734 [DEBUG] game: Drew tile for next turn: O
+2026-03-11 02:05:26,524 [DEBUG] game: Placed tile O at (2, 0)
+2026-03-11 02:05:27,491 [DEBUG] game: Player Player 1 is attempting to place a meeple
+2026-03-11 02:05:27,492 [DEBUG] game: Player Player 1 passed meeple placement
+2026-03-11 02:05:27,492 [DEBUG] game: Current player is now Player 2
+2026-03-11 02:05:27,493 [DEBUG] game: Drew tile for next turn: V
+2026-03-11 02:05:28,354 [DEBUG] game: Placed tile V at (3, 0)
+2026-03-11 02:05:28,760 [DEBUG] game: Player Player 2 is attempting to place a meeple
+2026-03-11 02:05:28,760 [DEBUG] game: Player Player 2 passed meeple placement
+2026-03-11 02:05:28,761 [DEBUG] game: Current player is now Player 3
+2026-03-11 02:05:28,761 [DEBUG] game: Drew tile for next turn: W
+2026-03-11 02:05:31,187 [DEBUG] game: Rotated tile W (rotation count=1)
+2026-03-11 02:05:31,711 [DEBUG] game: Placed tile W at (3, 1)
+2026-03-11 02:05:32,360 [DEBUG] game: Player Player 3 is attempting to place a meeple
+2026-03-11 02:05:32,361 [DEBUG] game: Placed meeple for player Player 3 at (996, 464)
+2026-03-11 02:05:32,362 [DEBUG] game: Current player is now Player 4
+2026-03-11 02:05:32,362 [DEBUG] game: Drew tile for next turn: K
+2026-03-11 02:05:33,598 [DEBUG] game: Rotated tile K (rotation count=1)
+2026-03-11 02:05:33,744 [DEBUG] game: Rotated tile K (rotation count=2)
+2026-03-11 02:05:34,116 [DEBUG] game: Rotated tile K (rotation count=3)
+2026-03-11 02:05:37,589 [DEBUG] game: Placed tile K at (-1, 0)
+2026-03-11 02:05:38,825 [DEBUG] game: Player Player 4 is attempting to place a meeple
+2026-03-11 02:05:38,826 [DEBUG] game: Placed meeple for player Player 4 at (636, 410)
+2026-03-11 02:05:38,827 [DEBUG] game: Current player is now Player 1
+2026-03-11 02:05:38,827 [DEBUG] game: Drew tile for next turn: E
+2026-03-11 02:05:39,840 [DEBUG] game: Rotated tile E (rotation count=1)
+2026-03-11 02:05:40,210 [DEBUG] game: Placed tile E at (-2, 0)
+2026-03-11 02:05:40,968 [DEBUG] game: Player Player 1 is attempting to place a meeple
+2026-03-11 02:05:40,968 [DEBUG] game: Placed meeple for player Player 1 at (534, 413)
+2026-03-11 02:05:40,969 [DEBUG] game: Scoring region tiles: {(-2, 0): [3], (-1, 0): [7]}, count: 2, terrain: Terrain.City, mepple: [<src.meeple.Meeple object at 0x7209459ba840>] for 4 points to [<src.player.Player object at 0x720945b3a120>]
+2026-03-11 02:05:40,969 [DEBUG] game: Player Player 1 now has 8 points
+2026-03-11 02:05:40,970 [DEBUG] game: Current player is now Player 2
+2026-03-11 02:05:40,970 [DEBUG] game: Drew tile for next turn: E
+2026-03-11 02:05:57,077 [DEBUG] game: Rotated tile E (rotation count=1)
+2026-03-11 02:05:57,451 [DEBUG] game: Rotated tile E (rotation count=2)
+2026-03-11 02:05:58,471 [DEBUG] game: Rotated tile E (rotation count=3)
+2026-03-11 02:05:59,512 [DEBUG] game: Placed tile E at (3, -1)
+2026-03-11 02:06:00,436 [DEBUG] game: Player Player 2 is attempting to place a meeple
+2026-03-11 02:06:00,436 [DEBUG] game: Placed meeple for player Player 2 at (954, 310)
+2026-03-11 02:06:00,437 [DEBUG] game: Current player is now Player 3
+2026-03-11 02:06:00,438 [DEBUG] game: Drew tile for next turn: V
+2026-03-11 02:06:01,512 [DEBUG] game: Rotated tile V (rotation count=1)
+2026-03-11 02:06:01,686 [DEBUG] game: Rotated tile V (rotation count=2)
+2026-03-11 02:06:03,158 [DEBUG] game: Placed tile V at (2, 1)
+2026-03-11 02:06:17,029 [DEBUG] game: Player Player 3 is attempting to place a meeple
+2026-03-11 02:06:19,424 [DEBUG] game: Player Player 3 is attempting to place a meeple
+2026-03-11 02:06:19,799 [DEBUG] game: Player Player 3 is attempting to place a meeple
+2026-03-11 02:06:19,800 [DEBUG] game: Placed meeple for player Player 3 at (915, 495)
+2026-03-11 02:06:19,800 [DEBUG] game: Current player is now Player 4
+2026-03-11 02:06:19,801 [DEBUG] game: Drew tile for next turn: V
