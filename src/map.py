@@ -1,7 +1,5 @@
 from settings import *
 from src.tiles import Tile
-from src.meeple import Meeple
-from src.region import *
 
 class Tileset:
     def __init__(self, seed: int):

@@ -30,3 +30,17 @@ class HUD:
         if not game.players:
             text = self.font.render("No players", True, (255, 255, 255))
             screen.blit(text, (10, 10))
+
+        # When the game is over, show a simple overlay with instructions.
+        if getattr(game, "game_over", False):
+            overlay = pygame.Surface((screen.get_width(), screen.get_height()), pygame.SRCALPHA)
+            overlay.fill((0, 0, 0, 180))
+            screen.blit(overlay, (0, 0))
+
+            title = self.font.render("GAME OVER", True, (255, 0, 0))
+            rect = title.get_rect(center=(screen.get_width() // 2, 80))
+            screen.blit(title, rect)
+
+            hint = self.font.render("Press ESC to return to menu", True, (255, 255, 255))
+            hint_rect = hint.get_rect(center=(screen.get_width() // 2, 120))
+            screen.blit(hint, hint_rect)

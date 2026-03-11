@@ -4,7 +4,7 @@ from settings import *
 class Region:
     def __init__(self, tile_pos : tuple, region: list, terrain : Terrain):
         self.tiles = dict()
-        self.tiles[tile_pos] = region
+        self.tiles[tile_pos] = set(region)
         self.count = 1
         self.meeples : list[Meeple] = list()
         self.terrain = terrain
@@ -12,7 +12,7 @@ class Region:
         self.completed_flag = False
         
     def addTile(self, tile_pos: tuple, region : list):
-        self.tiles[tile_pos] = region
+        self.tiles[tile_pos] = set(region)
         self.count = self.count + 1
         
     def is_completed(self):
@@ -23,12 +23,13 @@ class Region:
     
     def addRegion(self, region):
         for key, value in region.tiles.items():
-            self.tiles[key] = self.tiles.get(key, []) + value
+            self.tiles[key] = self.tiles.get(key, set()) ^ value
         self.meeples = self.meeples + region.meeples
         self.count = len(list(self.tiles.items()))
         
     def addMeeple(self, meeple : Meeple):
         self.meeples.append(meeple)
+        print(f"meeple {meeple} is place in {repr(self)}")
     
     def has_owner(self):
         return bool(self.meeples)
@@ -38,7 +39,7 @@ class Region:
             return []
         counts = {}
         for meeple in self.meeples:
-            player = getattr(meeple, "player", None)
+            player = meeple.player
             if not player:
                 continue
             player.return_meeple()
@@ -50,24 +51,24 @@ class Region:
 
     def render(self, screen, image, idx):
         [mepple.render(screen, True) for mepple in self.meeples]
-        for tile_pos, region in self.tiles.items():
-            font = pygame.font.SysFont(None, 20)
-            coors = [Neighbor.render_pos[key] for key in region] 
-            text = font.render(f"{idx}", True, (0, 0, 0))
-            for coordinate in coors:
-                text_pos = (
-                    (tile_pos[0] + coordinate[0]) * image.get_width() + SCREEN_WIDTH // 2,
-                    (tile_pos[1] + coordinate[1]) * image.get_height() + SCREEN_HEIGHT // 2
-                )
-                screen.blit(text, text_pos)
+        # for tile_pos, region in self.tiles.items():
+        #     font = pygame.font.SysFont(None, 20)
+        #     coors = [Neighbor.render_pos[key] for key in region] 
+        #     text = font.render(f"{idx}", True, (0, 0, 0))
+        #     for coordinate in coors:
+        #         text_pos = (
+        #             (tile_pos[0] + coordinate[0]) * image.get_width() + SCREEN_WIDTH // 2,
+        #             (tile_pos[1] + coordinate[1]) * image.get_height() + SCREEN_HEIGHT // 2
+        #         )
+        #         screen.blit(text, text_pos)
 
     def __repr__(self):
         return f"tiles: {self.tiles}, count: {self.count}, terrain: {self.terrain}, mepple: {self.meeples}"
         
 class CityRegion(Region):
-    def __init__(self, tile_pos : tuple, region: list, tile : Tile):
+    def __init__(self, tile_pos : tuple, region: list, shield):
         super().__init__(tile_pos, region, Terrain.City)
-        self.shield = 1 if tile.shield else 0
+        self.shield = 1 if shield else 0
 
     def get_region_points(self):
         total = self.shield + self.count
@@ -75,7 +76,7 @@ class CityRegion(Region):
 
     def addRegion(self, region):
         for key, value in region.tiles.items():
-            self.tiles[key] = self.tiles.get(key, []) + value
+            self.tiles[key] = self.tiles.get(key, set()) ^ value
         self.meeples = self.meeples + region.meeples
         self.count = len(list(self.tiles.items()))
         self.shield += region.shield
