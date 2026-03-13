@@ -8,12 +8,6 @@ from src.meeple import Meeple
 from src.player import Player
 from src.region import *
 
-
-class GamePhase(Enum):
-    PlaceTile = 1
-    PlaceMeeple = 2
-
-
 class Game:
     def __init__(self, screen):
         self.screen = screen
@@ -27,7 +21,12 @@ class Game:
         self.events = list()
         self.score_events = []
         
-        self.regions_list : list[Region] = list()
+        self.regions = {
+            Terrain.Grass       : list(),
+            Terrain.City        : list(),
+            Terrain.Monastery   : list(),
+            Terrain.Road        : list(),
+        }
         self.place_positions = dict()
         
         self.hud = HUD()
@@ -77,8 +76,8 @@ class Game:
 
                     grid_pos = get_grid_position(pos, self.current_tile.image)
                     if self.place_tile(grid_pos, self.current_tile):
-                        self.addScore()
-                        self.current_phase = GamePhase.PlaceMeeple
+                        self.addRegionScore()
+                        self.changePhase()
                 elif action == "Rotate":
                     if piece is not None and hasattr(piece, "rotate"):
                         piece.rotate()
@@ -87,42 +86,35 @@ class Game:
                     if self.can_place_meeple(pos):
                         meeple = Meeple(piece, pos)
                         self.place_meeple(pos, meeple)
-                        self.addScore()
-                        self.changePlayer()
+                        self.addRegionScore()
+                        self.changePhase()
                 else:
-                    self.changePlayer()
+                    self.changePhase()
 
         for event in self.score_events[:]:
             event["remaining"] -= dt
             if event["remaining"] <= 0:
                 self.score_events.remove(event)
 
-    def addScore(self):
+    def addRegionScore(self, completed = True):
         """Award points for completed regions and remove them from tracking."""
-        completed = [r for r in self.regions_list if r.completed_flag and r.meeples]
-        for region in completed:
-            points = region.get_region_points()
-            owners = region.get_owner_players()
-            for player in owners:
-                player.add_points(points)
-                self.add_score_event(f"+{points} points for {player.name}")
-            self.regions_list.remove(region)
-
-    def addIncompleteRegionScore(self):
-        """Score any remaining regions when the game ends (partial points)."""
-        remaining = [r for r in self.regions_list if r.meeples]
-        for region in remaining:
-            points = region.get_region_points()
-            owners = region.get_owner_players()
-            for player in owners:
-                player.add_points(points)
-                self.add_score_event(
-                    f"+{points} points for {player.name} (incomplete {region.terrain.name})"
-                )
-            # Remove the region so it isn't scored twice.
-            if region in self.regions_list:
-                self.regions_list.remove(region)
-
+        for terrain, regions in self.regions.items():
+            for region in regions:
+                if not region.meeples:
+                    continue
+                if region.completed_flag or not completed:
+                    points = region.get_region_points()
+                    owners = region.get_owner_players()
+                    for player in owners:
+                        player.add_points(points)
+                        if region.completed_flag:
+                            self.add_score_event(f"+{points} points for {player.name}")
+                        else:
+                            self.add_score_event(
+                                f"+{points} points for {player.name} (incomplete {terrain.name})"
+                            )                            
+                    self.regions[terrain].remove(region)
+                    
     def end_game(self):
         """End the game due to no tiles remaining and score remaining regions."""
         if getattr(self, "game_over", False):
@@ -132,23 +124,26 @@ class Game:
         self.current_phase = None
 
         # Score any remaining completed regions first, then score incomplete ones.
-        self.addScore()
-        self.addIncompleteRegionScore()
+        self.addRegionScore()
+        self.addRegionScore(False)
         self.add_score_event("Game over! Final scores calculated.", duration=5.0)
 
-    def changePlayer(self):
+    def changePhase(self):
         """Rotate turn order and draw next tile."""
-        player = self.players.pop(0)
-        self.players.append(player)
-        self.current_player = self.players[0]
+        if self.current_phase == GamePhase.PlaceTile:
+            self.current_phase = GamePhase.PlaceMeeple
+        else:  
+            player = self.players.pop(0)
+            self.players.append(player)
+            self.current_player = self.players[0]
 
-        self.current_tile = self.tile_deck.draw_random() if hasattr(self, "tile_deck") else None
-        if self.current_tile is None:
-            # No more tiles available -> end the game and score remaining regions
-            self.end_game()
-            return
+            self.current_tile = self.tile_deck.draw_random() if hasattr(self, "tile_deck") else None
+            if self.current_tile is None:
+                # No more tiles available -> end the game and score remaining regions
+                self.end_game()
+                return
 
-        self.current_phase = GamePhase.PlaceTile        
+            self.current_phase = GamePhase.PlaceTile        
 
     def handle_event(self, event):
         # Allow exiting to menu when game is over
@@ -189,10 +184,9 @@ class Game:
     def render(self):
         if not self.running:
             return
+        
         self.screen.fill((50, 50, 50))
-        
         self.map.render(self.screen)
-        
         
         tile_image = getattr(self.current_tile, "image", None)
 
@@ -203,9 +197,8 @@ class Game:
             for pos in self.place_positions:
                 pygame.draw.circle(self.screen, (200, 0, 0), pos, 10)
 
-        for idx, region in enumerate(self.regions_list):
-            # print(region.__repr__())
-            region.render(self.screen, tile_image, idx)
+        for region in [r for rl in list(self.regions.values()) for r in rl]:  
+            region.render(self.screen)
         
         # draw the HUD over the map
         if hasattr(self, 'hud'):
@@ -240,9 +233,7 @@ class Game:
         grid_pos = get_grid_position(pos, self.current_tile.image)
 
         terrain, region_pos = self.place_positions[closest]        
-        for region in self.regions_list[::-1]:
-            if region.terrain != terrain:
-                continue
+        for region in self.regions[terrain][::-1]:
             if region_pos in region.tiles.get(grid_pos, None):
                 region.addMeeple(meeple)
                 self.current_player.place_meeple()
@@ -262,13 +253,12 @@ class Game:
 
     def updateRegion(self, pos):
         self.place_positions.clear()
-        tile = self.map.get_tile(*pos)
+        tile = self.current_tile
         if tile is None:
             return
-        for x in self.regions_list:
-            if type(x) is MonasteryRegion:
-                x.update(pos)
-                x.is_completed()
+        for x in self.regions[Terrain.Monastery]:
+            x.update(pos)
+            x.is_completed()
 
         
         for terrain, tile_regions in tile.region.items():
@@ -277,20 +267,31 @@ class Game:
                     new_region = self.addMonasteryRegion(tile_region, pos)
                 else:
                     new_region = self.addRegion(terrain, tile_region, pos)
+                self.regions[terrain].append(new_region)
                 new_region.is_completed()
-                if not new_region.meeples:
-                    coor = Neighbor().render_pos[tile_region[0]]
-                    placeholder_pos = (
-                        int((pos[0] + coor[0]) * tile.image.get_width() + SCREEN_WIDTH // 2),
-                        int((pos[1] + coor[1]) * tile.image.get_height() + SCREEN_HEIGHT // 2),
-                    )
-                    print(placeholder_pos, pos)
-                    self.place_positions[placeholder_pos] = (terrain, tile_region[0])
-        
-        print("----------------------------------")
-        print([repr(x) for x in self.regions_list])
 
-
+                if new_region.meeples:
+                    continue
+                
+                coor = Neighbor().render_pos[tile_region[0]]
+                placeholder_pos = (
+                    int((pos[0] + coor[0]) * tile.image.get_width() + SCREEN_WIDTH // 2),
+                    int((pos[1] + coor[1]) * tile.image.get_height() + SCREEN_HEIGHT // 2),
+                )
+                self.place_positions[placeholder_pos] = (terrain, tile_region[0])
+                    
+        # for grass, city in tile.adjency:
+        #     print(grass, city)
+        #     grass_region : GrassRegion = next(filter(
+        #         lambda x : x.tiles.get(pos, None) and grass[0] in x.tiles[pos]
+        #         , self.regions[Terrain.Grass][::-1]), None)
+        #     city_region : CityRegion = next(filter(
+        #         lambda x : x.tiles.get(pos, None) and city[0] in x.tiles[pos] and x.completed_flag
+        #         , self.regions[Terrain.City][::-1]), None)
+        #     # print(city_region)
+        #     if grass_region and city_region:
+        #         grass_region.addAdjencyCityRegion(city_region)
+            
     def addRegion(self, terrain, positions: list, tile_pos):
         x, y = tile_pos
         match terrain:
@@ -310,13 +311,12 @@ class Game:
                 neighbor_pos_list = Neighbor.get_neighbor_pos(positions, (dx, dy))
                 for neighbor_pos in neighbor_pos_list:
                     result : Region = next(filter(
-                        lambda reg : reg.terrain == terrain and neighbor_pos in reg.tiles.get((x + dx, y + dy), []), self.regions_list
-                    ), None)
-                    if result:
-                        
-                        new_region.addRegion(result)
-                        self.regions_list.remove(result)
-        self.regions_list.append(new_region)
+                        lambda reg : neighbor_pos in reg.tiles.get((x + dx, y + dy), []), 
+                        self.regions[terrain]), None)
+                    if not result:
+                        continue
+                    new_region.addRegion(result)
+                    self.regions[terrain].remove(result)
         return new_region
 
     def addMonasteryRegion(self, positions: list, tile_pos):
@@ -325,6 +325,5 @@ class Game:
         for dx, dy in [(-1, -1), (0, -1), (1, -1), (1, 0), (1, 1), (0, 1), (-1, 1), (-1, 0)]:
             if self.map.get_tile(x + dx, y + dy):
                 new_region.update((x + dx, y + dy))
-        self.regions_list.append(new_region)
         return new_region
 
