@@ -5,7 +5,7 @@ from src.assetloader import *
 
 
 class Tile:
-    def __init__(self, tile_type):
+    def __init__(self, tile_type = None):
         self.tile_type = tile_type
         self.image = get_image(tile_type, "Tile")
         self.shield = False
@@ -35,6 +35,10 @@ class Tile:
             SCREEN_WIDTH // 2 + pos[0] * tw,
             SCREEN_HEIGHT // 2 + pos[1] * th,
         )
+        if not self.tile_type:
+            pygame.draw.rect(screen, (255, 255, 255), pygame.Rect(new_pos[0], new_pos[1], tw, th), 2)            
+            return
+
         rotated_image = pygame.transform.rotate(image, - 90 * self.rotate_count)
         if not_place:
             rotated_image.set_alpha(100)  # make it semi-transparent

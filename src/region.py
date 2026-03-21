@@ -53,19 +53,9 @@ class Region:
 
     def render(self, screen):
         [mepple.render(screen, True) for mepple in self.meeples]
-        # for tile_pos, region in self.tiles.items():
-        #     font = pygame.font.SysFont(None, 20)
-        #     coors = [Neighbor.render_pos[key] for key in region] 
-        #     text = font.render(f"{idx}", True, (0, 0, 0))
-        #     for coordinate in coors:
-        #         text_pos = (
-        #             (tile_pos[0] + coordinate[0]) * image.get_width() + SCREEN_WIDTH // 2,
-        #             (tile_pos[1] + coordinate[1]) * image.get_height() + SCREEN_HEIGHT // 2
-        #         )
-        #         screen.blit(text, text_pos)
 
-    # def __repr__(self):
-    #     return f"tiles: {self.tiles}, count: {self.count}, mepple: {self.meeples}"
+    def __repr__(self):
+        return f"{type(self)}: count: {self.count}, mepple: {self.meeples}"
         
 class CityRegion(Region):
     def __init__(self, tile_pos : tuple, region: list, shield):
@@ -149,16 +139,60 @@ class GrassRegion(Region):
     def __init__(self, tile_pos : tuple, region: list):
         super().__init__(tile_pos, region)
         self.adjency_cities = set()
-    
-    def addAdjencyCityRegion(self, region: CityRegion):
-        self.adjency_cities.add(region)
-        print(self.adjency_cities)
+
+    @staticmethod
+    def _positions_touch(pos_a, pos_b):
+        # Defines tile-local adjacency of edge/corner positions
+        adjacent = {
+            0: {1, 7},
+            1: {0, 2},
+            2: {1, 3},
+            3: {2, 4},
+            4: {3, 5},
+            5: {4, 6},
+            6: {5, 7},
+            7: {6, 0},
+            8: set(range(0, 8)),
+        }
+        for a in pos_a:
+            for b in pos_b:
+                if b in adjacent.get(a, set()) or a in adjacent.get(b, set()):
+                    return True
+        return False
+
+    def is_adjacent_to(self, city_region):
+        direction_by_delta = {(0, -1): 1, (1, 0): 3, (0, 1): 5, (-1, 0): 7}
+        opposite_edge = {1: 5, 3: 7, 5: 1, 7: 3}
+
+        # Same-tile adjacency
+        for grass_tile, grass_pos in self.tiles.items():
+            city_pos = city_region.tiles.get(grass_tile)
+            if city_pos and self._positions_touch(grass_pos, city_pos):
+                return True
+
+        # Cross-tile adjacency along cardinal edges
+        for grass_tile, grass_pos in self.tiles.items():
+            for city_tile, city_pos in city_region.tiles.items():
+                dx = city_tile[0] - grass_tile[0]
+                dy = city_tile[1] - grass_tile[1]
+                direction = direction_by_delta.get((dx, dy))
+                if not direction:
+                    continue
+                opposite = opposite_edge[direction]
+                if direction in grass_pos and opposite in city_pos:
+                    return True
+
+        return False
+
+    def updateAdjencyCities(self, cities_list : list):
+        # self.adjency_cities.clear()
+        for city in cities_list:
+            if self.is_adjacent_to(city):
+                self.adjency_cities.add(city)
+
     def get_region_points(self):
-        print(self.adjency_cities)
-        # if not self.adjency_cities: 
-        #     return 0
-        # finished_cities = len([c for c in list(self.adjency_cities) if c.completed_flag])
-        finished_cities = len(list(self.adjency_cities))
+        # print(self.adjency_cities)
+        finished_cities = len(self.adjency_cities)
         return finished_cities * 3
         
 class MonasteryRegion(Region):

@@ -55,7 +55,7 @@ def get_image(type, assets):
     if entry and 'image' in entry:
         return entry['image']
 
-    surf = pygame.Surface((50, 50), pygame.SRCALPHA)
+    surf = pygame.Surface((100, 100), pygame.SRCALPHA)
     surf.fill((200, 0, 0))
     return surf
 
