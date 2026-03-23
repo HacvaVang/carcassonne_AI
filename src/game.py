@@ -7,6 +7,8 @@ from src.hud import HUD
 from src.meeple import Meeple
 from src.player import Player
 from src.region import *
+from src import Terrain, GamePhase, Color
+from AI_agent.MCTS.mcts_player import MCTSPlayer
 
 class Game:
     def __init__(self, screen):
@@ -27,8 +29,10 @@ class Game:
             Terrain.Monastery   : list(),
             Terrain.Road        : list(),
         }
+            
         self.complete_cities = list()
         self.place_positions = dict()
+        self.avaliable_moves = dict()
         
         self.hud = HUD()
         self.map = Map()
@@ -43,11 +47,34 @@ class Game:
         self.tile_deck = TileDeck()
         self.current_tile = self.tile_deck.getStartingTile()
         self.place_tile((0, 0), self.current_tile, True)
-        self.current_tile = self.tile_deck.draw_random()
-        self.players = [Player(f"Player {i+1}", list(Color.color.keys())[i]) for i in range(4)]
+        self.current_tile = self.drawTile()
+        self.players = [Player(f"Player", list(Color.color.keys())[1])] + [MCTSPlayer(f"AI Player", list(Color.color.keys())[0])]
         self.current_player = self.players[0]
         self.current_phase = GamePhase.PlaceTile
 
+    def drawTile(self):
+        flag = True
+        while flag:
+            tile : Tile = self.tile_deck.getRandomTile()
+            if not tile:
+                return None
+            self.getAvaliableMoves(tile)
+            if not self.checkAvaliableMoves():
+                self.tile_deck.returnToTileDeck(tile)
+            else:
+                flag = False
+        return tile
+    
+    def getAvaliableMoves(self, tile : Tile):
+        for _ in range(4):
+            moves = self.map.get_placeable_positon(tile)
+            if moves:
+                self.avaliable_moves[tile.rotate_count] = moves
+            tile.rotate()
+            
+    def checkAvaliableMoves(self):
+        return True if self.avaliable_moves else False
+    
     def update(self, dt):
         if not self.running:
             return
@@ -82,7 +109,6 @@ class Game:
                 elif action == "Rotate":
                     if piece is not None and hasattr(piece, "rotate"):
                         piece.rotate()
-                        self.map.update_placeable_pos(piece)
             elif self.current_phase == GamePhase.PlaceMeeple:
                 if action == "Place":
                     if self.can_place_meeple(pos):
@@ -93,6 +119,24 @@ class Game:
                 else:
                     self.changePhase()
 
+        # Handle AI turns
+        if not self.game_over and isinstance(self.current_player, MCTSPlayer):
+            if self.current_phase == GamePhase.PlaceTile:
+                action = self.current_player.choose_tile_action(self)
+                if action:
+                    # Rotate the tile
+                    for _ in range(action.rotation):
+                        self.current_tile.rotate()
+                    # Place the tile
+                    if self.place_tile(action.tile_pos, self.current_tile):
+                        self.addRegionScore()
+                        self.changePhase()
+            elif self.current_phase == GamePhase.PlaceMeeple:
+                action = self.current_player.choose_meeple_action(self)
+                # For now, always skip meeple placement
+                self.changePhase()
+
+        # always age score events
         for event in self.score_events[:]:
             event["remaining"] -= dt
             if event["remaining"] <= 0:
@@ -100,7 +144,7 @@ class Game:
 
     def addRegionScore(self, end_phase = False):
         for terrain, regions in self.regions.items():
-            print(regions)
+            # print(regions)
 
             if terrain == Terrain.Grass and not end_phase:
                 continue
@@ -124,7 +168,7 @@ class Game:
                     
                     
                     
-    def end_game(self):
+    def endGame(self):
         """End the game due to no tiles remaining and score remaining regions."""
         if getattr(self, "game_over", False):
             return
@@ -142,16 +186,18 @@ class Game:
         if self.current_phase == GamePhase.PlaceTile:
             self.current_phase = GamePhase.PlaceMeeple
         else:  
+            self.avaliable_moves.clear()
+            self.place_positions.clear()
+            
             player = self.players.pop(0)
             self.players.append(player)
             self.current_player = self.players[0]
 
-            self.current_tile = self.tile_deck.draw_random() if hasattr(self, "tile_deck") else None
+            self.current_tile = self.drawTile()
             if self.current_tile is None:
                 # No more tiles available -> end the game and score remaining regions
-                self.end_game()
+                self.endGame()
                 return
-            self.map.update_placeable_pos(self.current_tile)
             self.current_phase = GamePhase.PlaceTile
 
     def handle_event(self, event):
@@ -189,29 +235,6 @@ class Game:
             "remaining": duration,
             "duration": duration,
         })
-
-    def render(self):
-        if not self.running:
-            return
-        
-        self.screen.fill((50, 50, 50))
-        self.map.render(self.screen)
-        
-        tile_image = getattr(self.current_tile, "image", None)
-
-        if self.current_phase == GamePhase.PlaceTile and tile_image is not None:
-            pos = get_grid_position(pygame.mouse.get_pos(), tile_image)
-            self.current_tile.render(self.screen, pos, not_place=True)
-        else:
-            for pos in self.place_positions:
-                pygame.draw.circle(self.screen, (200, 0, 0), pos, 10)
-
-        for region in [r for rl in list(self.regions.values()) for r in rl]:  
-            region.render(self.screen)
-        
-        # draw the HUD over the map
-        if hasattr(self, 'hud'):
-            self.hud.render(self.screen, self)
 
     def can_place_meeple(self, pos):
         if self.current_player.meeples == 0:
@@ -252,16 +275,16 @@ class Game:
         if tile is None:
             return False
 
-        if not start_tile and not self.map.can_set_tile(pos):
+        if not start_tile and not (pos in self.avaliable_moves.get(tile.rotate_count, [])):
             return False
 
         self.map.place_tile(pos, tile)
-        self.updateRegion(pos)
+        self.updateRegion(pos, start_tile)
         return True
 
 
-    def updateRegion(self, pos):
-        self.place_positions.clear()
+    def updateRegion(self, pos, start_tile = False):
+        
         tile = self.current_tile
         if tile is None:
             return
@@ -282,27 +305,15 @@ class Game:
                 if terrain == Terrain.City and new_region.completed_flag:
                     self.complete_cities.append(new_region)
                 
-                if new_region.meeples:
+                if start_tile or new_region.meeples:
                     continue
-                
+                                
                 coor = Neighbor().render_pos[tile_region[0]]
                 placeholder_pos = (
                     int((pos[0] + coor[0]) * tile.image.get_width() + SCREEN_WIDTH // 2),
                     int((pos[1] + coor[1]) * tile.image.get_height() + SCREEN_HEIGHT // 2),
                 )
                 self.place_positions[placeholder_pos] = (terrain, tile_region[0])
-                    
-        # for grass, city in tile.adjency:
-        #     print(grass, city)
-        #     grass_region : GrassRegion = next(filter(
-        #         lambda x : x.tiles.get(pos, None) and grass[0] in x.tiles[pos]
-        #         , self.regions[Terrain.Grass][::-1]), None)
-        #     city_region : CityRegion = next(filter(
-        #         lambda x : x.tiles.get(pos, None) and city[0] in x.tiles[pos] and x.completed_flag
-        #         , self.regions[Terrain.City][::-1]), None)
-        #     # print(city_region)
-        #     if grass_region and city_region:
-        #         grass_region.addAdjencyCityRegion(city_region)
             
     def addRegion(self, terrain, positions: list, tile_pos):
         x, y = tile_pos
@@ -338,4 +349,30 @@ class Game:
             if self.map.get_tile(x + dx, y + dy):
                 new_region.update((x + dx, y + dy))
         return new_region
+    
+    def render(self):
+        if not self.running:
+            return
+        
+        self.screen.fill((50, 50, 50))
+        self.map.render(self.screen)
+        
+        tile_image = getattr(self.current_tile, "image", None)
+
+        if self.current_phase == GamePhase.PlaceTile and tile_image is not None:
+            pos = get_grid_position(pygame.mouse.get_pos(), tile_image)
+            self.current_tile.render(self.screen, pos, not_place=True)
+            
+            for pos in self.avaliable_moves.get(self.current_tile.rotate_count, []):
+                Tile().render(self.screen, pos)
+        else:
+            for pos in self.place_positions:
+                pygame.draw.circle(self.screen, (200, 0, 0), pos, 10)
+
+        for region in [r for rl in list(self.regions.values()) for r in rl]:  
+            region.render(self.screen)
+        
+        # draw the HUD over the map
+        if hasattr(self, 'hud'):
+            self.hud.render(self.screen, self)
 

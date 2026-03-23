@@ -1,5 +1,6 @@
 from settings import *
 from src.tiles import Tile
+from src import Neighbor
 
 class Tileset:
     def __init__(self, seed: int):
@@ -9,10 +10,6 @@ class Map:
     def __init__(self):
         self.tileset = {}
         self.adjency_tile : set = {(0, 0)}
-        self.placeable_pos : set = set()
-        
-    def can_set_tile(self, pos):
-        return pos in self.placeable_pos    
         
     def can_place_tile(self, pos : tuple, tile : Tile):
         x, y = pos
@@ -43,8 +40,6 @@ class Map:
             lambda pos : self.can_place_tile(pos, tile), self.adjency_tile
         ))
         
-    def update_placeable_pos(self, tile : Tile):
-        self.placeable_pos = self.get_placeable_positon(tile)
 
     def get_tile(self, x, y):
         return self.tileset.get((x, y), None)
@@ -54,8 +49,7 @@ class Map:
             if not hasattr(tile, 'image'):
                 continue
             tile.render(screen, (x, y))
-        for pos in self.placeable_pos:
-            Tile().render(screen, pos)
+
 
 
             

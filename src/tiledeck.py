@@ -73,7 +73,7 @@ class TileDeck:
         self.count -= 1
         return Tile(name)
 
-    def draw_random(self):
+    def getRandomTile(self):
         """Draw a random tile from the remaining deck."""
         if self.count <= 0:
             return None
@@ -90,3 +90,8 @@ class TileDeck:
 
     def getStartingTile(self):
         return Tile(self.starting_tile)
+    
+    def returnToTileDeck(self, tile : Tile):
+        tile_name = tile.tile_type
+        self.tileset[tile_name] += 1
+        self.count += 1        

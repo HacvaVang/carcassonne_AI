@@ -1,8 +1,5 @@
-import os
-from unittest import case
-from settings import *
 from src.assetloader import *
-
+from src.ulti import Terrain
 
 class Tile:
     def __init__(self, tile_type = None):
@@ -74,18 +71,12 @@ class Tile:
                     Terrain.City : [[1]],
                     Terrain.Grass : [[0, 2], [4, 5, 6]],
                 }
-                self.adjency = [
-                    (self.region[Terrain.Grass][0], self.region[Terrain.City][0])
-                ]
             case 'E':
                 self.edges = [Terrain.City, Terrain.Grass, Terrain.Grass, Terrain.Grass]
                 self.region = {
                     Terrain.City : [[1]],
                     Terrain.Grass : [[0, 2, 3, 4, 5, 6 ,7]]
                 }
-                self.adjency = [
-                    (self.region[Terrain.Grass][0], self.region[Terrain.City][0])
-                ]
 
             case 'F':
                 self.edges = [Terrain.Grass, Terrain.City, Terrain.Grass, Terrain.City]
@@ -94,9 +85,6 @@ class Tile:
                     Terrain.City : [[3, 7]],
                     Terrain.Grass : [[0, 1, 2], [4, 5, 6]],
                 }
-                self.adjency = [
-                    (self.region[Terrain.Grass][0], self.region[Terrain.City][0])
-                ]
 
             case 'G':
                 self.edges = [Terrain.Grass, Terrain.City, Terrain.Grass, Terrain.City]

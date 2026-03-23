@@ -1,6 +1,7 @@
 from src.tiles import Tile
 from src.meeple import Meeple
 from settings import *
+from src import Neighbor
 class Region:
     def __init__(self, tile_pos : tuple, region: list):
         self.tiles = dict()
