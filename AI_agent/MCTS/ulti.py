@@ -82,7 +82,7 @@ class CarcassonneState:
     def get_score(self, player_index) -> int:
         return self.players[player_index].score
 
-    def get_possible_actions(self) -> list[Action]:
+    def get_possible_actions(self) -> list["Action"]:
         if self.is_terminal():
             return []
 
@@ -123,7 +123,6 @@ class CarcassonneState:
             self.current_phase = GamePhase.PlaceTile
 
     def simulate_action(self, action):
-        print("Copying state for simulation")
         next_state = copy.deepcopy(self)
 
         if next_state.current_phase == GamePhase.PlaceTile:
@@ -186,7 +185,6 @@ class Node:
     # ROLLOUT PHASE
     # -------------------------------------------------------
     def rollout(self):
-        print("Starting rollout, copying state")
         state : CarcassonneState = copy.deepcopy(self.state)
         while not state.is_terminal():
             actions = state.get_possible_actions()
