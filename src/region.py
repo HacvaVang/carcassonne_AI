@@ -8,7 +8,7 @@ class Region:
         self.tiles[tile_pos] = set(region)
         self.count = 1
         self.meeples : list[Meeple] = list()
-        self.intial_pos = tile_pos
+        self.initial_pos = tile_pos
         self.completed_flag = False
         
     def addTile(self, tile_pos: tuple, region : list):
@@ -55,6 +55,16 @@ class Region:
     def render(self, screen):
         [mepple.render(screen, True) for mepple in self.meeples]
 
+    def get_info_state(self):
+        return {
+            'type': type(self).__name__,
+            'tiles': self.tiles,
+            'count': self.count,
+            'meeples': [m.get_info_state() for m in self.meeples],
+            'initial_pos': self.initial_pos,
+            'completed_flag': self.completed_flag
+        }
+
     def __repr__(self):
         return f"{type(self)}: count: {self.count}, mepple: {self.meeples}"
         
@@ -77,12 +87,17 @@ class CityRegion(Region):
     def addTile(self, tile_pos: tuple, region : list, tile : Tile):
         self.tiles[tile_pos] = region
         self.setCount()
-        self.shield = self.shield + 1 if tile.shield else self.shield 
+        self.shield = self.shield + 1 if tile.shield else self.shield
+
+    def get_info_state(self):
+        info = super().get_info_state()
+        info['shield'] = self.shield
+        return info 
         
     def is_completed(self):
         visited_mask = dict.fromkeys(self.tiles.keys(), 0)
-        visited_mask[self.intial_pos] = 1
-        queue = [self.intial_pos]
+        visited_mask[self.initial_pos] = 1
+        queue = [self.initial_pos]
         
         flag = True
         
@@ -111,7 +126,7 @@ class RoadRegion(Region):
         return self.count
     
     def is_completed(self):
-        start, end = self.tiles[self.intial_pos]
+        start, end = self.tiles[self.initial_pos]
         def road_traversal(travel_pos, travel_tile, intial_tile):
             if travel_pos == 8:
                 return 0
@@ -127,10 +142,10 @@ class RoadRegion(Region):
             travel_pos = next(filter(lambda x : x not in Neighbor.neighbor_region[(dx, dy)], neighbor_pos), -1)
             return road_traversal(travel_pos, neighbor_tile, intial_tile)
         
-        result = road_traversal(start, self.intial_pos, self.intial_pos)
+        result = road_traversal(start, self.initial_pos, self.initial_pos)
         match result:
             case 0:
-                self.completed_flag = (road_traversal(end, self.intial_pos, self.intial_pos) == 0)
+                self.completed_flag = (road_traversal(end, self.initial_pos, self.initial_pos) == 0)
             case -1:
                 self.completed_flag = False
             case 1:
@@ -208,7 +223,7 @@ class MonasteryRegion(Region):
     
     def update(self, tile_pos):
         x, y = tile_pos
-        x_, y_ = self.intial_pos
+        x_, y_ = self.initial_pos
         if abs(x - x_) <= 1 and abs(y - y_) <= 1 and not self.tiles.get(tile_pos, None):
             self.addTile(tile_pos, [8])
             

@@ -13,3 +13,9 @@ class Meeple:
             screen.blit(self.image, self.rect)
         else:
             pygame.draw.circle(screen, self.player.color, self.position, 15)
+
+    def get_info_state(self):
+        return {
+            'player': self.player,
+            'position': self.rect.center
+        }

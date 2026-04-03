@@ -15,7 +15,7 @@ def mcts_search(root_state, iterations=1000):
         leaf = root.select()
 
         # Expansion
-        if not leaf.state.is_terminal():
+        if not leaf.get_state().is_terminal():
             leaf = leaf.expand()
             if leaf is None:
                 continue

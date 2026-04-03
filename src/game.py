@@ -1,3 +1,4 @@
+import threading
 from enum import Enum
 
 from src.map import Map
@@ -16,7 +17,7 @@ class Game:
         self.running = False
         
         self.players = []  # list of Player instances
-        self.current_player = None  # index of whose turn it is
+        self.current_player_index = 0  # index of whose turn it is
         self.current_phase = None
         
         self.current_tile = None
@@ -41,6 +42,10 @@ class Game:
         self.game_over = False
         self.game_over_message = ""
 
+        # AI thinking state
+        self.ai_thinking = False
+        self.pending_action = None
+
     def start(self):
         self.running = True
 
@@ -49,8 +54,12 @@ class Game:
         self.place_tile((0, 0), self.current_tile, True)
         self.current_tile = self.drawTile()
         self.players = [Player(f"Player", list(Color.color.keys())[1])] + [MCTSPlayer(f"AI Player", list(Color.color.keys())[0])]
-        self.current_player = self.players[0]
+        # self.players = [Player(f"Player", list(Color.color.keys())[1])] + [Player(f"AI Player", list(Color.color.keys())[3])]
+        self.current_player_index = 0
         self.current_phase = GamePhase.PlaceTile
+
+    def isGameOver(self):
+        return self.game_over
 
     def drawTile(self):
         flag = True
@@ -120,19 +129,32 @@ class Game:
                     self.changePhase()
 
         # Handle AI turns
-        if not self.game_over and isinstance(self.current_player, MCTSPlayer):
+        if not self.game_over and isinstance(self.players[self.current_player_index], MCTSPlayer) and not self.ai_thinking and self.pending_action is None:
+            self.ai_thinking = True
+            def ai_thread():
+                if self.current_phase == GamePhase.PlaceTile:
+                    action = self.players[self.current_player_index].choose_tile_action(self)
+                    self.pending_action = action
+                elif self.current_phase == GamePhase.PlaceMeeple:
+                    action = self.players[self.current_player_index].choose_meeple_action(self)
+                    self.pending_action = action
+                self.ai_thinking = False
+            thread = threading.Thread(target=ai_thread)
+            thread.start()
+
+        # Apply pending AI action
+        if not self.ai_thinking and self.pending_action is not None:
+            action = self.pending_action
+            self.pending_action = None
             if self.current_phase == GamePhase.PlaceTile:
-                action = self.current_player.choose_tile_action(self)
-                if action:
-                    # Rotate the tile
-                    for _ in range(action.rotation):
-                        self.current_tile.rotate()
-                    # Place the tile
-                    if self.place_tile(action.tile_pos, self.current_tile):
-                        self.addRegionScore()
-                        self.changePhase()
+                # Rotate the tile
+                for _ in range(action.rotation):
+                    self.current_tile.rotate()
+                # Place the tile
+                if self.place_tile(action.tile_pos, self.current_tile):
+                    self.addRegionScore()
+                    self.changePhase()
             elif self.current_phase == GamePhase.PlaceMeeple:
-                action = self.current_player.choose_meeple_action(self)
                 # For now, always skip meeple placement
                 self.changePhase()
 
@@ -189,9 +211,7 @@ class Game:
             self.avaliable_moves.clear()
             self.place_positions.clear()
             
-            player = self.players.pop(0)
-            self.players.append(player)
-            self.current_player = self.players[0]
+            self.current_player_index = (self.current_player_index + 1) % len(self.players)
 
             self.current_tile = self.drawTile()
             if self.current_tile is None:
@@ -201,6 +221,10 @@ class Game:
             self.current_phase = GamePhase.PlaceTile
 
     def handle_event(self, event):
+        # Ignore input while AI is thinking
+        if getattr(self, 'ai_thinking', False):
+            return
+
         # Allow exiting to menu when game is over
         if getattr(self, "game_over", False):
             if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
@@ -220,7 +244,7 @@ class Game:
                     game_event["action"] = "Rotate"
 
             elif self.current_phase == GamePhase.PlaceMeeple:
-                game_event["piece"] = self.current_player
+                game_event["piece"] = self.players[self.current_player_index]
                 if event.button == 1:
                     game_event["action"] = "Place"
                 elif event.button == 3:
@@ -237,7 +261,7 @@ class Game:
         })
 
     def can_place_meeple(self, pos):
-        if self.current_player.meeples == 0:
+        if self.players[self.current_player_index].meeples == 0:
             return False
 
         # Define a click radius around the placeholder dots.
@@ -268,7 +292,7 @@ class Game:
         for region in self.regions[terrain][::-1]:
             if region_pos in region.tiles.get(grid_pos, None):
                 region.addMeeple(meeple)
-                self.current_player.place_meeple()
+                self.players[self.current_player_index].place_meeple()
                 break
 
     def place_tile(self, pos, tile: Tile | None = None, start_tile = False) -> bool:
