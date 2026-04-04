@@ -13,15 +13,14 @@ import pygame
 class HUD:
     """Heads-Up Display for showing game info like scores, turn order, etc."""
     def __init__(self):
-        self.font = pygame.font.Font("assets/font/led_board-7.ttf" , 30)
+        self.font = pygame.font.Font("assets/font/Squares.otf" , 30)
+        self.score_font = pygame.font.Font("assets/font/Squares.otf", 60)
         self.player_font = None
 
     def render(self, screen, game):
         """Draw the HUD elements onto the screen."""
-        # show all player names and scores in a horizontal row at the top
         if game.players:
             screen_width = screen.get_width()
-            box_width = 240
             box_height = 80
             box_y = 10
             num_players = len(game.players)
@@ -31,38 +30,45 @@ class HUD:
             current_player_idx = game.current_player_index if hasattr(game, 'current_player_index') else -1
             
             for idx, player in enumerate(game.players):
-                # Create two lines of text
-                top_text_str = f"{player.name}: {player.score}"
-                bottom_text_str = f"Meeples: {player.meeples}"
+                # Render texts separately
+                score_text = self.score_font.render(str(player.score), True, player.color)
+                name_text = self.font.render(player.name, True, player.color)
+                meeples_text = self.font.render(f"{player.meeples}", True, player.color)
                 
-                top_text = self.font.render(top_text_str, True, player.color)
-                bottom_text = self.font.render(bottom_text_str, True, player.color)
+                # Calculate scalable box width for the score alone
+                score_pad_x = 20
+                score_box_width = score_text.get_width() + score_pad_x * 2
                 
-                # Calculate centered position for this player's box
-                box_x = (idx + 1) * box_spacing - box_width / 2
+                # Calculate total width to keep the player info centered
+                right_text_width = max(name_text.get_width(), meeples_text.get_width())
+                total_block_width = score_box_width + 15 + right_text_width
                 
-                # Draw rounded box around score
-                box_rect = pygame.Rect(box_x, box_y, box_width, box_height)
+                block_x = (idx + 1) * box_spacing - total_block_width / 2
+                
+                # Draw rounded box ONLY around score
+                score_box_rect = pygame.Rect(block_x, box_y, score_box_width, box_height)
                 is_current = idx == current_player_idx
                 
                 # Highlight current player
                 if is_current:
-                    # Draw glowing background for current player
-                    pygame.draw.rect(screen, (100, 100, 0), box_rect, width=0, border_radius=5)
-                    pygame.draw.rect(screen, (255, 255, 100), box_rect, width=4, border_radius=5)
+                    pygame.draw.rect(screen, (100, 100, 0), score_box_rect, width=0, border_radius=5)
+                    pygame.draw.rect(screen, player.color, score_box_rect, width=4, border_radius=5)
                 else:
-                    pygame.draw.rect(screen, (50, 50, 50), box_rect, width=0, border_radius=5)
-                    pygame.draw.rect(screen, player.color, box_rect, width=2, border_radius=5)
+                    pygame.draw.rect(screen, (255, 255, 255, 75), score_box_rect, width=0, border_radius=5)
+                    pygame.draw.rect(screen, (0, 0, 0), score_box_rect, width=4, border_radius=5)
                 
-                # Draw top text (name and score)
-                top_text_y = box_y + 10
-                top_text_x = box_x + (box_width - top_text.get_width()) // 2
-                screen.blit(top_text, (top_text_x, top_text_y))
+                # Layout: Score centered inside its box
+                score_x = block_x + score_pad_x
+                score_y = box_y + (box_height - score_text.get_height()) // 2
+                screen.blit(score_text, (score_x, score_y))
                 
-                # Draw bottom text (meeples)
-                bottom_text_y = box_y + 45
-                bottom_text_x = box_x + (box_width - bottom_text.get_width()) // 2
-                screen.blit(bottom_text, (bottom_text_x, bottom_text_y))
+                # Layout: Name and meeples on the right side of the score box
+                text_col_x = block_x + score_box_width + 15
+                name_y = box_y + 10
+                meeples_y = box_y + 45
+                
+                screen.blit(name_text, (text_col_x, name_y))
+                screen.blit(meeples_text, (text_col_x, meeples_y))
 
         # Show currently playing tile with remaining count
         if hasattr(game, 'current_tile') and game.current_tile:

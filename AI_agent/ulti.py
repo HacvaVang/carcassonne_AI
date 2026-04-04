@@ -2,9 +2,12 @@ from src.player import Player
 from src.map import Map
 from src.tiles import Tile
 from src.tiledeck import TileDeck
+from src.meeple import Meeple
 from src.region import *
-from src import Terrain, GamePhase, Color
+from src import Terrain, GamePhase, Color, Neighbor
 import copy
+from functools import reduce
+from src.game_logic import *
 
 class Action:
     def __init__(self, tile_pos=None, rotation=0, meeple_pos=None):
@@ -12,39 +15,33 @@ class Action:
         self.rotation = rotation  # 0-3
         self.meeple_pos = meeple_pos  # position for meeple, or None to skip
 
+    def __repr__(self):
+        return f"Action(tile_pos={self.tile_pos}, rot={self.rotation}, meeple={self.meeple_pos})"
+    
+    def __str__(self):
+        return self.__repr__()
+
 class CarcassonneState:
     def __init__(self, game=None):
         if game:
-            # Copy relevant parts of the game without pygame surfaces
-            self.players = copy.deepcopy(game.players)
+            memo = {}
+            # Copy all game parts cleanly using memo dict
+            self.players = copy.deepcopy(game.players, memo)
             self.current_player_index = game.current_player_index
             self.current_phase = game.current_phase
             
-            # Copy map without surfaces
-            self.map : Map = Map()
-            self.map.tileset = {}
-            for pos, tile in game.map.tileset.items():
-                copied_tile = Tile(tile.tile_type)
-                copied_tile.image = None
-                self.map.tileset[pos] = copied_tile
-            self.map.adjency_tile = set(game.map.adjency_tile)
+            # Map, TileDeck, and Regions contain Tiles, Meeples which now implement __setstate__ to handle surfaces
+            self.map = copy.deepcopy(game.map, memo)
+            self.tile_deck = copy.deepcopy(game.tile_deck, memo)
+            self.current_tile = copy.deepcopy(game.current_tile, memo)
+            self.regions = copy.deepcopy(game.regions, memo)
+            self.complete_cities = copy.deepcopy(game.complete_cities, memo)
             
-            # Copy tile_deck
-            self.tile_deck = TileDeck()
-            self.tile_deck.tileset = dict(game.tile_deck.tileset)
-            self.tile_deck.count = game.tile_deck.count
-            self.tile_deck.starting_tile = game.tile_deck.starting_tile
-            
-            # Copy current_tile
-            self.current_tile = Tile(game.current_tile.tile_type) if game.current_tile else None
-            if self.current_tile:
-                self.current_tile.image = None
-                
-            # Copy regions without surfaces
-            self.regions = copy.deepcopy({k: [r.get_info_state() for r in v] for k, v in game.regions.items()})
-            self.complete_cities = copy.deepcopy([c.get_info_state() for c in game.complete_cities])
+            self.place_positions = copy.deepcopy(game.place_positions, memo)
+            self.avaliable_moves = copy.deepcopy(game.avaliable_moves, memo)
             
             self.game_over = game.game_over
+
         else:
             # Initialize empty state
             self.players = []
@@ -60,8 +57,26 @@ class CarcassonneState:
                 Terrain.Road: [],
             }
             self.complete_cities = []
+            self.place_positions = {}
+            self.avaliable_moves = {}
             self.game_over = False
 
+    def addRegionScore(self, end_phase=False):
+        for terrain, regions in self.regions.items():
+            if terrain == Terrain.Grass and not end_phase:
+                continue
+            for region in regions[:]:
+                if region.completed_flag or end_phase:
+                    if not region.meeples:
+                        continue
+                    if terrain == Terrain.Grass:
+                        region.updateAdjencyCities(self.complete_cities)
+                    points = region.get_region_points()
+                    owners = region.get_owner_players()
+                    for player in owners:
+                        player.add_points(points)
+                    if region.completed_flag and region in self.regions[terrain]:
+                        self.regions[terrain].remove(region)
     def get_current_player(self):
         return self.players[self.current_player_index]
 
@@ -76,30 +91,201 @@ class CarcassonneState:
     def get_score(self, player_index) -> int:
         return self.players[player_index].score
 
+    def get_region_score(self, player_index) -> float:
+        """
+        Estimate the expected score from incomplete regions a player controls.
+
+        For each region:
+          - p_score  = probability the meeple WILL actually be scored
+                       (completion probability for completed bonus, else 1.0 for incomplete scoring)
+          - expected = p_score * full_value + (1 - p_score) * partial_value
+          - weighted by ownership share and discounted by meeples committed
+        """
+        target_player = self.players[player_index]
+        tiles_left = len(self.tile_deck.tiles) if hasattr(self.tile_deck, 'tiles') else 10
+        total_tiles = max(tiles_left, 1)
+        total_score = 0.0
+
+        for terrain, regions in self.regions.items():
+            for region in regions:
+                if not region.meeples or region.completed_flag:
+                    continue
+
+                # --- 1. Ownership ---
+                counts = {}
+                for meeple in region.meeples:
+                    if meeple.player:
+                        counts[meeple.player] = counts.get(meeple.player, 0) + 1
+                if not counts:
+                    continue
+                max_count = max(counts.values())
+                owners = [p for p, c in counts.items() if c == max_count]
+                if target_player not in owners:
+                    continue
+                share = 1.0 / len(owners)
+
+                base_points = region.get_region_points()
+                meeples_used = counts.get(target_player, 0)
+
+                if terrain == Terrain.City:
+                    open_edges = self._count_open_city_edges(region)
+                    completed_value = (region.shield + region.count) * 2
+                    incomplete_value = base_points
+                    # p_complete: chance the city gets closed (= scored at premium)
+                    p_complete = max(0.0, 1.0 - (open_edges / (open_edges + total_tiles * 0.3 + 1)))
+                    # Meeple is guaranteed to be scored regardless (complete or not at end)
+                    # but full bonus only if completed
+                    p_scored = 1.0  # meeple participates in scoring either way
+
+                elif terrain == Terrain.Road:
+                    open_ends = self._count_open_road_ends(region)
+                    completed_value = base_points
+                    incomplete_value = base_points
+                    p_complete = max(0.0, 1.0 - (open_ends / (open_ends + total_tiles * 0.5 + 1)))
+                    p_scored = 1.0
+
+                elif terrain == Terrain.Monastery:
+                    tiles_missing = 9 - region.count
+                    completed_value = 9
+                    incomplete_value = base_points
+                    # Fewer tiles missing AND more tiles remaining = higher chance to fill
+                    p_complete = max(0.0, 1.0 - (tiles_missing / (total_tiles + 1)))
+                    # Monastery only scores all 9 if complete; otherwise scores partial
+                    p_scored = 1.0
+
+                elif terrain == Terrain.Grass:
+                    completed_value = base_points
+                    incomplete_value = base_points * 0.5
+                    p_complete = 0.3
+                    # Grass only ever scores at game end — chance depends on game stage
+                    p_scored = min(1.0, (71 - total_tiles) / 71.0 + 0.1)
+
+                else:
+                    continue
+
+                # Expected value: blend completion bonus weighted by p_complete
+                expected_value = p_complete * completed_value + (1.0 - p_complete) * incomplete_value
+
+                # Scale by probability that the meeple actually gets scored at all
+                expected_value *= p_scored
+
+                # Meeple cost: each meeple locked into a low-p_complete region is expensive
+                # Penalty grows if many meeples are tied up in uncertain regions
+                lock_penalty = meeples_used * (1.0 - p_complete) * 0.8
+
+                total_score += share * (expected_value - lock_penalty)
+
+        return total_score
+
+    def _count_open_city_edges(self, region) -> int:
+        """Count the number of unconnected open border edges of a city region."""
+        open_edges = 0
+        for tile_pos, positions in region.tiles.items():
+            x, y = tile_pos
+            for idx, (dx, dy) in enumerate(Neighbor.neighbor.values()):
+                direction_mask = 1 << idx
+                if any(pos & direction_mask for pos in positions):
+                    if not self.map.get_tile(x + dx, y + dy):
+                        open_edges += 1
+        return open_edges
+
+    def _count_open_road_ends(self, region) -> int:
+        """Count the number of open (unconnected) road endpoints."""
+        open_ends = 0
+        for tile_pos, positions in region.tiles.items():
+            x, y = tile_pos
+            for pos in positions:
+                if pos == 8:  # center junction - always closed
+                    continue
+                if pos & 1:  # odd positions are edge-facing
+                    dx, dy = list(Neighbor.neighbor.values())[pos // 2]
+                    if not self.map.get_tile(x + dx, y + dy):
+                        open_ends += 1
+        return open_ends
+
+
     def get_possible_actions(self):
         if self.is_terminal():
             return []
 
         actions = []
-        if self.current_phase == GamePhase.PlaceTile:
-            tile = self.current_tile
-            if tile:
-                for rot in range(4):
-                    tile_copy = copy.deepcopy(tile)
-                    for _ in range(rot):
-                        tile_copy.rotate()
-                    moves = self.map.get_placeable_positon(tile_copy)
-                    for pos in moves:
-                        actions.append(Action(tile_pos=pos, rotation=rot))
-        elif self.current_phase == GamePhase.PlaceMeeple:
-            actions.append(Action(meeple_pos=None))
-            # TODO: add actual meeple placement options
+        tile = self.current_tile
+        if not tile:
+            return actions
+
+        can_place_meeple = self.players[self.current_player_index].meeples > 0
+
+        for rot in range(4):
+            tile_copy = copy.deepcopy(tile)
+            for _ in range(rot):
+                tile_copy.rotate()
+            moves = self.map.get_placeable_positon(tile_copy)
+            for pos in moves:
+                # Always offer the no-meeple action
+                actions.append(Action(tile_pos=pos, rotation=rot, meeple_pos=None))
+
+                if not can_place_meeple:
+                    continue
+
+                # Determine which tile-local positions are free (no existing meeple claim)
+                # by checking whether placing would merge with any region that already has meeples.
+                available_positions = self._get_free_meeple_positions(tile_copy, pos)
+                for meeple_key in available_positions:
+                    actions.append(Action(tile_pos=pos, rotation=rot, meeple_pos=meeple_key))
+
         return actions
 
+    def _get_free_meeple_positions(self, tile_copy, tile_pos):
+        """Return list of (terrain, region_first_pos) keys where a meeple can legally be placed.
+        A position is valid only if the corresponding region (after merging with neighbors)
+        would have no meeples in it.
+        """
+        from functools import reduce
+        x, y = tile_pos
+        free_positions = []
+
+        for terrain, tile_regions in tile_copy.region.items():
+            if terrain == Terrain.Monastery:
+                # Monastery regions can always be claimed if the tile region is free
+                for tile_region in tile_regions:
+                    free_positions.append((terrain, tile_region[0]))
+                continue
+
+            for tile_region in tile_regions:
+                first_pos = tile_region[0]
+                # Build the direction mask for this tile region
+                mask = reduce(lambda acc, ele: acc ^ Neighbor.direction_mask[ele], tile_region, 0)
+                border = tile_copy.edges
+
+                region_has_meeple = False
+                for idx, (dx, dy) in enumerate(Neighbor.neighbor.values()):
+                    if not (mask & (1 << idx)):
+                        continue
+                    neighbor_tile = self.map.get_tile(x + dx, y + dy)
+                    if not neighbor_tile:
+                        continue
+                    if terrain == Terrain.Grass and border[idx] == Terrain.City:
+                        continue
+                    # Find matching neighbor region
+                    neighbor_pos_list = Neighbor.get_neighbor_pos(tile_region, (dx, dy))
+                    for neighbor_pos in neighbor_pos_list:
+                        matching_region = next(
+                            (reg for reg in self.regions.get(terrain, [])
+                             if neighbor_pos in reg.tiles.get((x + dx, y + dy), [])),
+                            None
+                        )
+                        if matching_region and matching_region.meeples:
+                            region_has_meeple = True
+                            break
+                    if region_has_meeple:
+                        break
+
+                if not region_has_meeple:
+                    free_positions.append((terrain, first_pos))
+
+        return free_positions
+
     def change_phase(self):
-        if self.current_phase == GamePhase.PlaceTile:
-            self.current_phase = GamePhase.PlaceMeeple
-            return
 
         if len(self.players) == 0:
             self.game_over = True
@@ -116,44 +302,65 @@ class CarcassonneState:
         else:
             self.current_phase = GamePhase.PlaceTile
 
-    def simulate_action(self, action):
-        print("Copying state for simulation")
+    def simulate_action(self, action : Action):
         next_state = copy.deepcopy(self)
-
-        if next_state.current_phase == GamePhase.PlaceTile:
-            if action.tile_pos is None:
-                return next_state
-
-            tile = next_state.current_tile
-            if not tile:
-                return next_state
-
-            for _ in range(action.rotation):
-                tile.rotate()
-            next_state.map.place_tile(action.tile_pos, tile)
-            # TODO: properly update regions / scoring
-            next_state.change_phase()
-        elif next_state.current_phase == GamePhase.PlaceMeeple:
-            # no meeple placement in simplified rollout
-            next_state.change_phase()
-
+        next_state.apply_action(action)
         return next_state
     
     def apply_action(self, action):
-        if self.current_phase == GamePhase.PlaceTile:
-            if action.tile_pos is None:
-                return
-
-            tile = self.current_tile
-            if not tile:
-                return
-
-            for _ in range(action.rotation):
-                tile.rotate()
-            self.map.place_tile(action.tile_pos, tile)
-            # TODO: properly update regions / scoring
+        if action.tile_pos is None:
             self.change_phase()
-        elif self.current_phase == GamePhase.PlaceMeeple:
-            # no meeple placement in simplified rollout
-            self.change_phase()
+            return
 
+        tile = self.current_tile
+        if not tile:
+            self.change_phase()
+            return
+
+        for _ in range(action.rotation):
+            tile.rotate()
+        self.map.place_tile(action.tile_pos, tile)
+        self.updateRegion(action.tile_pos)
+
+        if action.meeple_pos is not None and action.meeple_pos in self.place_positions:
+            terrain, region_pos = self.place_positions[action.meeple_pos]
+            for region in self.regions[terrain][::-1]:
+                if any(region_pos in positions for positions in region.tiles.values()):
+                    meeple = Meeple(self.players[self.current_player_index], action.meeple_pos, is_simulation=True)
+                    region.addMeeple(meeple)
+                    self.players[self.current_player_index].place_meeple()
+                    break
+                    
+        self.addRegionScore()
+        self.change_phase()
+
+    def updateRegion(self, pos, start_tile=False):
+        self.place_positions.clear()
+        tile = self.current_tile
+        if tile is None:
+            return
+        for x in self.regions[Terrain.Monastery]:
+            x.update(pos)
+            x.is_completed()
+
+        for terrain, tile_regions in tile.region.items():
+            for tile_region in tile_regions:
+                if terrain == Terrain.Monastery:
+                    new_region = add_monastery_region(self.map, tile_region, pos)
+                else:
+                    new_region = add_region(self.regions, self.map, self.current_tile, terrain, tile_region, pos)
+                new_region.is_completed()
+                self.regions[terrain].append(new_region)
+                
+                if terrain == Terrain.City and new_region.completed_flag:
+                    self.complete_cities.append(new_region)
+
+                if start_tile or new_region.meeples:
+                    continue
+
+                self.place_positions[(terrain, tile_region[0])] = (terrain, tile_region[0])
+
+    def assignPointsAtEndOfGame(self):
+        """Assign points for remaining regions at end of game."""
+        # Score any remaining completed regions first, then score incomplete ones.
+        assign_points_at_end_of_game(self)

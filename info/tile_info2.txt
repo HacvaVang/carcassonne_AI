@@ -1,0 +1,12 @@
+# Tile deck configuration for Carcassonne AI
+# Format:
+#   STARTING_TILE <tile>
+#   <tile> <count>
+# Blank lines and lines starting with # are ignored.
+
+STARTING_TILE D
+
+# A small sample distribution (match what the game currently uses).
+
+D 10
+E 10

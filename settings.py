@@ -32,12 +32,13 @@ def resize_assets(original_size):
     height = height / DEFAULT_SCREEN_HEIGHT * SCREEN_HEIGHT
     return width, height
 
-def get_grid_position(mouse_pos, image):
-    mouse_x, mouse_y = mouse_pos
+def get_grid_position(mouse_pos, image, camera=None):
     tw, th = image.get_width(), image.get_height()
-
-    pos_place = (
+    if camera:
+        wx, wy = camera.screen_to_world(mouse_pos[0], mouse_pos[1])
+        return (int(wx // tw), int(wy // th))
+    mouse_x, mouse_y = mouse_pos
+    return (
         (mouse_x - SCREEN_WIDTH // 2) // tw,
         (mouse_y - SCREEN_HEIGHT // 2) // th,
-    )    
-    return pos_place
+    )

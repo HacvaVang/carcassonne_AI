@@ -44,11 +44,11 @@ class Map:
     def get_tile(self, x, y):
         return self.tileset.get((x, y), None)
 
-    def render(self, screen):
+    def render(self, screen, camera=None):
         for (x, y), tile in self.tileset.items():
-            if not hasattr(tile, 'image'):
+            if not hasattr(tile, 'image') or tile.image is None:
                 continue
-            tile.render(screen, (x, y))
+            tile.render(screen, (x, y), camera=camera)
 
 
 

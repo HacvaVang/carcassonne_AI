@@ -25,21 +25,42 @@ class Tile:
         for key, value in list(self.region.items()):
             self.region[key] = [[self.rotation_update(pos) for pos in group] for group in value]
 
-    def render(self, screen, pos, not_place=False):
+    def __getstate__(self):
+        state = self.__dict__.copy()
+        state['image'] = None
+        return state
+
+    def __setstate__(self, state):
+        self.__dict__.update(state)
+
+    def render(self, screen, pos, camera=None, not_place=False):
         image = self.image
         tw, th = image.get_width(), image.get_height()
-        new_pos = (
-            SCREEN_WIDTH // 2 + pos[0] * tw,
-            SCREEN_HEIGHT // 2 + pos[1] * th,
-        )
+        world_x = pos[0] * tw
+        world_y = pos[1] * th
+
+        if camera:
+            sx, sy = camera.world_to_screen(world_x, world_y)
+            draw_w = max(1, int(tw * camera.zoom))
+            draw_h = max(1, int(th * camera.zoom))
+        else:
+            sx = SCREEN_WIDTH // 2 + world_x
+            sy = SCREEN_HEIGHT // 2 + world_y
+            draw_w, draw_h = tw, th
+
         if not self.tile_type:
-            pygame.draw.rect(screen, (255, 255, 255), pygame.Rect(new_pos[0], new_pos[1], tw, th), 2)            
+            placeholder = get_image("0", "Tile")
+            if draw_w != tw or draw_h != th:
+                placeholder = pygame.transform.scale(placeholder, (draw_w, draw_h))
+            screen.blit(placeholder, (sx, sy))
             return
 
-        rotated_image = pygame.transform.rotate(image, - 90 * self.rotate_count)
+        rotated_image = pygame.transform.rotate(image, -90 * self.rotate_count)
+        if draw_w != tw or draw_h != th:
+            rotated_image = pygame.transform.scale(rotated_image, (draw_w, draw_h))
         if not_place:
-            rotated_image.set_alpha(100)  # make it semi-transparent
-        screen.blit(rotated_image, new_pos)
+            rotated_image.set_alpha(100)
+        screen.blit(rotated_image, (sx, sy))
         
 
     def set_tileinfo(self):

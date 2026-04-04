@@ -1,52 +1,57 @@
-
-EXPLOITATION_CONST = 1.414  # sqrt(2)
 import math
 import random
-import logging
 import copy
 from ..ulti import CarcassonneState, Action
+from src import GamePhase
 
-logger = logging.getLogger(__name__)
+EXPLOITATION_CONST = 3  # sqrt(2)
+
+def meeple_policy(actions):
+    """Place meeple policy when possible."""
+    if not actions:
+        return None
+    place_actions = [a for a in actions if getattr(a, 'meeple_pos', None) is not None]
+    if place_actions:
+        return random.choice(place_actions)
+    return actions[0]
 
 
 
 class Node:
-    def __init__(self, state=None, action=None, parent=None):
-        self.state = state  # Only root has state initially
-        self.action : Action = action
+    def __init__(self, state=None, parent=None, action=None, root_player_index=None):
+        self.state : CarcassonneState = state  # Only root has state initially
         self.parent : Node = parent
         self.children : list[Node] = list()
         self.visits = 0
-        self.value = 0  # total value
-
-    def get_state(self):
-        if self.state is not None:
-            return self.state
-        # Compute state by applying action to parent's state
-        if self.parent is None:
-            return None  # Should not happen
-        parent_state = self.parent.get_state()
-        self.state = parent_state.simulate_action(self.action)
-        return self.state
+        self.value = 0  # total value (always from root player's perspective)
+        self.action = action  # The action that led to this node
+        self.unvisited_actions = self.get_possible_actions() if self.state and not self.state.is_terminal() else []
+        # Track which player index is the "root" (the one we're optimising for)
+        if root_player_index is not None:
+            self.root_player_index = root_player_index
+        elif parent is not None:
+            self.root_player_index = parent.root_player_index
+        else:
+            self.root_player_index = state.current_player_index if state else 0
 
     # -------------------------------------------------------
     # SELECT PHASE
     # -------------------------------------------------------
     def select(self):
         node = self
-        while node.children:
-            node = node.best_child()
+        while node.is_fully_expanded() and node.children:
+            node = node.best_child_uct()
         return node
 
     # -------------------------------------------------------
     # EXPAND PHASE
     # -------------------------------------------------------
     def expand(self):
-        actions = self.get_possible_actions()
-        if not actions:
+        if not self.unvisited_actions:
             return None
-        action = random.choice(actions)
-        child = Node(action=action, parent=self)
+        action = self.unvisited_actions.pop()
+        child_state = self.state.simulate_action(action)
+        child = Node(state=child_state, parent=self, action=action)
         self.children.append(child)
         return child
 
@@ -54,16 +59,29 @@ class Node:
     # ROLLOUT PHASE
     # -------------------------------------------------------
     def rollout(self):
-        state : CarcassonneState = copy.deepcopy(self.get_state())
-        player_index = state.current_player_index  # The player for whom we're evaluating
+        state : CarcassonneState = copy.deepcopy(self.state)
         while not state.is_terminal():
             actions = state.get_possible_actions()
             if not actions:
                 break
+
             action = random.choice(actions)
-            state = state.simulate_action(action)
-        # Return score for the player we're evaluating
-        return state.get_score(player_index)
+            state.apply_action(action)
+        state.assignPointsAtEndOfGame()
+        # Score the final state from the root player's perspective
+        player_scores = [state.get_score(i) for i in range(len(state.players))]
+        print(f"player_scores: {player_scores}")
+        value = player_scores[self.root_player_index]
+        if len(state.players) > 1:
+            opponent_max_score = max(
+                player_scores[idx]
+                for idx in range(len(state.players))
+                if idx != self.root_player_index
+            )
+        else:
+            opponent_max_score = 0
+        print(value - opponent_max_score)
+        return value - opponent_max_score
 
     # -------------------------------------------------------
     # BACKPROPAGATE PHASE
@@ -76,15 +94,22 @@ class Node:
             
             
     def is_fully_expanded(self):
-        return len(self.children) == len(self.get_possible_actions())
+        return len(self.unvisited_actions) == 0
 
     def get_possible_actions(self):
-        return self.get_state().get_possible_actions()
+        return self.state.get_possible_actions()
 
-    def best_child(self, c=EXPLOITATION_CONST):
+    def best_child_uct(self, c=EXPLOITATION_CONST):
         if not self.children:
             return None
-        best = max(self.children, key=lambda child: child.value / child.visits + c * math.sqrt(math.log(self.visits) / child.visits) if child.visits > 0 else float('inf'))
-        return best
 
-            
+        def uct_score(child):
+            if child.visits == 0:
+                return float('inf')
+            exploit = child.value / child.visits
+            explore = c * math.sqrt(math.log(self.visits) / child.visits)
+            return exploit + explore
+
+        return max(self.children, key=uct_score)
+
+        

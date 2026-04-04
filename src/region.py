@@ -52,8 +52,8 @@ class Region:
         max_count = max(counts.values())
         return [p for p, c in counts.items() if c == max_count]
 
-    def render(self, screen):
-        [mepple.render(screen, True) for mepple in self.meeples]
+    def render(self, screen, camera=None):
+        [meeple.render(screen, True, camera) for meeple in self.meeples]
 
     def get_info_state(self):
         return {
