@@ -51,10 +51,12 @@ class HUD:
                 
                 # Highlight current player
                 if is_current:
-                    pygame.draw.rect(screen, (100, 100, 0), score_box_rect, width=0, border_radius=5)
+                    pygame.draw.rect(screen, (200, 200, 200), score_box_rect, width=0, border_radius=5)
                     pygame.draw.rect(screen, player.color, score_box_rect, width=4, border_radius=5)
                 else:
-                    pygame.draw.rect(screen, (255, 255, 255, 75), score_box_rect, width=0, border_radius=5)
+                    alpha_surface = pygame.Surface(score_box_rect.size, pygame.SRCALPHA)
+                    pygame.draw.rect(alpha_surface, (255, 255, 255, 128), alpha_surface.get_rect(), width=0, border_radius=5)
+                    screen.blit(alpha_surface, score_box_rect.topleft)
                     pygame.draw.rect(screen, (0, 0, 0), score_box_rect, width=4, border_radius=5)
                 
                 # Layout: Score centered inside its box

@@ -62,8 +62,8 @@ class Game:
         self.current_tile = self.tile_deck.getStartingTile()
         self.place_tile((0, 0), self.current_tile, True)
         self.current_tile = self.drawTile()
-        self.players = [MCTSPlayer(f"MCTS1", list(Color.color.keys())[1])] + [MCTSPlayer(f"MCTS2", list(Color.color.keys())[2])]
-        # self.players = [Player(f"Hac", list(Color.color.keys())[0])] + [MCTSPlayer(f"MCTS", list(Color.color.keys())[1])] + [RandomPlayer(f"Random", list(Color.color.keys())[2])]
+        # self.players = [MCTSPlayer(f"MCTS", list(Color.color.keys())[i]) for i in range(5)] 
+        self.players = [Player(f"Hac", list(Color.color.keys())[0])] + [MCTSPlayer(f"MCTS", list(Color.color.keys())[1])] + [RandomPlayer(f"Random", list(Color.color.keys())[2])]
         # self.players = [Player(f"Player", list(Color.color.keys())[1])] + [Player(f"AI Player", list(Color.color.keys())[3])]
         self.current_player_index = 0
         self.current_phase = GamePhase.PlaceTile
