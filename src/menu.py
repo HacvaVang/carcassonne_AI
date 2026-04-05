@@ -247,7 +247,7 @@ class Menu:
             return RandomPlayer(f"AI {index + 1}", color)
         if kind == "Minimax bot":
             return MinimaxPlayer(f"AI {index + 1}", color, depth=2)
-        return MCTSPlayer(f"AI {index + 1}", color, iterations=1000)
+        return MCTSPlayer(f"AI {index + 1}", color, iterations=500)
 
     def _apply_configured_players(self, game):
         game.players = self._build_players()

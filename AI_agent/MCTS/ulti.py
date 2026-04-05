@@ -23,7 +23,7 @@ def get_meeple_placement_probability(state):
         return 1.0
 
     # Game progress from 0.0 (start) to 1.0 (end)
-    progress = max(1.0, 1.0 - (tiles_remaining / 36.0))
+    progress = min(1.0, 1.0 - (tiles_remaining / 36.0))
     
     # Assume 7 standard meeples per player
     meeple_ratio = player.meeples / 7.0
