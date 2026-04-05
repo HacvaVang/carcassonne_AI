@@ -6,7 +6,7 @@ import pygame
 from AI_agent.MCTS.mcts_player import MCTSPlayer
 from AI_agent.minimax.minimax_player import MinimaxPlayer
 from AI_agent.random.random_player import RandomPlayer
-from settings import BASE_DIR
+from settings import BASE_DIR, ASSETS_DIR
 from src import GamePhase, Color
 from src.game import Game
 from src.hud import HUD
@@ -58,6 +58,21 @@ class Menu:
 
         self.active_game = None
         self.paused_game = None
+
+        logo_path = os.path.join(ASSETS_DIR, "logo.png")
+        if os.path.exists(logo_path):
+            try:
+                self.logo = pygame.image.load(logo_path).convert_alpha()
+                # Scale logo to a reasonable height (e.g., 160px)
+                l_w, l_h = self.logo.get_size()
+                aspect = l_w / l_h
+                target_h = 160
+                self.logo = pygame.transform.smoothscale(self.logo, (int(target_h * aspect), target_h))
+            except Exception as e:
+                print(f"Error loading logo: {e}")
+                self.logo = None
+        else:
+            self.logo = None
 
         os.makedirs(os.path.dirname(self.SAVE_FILE), exist_ok=True)
         Menu._active_menu = self
@@ -389,7 +404,7 @@ class Menu:
 
     def _layout_buttons(self):
         buttons = self._build_buttons()
-        width = min(460, max(320, self.screen.get_width() - 120))
+        width = min(300, max(320, self.screen.get_width() - 120))
         base_height = 54
         base_gap = 18
 
@@ -410,7 +425,7 @@ class Menu:
             gap = max(8, int(base_gap * scale))
             total_height = len(buttons) * height + (len(buttons) - 1) * gap
 
-        start_y = self.screen.get_height()*0.23
+        start_y = self.screen.get_height() * 0.38
         start_x = self.screen.get_width() // 2 - width // 2
 
         for index, button in enumerate(buttons):
@@ -537,6 +552,15 @@ class Menu:
             self._draw_title("Game Over", "Continue is disabled after the match ends")
         elif self.paused_game and not getattr(self.paused_game, "running", True):
             self._draw_title("Paused", "Press Continue to resume or save the current game")
+        elif self.logo:
+            # Draw logo instead of title text
+            logo_rect = self.logo.get_rect(center=(self.screen.get_width() // 2, self.screen.get_height() // 7))
+            self.screen.blit(self.logo, logo_rect)
+            
+            subtitle = "Use arrow keys or click a button"
+            subtitle_surf = self.small_font.render(subtitle, True, (200, 200, 200))
+            subtitle_rect = subtitle_surf.get_rect(center=(self.screen.get_width() // 2, logo_rect.bottom + 15))
+            self.screen.blit(subtitle_surf, subtitle_rect)
         else:
             self._draw_title("Carcassonne AI", "Use arrow keys or click a button")
 
