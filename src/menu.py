@@ -26,7 +26,7 @@ class MenuButton:
 
 class Menu:
     SAVE_FILE = os.path.join(BASE_DIR, "save.pkl")
-    AI_TYPES = ["MCTS", "Random", "Minimax"]
+    PLAYER_TYPES = ["Player", "Random bot", "Minimax bot", "MCTS bot"]
     PLAYER_COLORS = ["blue", "red", "green", "yellow", "black"]
 
     _runtime_patched = False
@@ -53,8 +53,7 @@ class Menu:
 
         self.config = {
             "total_players": 3,
-            "ai_type": "MCTS",
-            "player_kinds": ["Player", "AI", "AI", "AI", "AI"],
+            "player_kinds": ["Player", "MCTS bot", "MCTS bot", "MCTS bot", "MCTS bot"],
         }
 
         self.active_game = None
@@ -154,25 +153,31 @@ class Menu:
             if not game_self.running or getattr(game_self, "game_over", False):
                 return
 
-            if isinstance(game_self.current_player, MCTSPlayer):
+            current_player = None
+            if getattr(game_self, "players", None):
+                current_index = getattr(game_self, "current_player_index", 0)
+                if 0 <= current_index < len(game_self.players):
+                    current_player = game_self.players[current_index]
+                    game_self.current_player = current_player
+
+            if current_player is None or isinstance(current_player, MCTSPlayer):
                 return
 
-            chooser = getattr(game_self.current_player, "choose_tile_action", None)
+            chooser = getattr(current_player, "choose_action", None)
             if not callable(chooser):
                 return
 
+            action = chooser(game_self)
+            if not action:
+                return
+
             if game_self.current_phase == GamePhase.PlaceTile:
-                action = chooser(game_self)
-                if action:
-                    for _ in range(action.rotation):
-                        game_self.current_tile.rotate()
-                    if game_self.place_tile(action.tile_pos, game_self.current_tile):
-                        game_self.addRegionScore()
-                        game_self.changePhase()
+                for _ in range(action.rotation):
+                    game_self.current_tile.rotate()
+                if game_self.place_tile(action.tile_pos, game_self.current_tile):
+                    game_self.addRegionScore()
+                    game_self.changePhase()
             elif game_self.current_phase == GamePhase.PlaceMeeple:
-                meeple_chooser = getattr(game_self.current_player, "choose_meeple_action", None)
-                if callable(meeple_chooser):
-                    meeple_chooser(game_self)
                 game_self.changePhase()
 
         def patched_handle_event(game_self, event):
@@ -209,35 +214,44 @@ class Menu:
         total_players = int(self.config.get("total_players", 3))
         total_players = max(2, min(total_players, len(self.PLAYER_COLORS)))
 
-        kinds = list(self.config.get("player_kinds", []))
-        if len(kinds) < len(self.PLAYER_COLORS):
-            kinds.extend(["AI"] * (len(self.PLAYER_COLORS) - len(kinds)))
-        kinds[0] = "Player"
-
-        ai_type = self.config.get("ai_type", "MCTS")
-        ai_index = 1
+        kinds = self._normalized_player_kinds(total_players)
 
         for index in range(total_players):
             color = self.PLAYER_COLORS[index]
-            kind = "Player" if index == 0 else kinds[index]
-
-            if kind == "Player":
-                name = "Player" if index == 0 else f"Player {index + 1}"
-                players.append(Player(name, color))
-            elif ai_type == "Random":
-                players.append(RandomPlayer(f"AI {ai_index}", color))
-                ai_index += 1
-            elif ai_type == "Minimax":
-                players.append(MinimaxPlayer(f"AI {ai_index}", color, depth=3))
-                ai_index += 1
-            else:
-                players.append(MCTSPlayer(f"AI {ai_index}", color, iterations=1000))
-                ai_index += 1
+            kind = kinds[index]
+            players.append(self._create_player(kind, index, color))
 
         return players
 
+    def _normalized_player_kinds(self, total_players):
+        kinds = list(self.config.get("player_kinds", []))
+        if len(kinds) < len(self.PLAYER_COLORS):
+            kinds.extend(["MCTS bot"] * (len(self.PLAYER_COLORS) - len(kinds)))
+
+        kinds = kinds[:len(self.PLAYER_COLORS)]
+        if kinds:
+            kinds[0] = kinds[0] if kinds[0] in self.PLAYER_TYPES else "Player"
+
+        for index in range(total_players):
+            if kinds[index] not in self.PLAYER_TYPES:
+                kinds[index] = "MCTS bot"
+
+        return kinds
+
+    def _create_player(self, kind, index, color):
+        name = "Player" if index == 0 and kind == "Player" else f"Player {index + 1}"
+
+        if kind == "Player":
+            return Player(name, color)
+        if kind == "Random bot":
+            return RandomPlayer(f"AI {index + 1}", color)
+        if kind == "Minimax bot":
+            return MinimaxPlayer(f"AI {index + 1}", color, depth=2)
+        return MCTSPlayer(f"AI {index + 1}", color, iterations=1000)
+
     def _apply_configured_players(self, game):
         game.players = self._build_players()
+        game.current_player_index = 0
         game.current_player = game.players[0] if game.players else None
         if game.current_tile is not None:
             game.current_phase = GamePhase.PlaceTile
@@ -315,19 +329,18 @@ class Menu:
             current = 2
         self.config["total_players"] = current
 
-    def _toggle_player_kind(self, player_index):
-        if player_index <= 0:
+    def _cycle_player_kind(self, player_index, step=1):
+        if player_index < 0:
             return
-        kinds = list(self.config.get("player_kinds", ["Player", "AI", "AI", "AI", "AI"]))
-        if len(kinds) < len(self.PLAYER_COLORS):
-            kinds.extend(["AI"] * (len(self.PLAYER_COLORS) - len(kinds)))
-        kinds[player_index] = "Player" if kinds[player_index] == "AI" else "AI"
-        self.config["player_kinds"] = kinds
 
-    def _cycle_ai_type(self, step):
-        current = self.AI_TYPES.index(self.config.get("ai_type", "MCTS"))
-        current = (current + step) % len(self.AI_TYPES)
-        self.config["ai_type"] = self.AI_TYPES[current]
+        total_players = int(self.config.get("total_players", 3))
+        if player_index >= total_players:
+            return
+        kinds = self._normalized_player_kinds(total_players)
+        current = kinds[player_index]
+        current_index = self.PLAYER_TYPES.index(current) if current in self.PLAYER_TYPES else 0
+        kinds[player_index] = self.PLAYER_TYPES[(current_index + step) % len(self.PLAYER_TYPES)]
+        self.config["player_kinds"] = kinds
 
     def _main_menu_buttons(self):
         can_continue = bool(self.paused_game and not getattr(self.paused_game, "game_over", False))
@@ -347,11 +360,9 @@ class Menu:
         ]
 
         total_players = int(self.config.get("total_players", 3))
-        kinds = list(self.config.get("player_kinds", ["Player", "AI", "AI", "AI", "AI"]))
-        if len(kinds) < len(self.PLAYER_COLORS):
-            kinds.extend(["AI"] * (len(self.PLAYER_COLORS) - len(kinds)))
+        kinds = self._normalized_player_kinds(total_players)
 
-        for idx in range(1, total_players):
+        for idx in range(total_players):
             role = kinds[idx]
             color_name = self.PLAYER_COLORS[idx].capitalize()
             base_rgb = Color.color.get(self.PLAYER_COLORS[idx], (220, 220, 220))
@@ -359,13 +370,12 @@ class Menu:
             buttons.append(
                 MenuButton(
                     f"Slot {idx + 1} ({color_name}): {role}",
-                    lambda p=idx: self._toggle_player_kind(p),
+                    lambda p=idx: self._cycle_player_kind(p, 1),
                     text_color=slot_rgb,
                 )
             )
 
         buttons.extend([
-            MenuButton(f"AI Type: {self.config['ai_type']}", lambda: self._cycle_ai_type(1)),
             MenuButton("Start Game", self._confirm_config),
             MenuButton("Back", self._back_to_main),
         ])
@@ -454,17 +464,13 @@ class Menu:
             elif event.key == pygame.K_LEFT and self.mode == "config":
                 if self.selected == 0:
                     self._cycle_total_players(-1)
-                elif 0 < self.selected < len(buttons) - 3:
-                    self._activate_index(self.selected)
-                elif self.selected == len(buttons) - 3:
-                    self._cycle_ai_type(-1)
+                elif 0 < self.selected < len(buttons) - 2:
+                    self._cycle_player_kind(self.selected, -1)
             elif event.key == pygame.K_RIGHT and self.mode == "config":
                 if self.selected == 0:
                     self._cycle_total_players(1)
-                elif 0 < self.selected < len(buttons) - 3:
-                    self._activate_index(self.selected)
-                elif self.selected == len(buttons) - 3:
-                    self._cycle_ai_type(1)
+                elif 0 < self.selected < len(buttons) - 2:
+                    self._cycle_player_kind(self.selected, 1)
             elif event.key in (pygame.K_RETURN, pygame.K_SPACE):
                 self._activate_index(self.selected)
             elif event.key == pygame.K_ESCAPE and self.mode == "config":
@@ -525,7 +531,7 @@ class Menu:
         buttons = self._layout_buttons()
 
         if self.mode == "config":
-            self._draw_title("Pre-game Config", "Configure total players and each slot role")
+            self._draw_title("Pre-game Config", "Choose a role for each slot")
         elif self.paused_game and getattr(self.paused_game, "game_over", False):
             self._draw_title("Game Over", "Continue is disabled after the match ends")
         elif self.paused_game and not getattr(self.paused_game, "running", True):
@@ -537,7 +543,7 @@ class Menu:
 
         footer_lines = []
         if self.mode == "config":
-            footer_lines.append("Left/Right adjust setting • ↑/↓ Navigate")
+            footer_lines.append("Left/Right cycle role • ↑/↓ Navigate")
         footer_lines.append("ESC pauses the game when you are in play")
         if self.message:
             footer_lines.append(self.message)
