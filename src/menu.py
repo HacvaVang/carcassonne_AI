@@ -7,7 +7,7 @@ from AI_agent.MCTS.mcts_player import MCTSPlayer
 from AI_agent.minimax.minimax_player import MinimaxPlayer
 from AI_agent.random.random_player import RandomPlayer
 from settings import BASE_DIR
-from src import GamePhase
+from src import GamePhase, Color
 from src.game import Game
 from src.hud import HUD
 from src.meeple import Meeple
@@ -16,17 +16,18 @@ from src.tiles import Tile
 
 
 class MenuButton:
-    def __init__(self, label, action, enabled=True):
+    def __init__(self, label, action, enabled=True, text_color=None):
         self.label = label
         self.action = action
         self.enabled = enabled
+        self.text_color = text_color
         self.rect = pygame.Rect(0, 0, 0, 0)
 
 
 class Menu:
     SAVE_FILE = os.path.join(BASE_DIR, "save.pkl")
     AI_TYPES = ["MCTS", "Random", "Minimax"]
-    AI_COLORS = ["red", "green", "yellow"]
+    PLAYER_COLORS = ["blue", "red", "green", "yellow", "black"]
 
     _runtime_patched = False
     _active_menu = None
@@ -51,8 +52,9 @@ class Menu:
         self.message_timer = 0.0
 
         self.config = {
-            "ai_count": 2,
+            "total_players": 3,
             "ai_type": "MCTS",
+            "player_kinds": ["Player", "AI", "AI", "AI", "AI"],
         }
 
         self.active_game = None
@@ -203,18 +205,34 @@ class Menu:
         Menu._active_game = game
 
     def _build_players(self):
-        players = [Player("Player", "blue")]
-        ai_count = max(0, min(int(self.config.get("ai_count", 1)), len(self.AI_COLORS)))
-        ai_type = self.config.get("ai_type", "MCTS")
+        players = []
+        total_players = int(self.config.get("total_players", 3))
+        total_players = max(2, min(total_players, len(self.PLAYER_COLORS)))
 
-        for index in range(ai_count):
-            color = self.AI_COLORS[index % len(self.AI_COLORS)]
-            if ai_type == "Random":
-                players.append(RandomPlayer(f"AI {index + 1}", color))
+        kinds = list(self.config.get("player_kinds", []))
+        if len(kinds) < len(self.PLAYER_COLORS):
+            kinds.extend(["AI"] * (len(self.PLAYER_COLORS) - len(kinds)))
+        kinds[0] = "Player"
+
+        ai_type = self.config.get("ai_type", "MCTS")
+        ai_index = 1
+
+        for index in range(total_players):
+            color = self.PLAYER_COLORS[index]
+            kind = "Player" if index == 0 else kinds[index]
+
+            if kind == "Player":
+                name = "Player" if index == 0 else f"Player {index + 1}"
+                players.append(Player(name, color))
+            elif ai_type == "Random":
+                players.append(RandomPlayer(f"AI {ai_index}", color))
+                ai_index += 1
             elif ai_type == "Minimax":
-                players.append(MinimaxPlayer(f"AI {index + 1}", color, depth=3))
+                players.append(MinimaxPlayer(f"AI {ai_index}", color, depth=3))
+                ai_index += 1
             else:
-                players.append(MCTSPlayer(f"AI {index + 1}", color, iterations=1000))
+                players.append(MCTSPlayer(f"AI {ai_index}", color, iterations=1000))
+                ai_index += 1
 
         return players
 
@@ -288,14 +306,23 @@ class Menu:
         game.running = True
         self._set_active_game(game)
 
-    def _cycle_ai_count(self, step):
-        current = int(self.config.get("ai_count", 1))
+    def _cycle_total_players(self, step):
+        current = int(self.config.get("total_players", 3))
         current += step
-        if current < 1:
-            current = len(self.AI_COLORS)
-        if current > len(self.AI_COLORS):
-            current = 1
-        self.config["ai_count"] = current
+        if current < 2:
+            current = len(self.PLAYER_COLORS)
+        if current > len(self.PLAYER_COLORS):
+            current = 2
+        self.config["total_players"] = current
+
+    def _toggle_player_kind(self, player_index):
+        if player_index <= 0:
+            return
+        kinds = list(self.config.get("player_kinds", ["Player", "AI", "AI", "AI", "AI"]))
+        if len(kinds) < len(self.PLAYER_COLORS):
+            kinds.extend(["AI"] * (len(self.PLAYER_COLORS) - len(kinds)))
+        kinds[player_index] = "Player" if kinds[player_index] == "AI" else "AI"
+        self.config["player_kinds"] = kinds
 
     def _cycle_ai_type(self, step):
         current = self.AI_TYPES.index(self.config.get("ai_type", "MCTS"))
@@ -315,12 +342,34 @@ class Menu:
         ]
 
     def _config_menu_buttons(self):
-        return [
-            MenuButton(f"AI Opponents: {self.config['ai_count']}", lambda: self._cycle_ai_count(1)),
+        buttons = [
+            MenuButton(f"Total Players: {self.config['total_players']}", lambda: self._cycle_total_players(1)),
+        ]
+
+        total_players = int(self.config.get("total_players", 3))
+        kinds = list(self.config.get("player_kinds", ["Player", "AI", "AI", "AI", "AI"]))
+        if len(kinds) < len(self.PLAYER_COLORS):
+            kinds.extend(["AI"] * (len(self.PLAYER_COLORS) - len(kinds)))
+
+        for idx in range(1, total_players):
+            role = kinds[idx]
+            color_name = self.PLAYER_COLORS[idx].capitalize()
+            base_rgb = Color.color.get(self.PLAYER_COLORS[idx], (220, 220, 220))
+            slot_rgb = tuple(min(255, c + 35) for c in base_rgb)
+            buttons.append(
+                MenuButton(
+                    f"Slot {idx + 1} ({color_name}): {role}",
+                    lambda p=idx: self._toggle_player_kind(p),
+                    text_color=slot_rgb,
+                )
+            )
+
+        buttons.extend([
             MenuButton(f"AI Type: {self.config['ai_type']}", lambda: self._cycle_ai_type(1)),
             MenuButton("Start Game", self._confirm_config),
             MenuButton("Back", self._back_to_main),
-        ]
+        ])
+        return buttons
 
     def _build_buttons(self):
         if self.mode == "config":
@@ -330,11 +379,27 @@ class Menu:
     def _layout_buttons(self):
         buttons = self._build_buttons()
         width = min(460, max(320, self.screen.get_width() - 120))
-        height = 54
-        gap = 18
+        base_height = 54
+        base_gap = 18
 
+        # Reserve space for title/subtitle and footer, then fit buttons in between.
+        title_block_h = self.title_font.get_height() + self.small_font.get_height() + 56
+        footer_block_h = 110
+        top_y = 30 + title_block_h
+        bottom_y = self.screen.get_height() - footer_block_h
+        available_h = max(180, bottom_y - top_y)
+
+        height = base_height
+        gap = base_gap
         total_height = len(buttons) * height + (len(buttons) - 1) * gap
-        start_y = int(self.screen.get_height() * 0.32)
+
+        if total_height > available_h and total_height > 0:
+            scale = available_h / total_height
+            height = max(42, int(base_height * scale))
+            gap = max(8, int(base_gap * scale))
+            total_height = len(buttons) * height + (len(buttons) - 1) * gap
+
+        start_y = self.screen.get_height()*0.23
         start_x = self.screen.get_width() // 2 - width // 2
 
         for index, button in enumerate(buttons):
@@ -388,13 +453,17 @@ class Menu:
                 self.selected = (self.selected + 1) % len(buttons)
             elif event.key == pygame.K_LEFT and self.mode == "config":
                 if self.selected == 0:
-                    self._cycle_ai_count(-1)
-                elif self.selected == 1:
+                    self._cycle_total_players(-1)
+                elif 0 < self.selected < len(buttons) - 3:
+                    self._activate_index(self.selected)
+                elif self.selected == len(buttons) - 3:
                     self._cycle_ai_type(-1)
             elif event.key == pygame.K_RIGHT and self.mode == "config":
                 if self.selected == 0:
-                    self._cycle_ai_count(1)
-                elif self.selected == 1:
+                    self._cycle_total_players(1)
+                elif 0 < self.selected < len(buttons) - 3:
+                    self._activate_index(self.selected)
+                elif self.selected == len(buttons) - 3:
                     self._cycle_ai_type(1)
             elif event.key in (pygame.K_RETURN, pygame.K_SPACE):
                 self._activate_index(self.selected)
@@ -419,7 +488,7 @@ class Menu:
 
     def _draw_title(self, title, subtitle=None):
         title_surf = self.title_font.render(title, True, (240, 240, 240))
-        title_rect = title_surf.get_rect(center=(self.screen.get_width() // 2, self.screen.get_height() // 5))
+        title_rect = title_surf.get_rect(center=(self.screen.get_width() // 2, self.screen.get_height() // 8))
         self.screen.blit(title_surf, title_rect)
 
         if subtitle:
@@ -429,6 +498,8 @@ class Menu:
 
     def _draw_buttons(self, buttons):
         mouse_pos = pygame.mouse.get_pos()
+        # In config mode with many rows, use a slightly smaller font to keep labels clean.
+        label_font = self.small_font if self.mode == "config" and len(buttons) >= 7 else self.font
         for index, button in enumerate(buttons):
             hovered = button.rect.collidepoint(mouse_pos)
             selected = index == self.selected
@@ -441,8 +512,11 @@ class Menu:
             pygame.draw.rect(self.screen, base_color, button.rect, border_radius=8)
             pygame.draw.rect(self.screen, (170, 170, 170), button.rect, 2, border_radius=8)
 
-            text_color = (245, 245, 245) if button.enabled else (140, 140, 140)
-            label = self.font.render(button.label, True, text_color)
+            if button.enabled and button.text_color is not None:
+                text_color = button.text_color
+            else:
+                text_color = (245, 245, 245) if button.enabled else (140, 140, 140)
+            label = label_font.render(button.label, True, text_color)
             label_rect = label.get_rect(center=button.rect.center)
             self.screen.blit(label, label_rect)
 
@@ -451,7 +525,7 @@ class Menu:
         buttons = self._layout_buttons()
 
         if self.mode == "config":
-            self._draw_title("Pre-game Config", "Configure opponents and AI type")
+            self._draw_title("Pre-game Config", "Configure total players and each slot role")
         elif self.paused_game and getattr(self.paused_game, "game_over", False):
             self._draw_title("Game Over", "Continue is disabled after the match ends")
         elif self.paused_game and not getattr(self.paused_game, "running", True):
