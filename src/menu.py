@@ -80,18 +80,25 @@ class Menu:
                 tile.rotate()
 
         def meeple_getstate(meeple):
+            center = getattr(meeple, "pos", None)
+            if center is None:
+                rect = getattr(meeple, "rect", None)
+                center = rect.center if rect is not None else (0, 0)
             return {
                 "player": meeple.player,
-                "center": meeple.rect.center,
+                "center": center,
             }
 
         def meeple_setstate(meeple, state):
             meeple.player = state.get("player")
+            center = state.get("center", state.get("pos", (0, 0)))
+            meeple.pos = center
             from src.assetloader import get_image
 
-            meeple.image = get_image(meeple.player.color, "Meeple")
-            meeple.rect = meeple.image.get_rect(center=state.get("center", (0, 0)))
-            meeple.position = meeple.rect.center
+            if meeple.player is not None:
+                meeple.image = get_image(meeple.player.color, "Meeple")
+            else:
+                meeple.image = None
 
         def hud_getstate(hud):
             return {}
