@@ -105,7 +105,8 @@ class Menu:
             return {}
 
         def hud_setstate(hud, state):
-            hud.font = pygame.font.SysFont(None, 36)
+            # Recreate all runtime-only font objects after unpickling.
+            hud.__init__()
 
         def game_getstate(game):
             state = dict(game.__dict__)
