@@ -73,8 +73,24 @@ class TileDeck:
         self.count -= 1
         return Tile(name)
 
+    def generate_fixed_deck(self):
+        """Generates and stores a fixed shuffle of the remaining tiles for determinism."""
+        deck_list = []
+        for t, c in self.tileset.items():
+            deck_list.extend([t] * c)
+        random.shuffle(deck_list)
+        self.fixed_deck = deck_list
+
     def getRandomTile(self):
-        """Draw a random tile from the remaining deck."""
+        """Draw a random tile from the remaining deck, or fixed deck if set."""
+        if hasattr(self, 'fixed_deck') and self.fixed_deck is not None:
+            if not self.fixed_deck:
+                return None
+            tile_name = self.fixed_deck.pop()
+            self.tileset[tile_name] -= 1
+            self.count -= 1
+            return Tile(tile_name)
+
         if self.count <= 0:
             return None
 

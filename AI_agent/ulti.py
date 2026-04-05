@@ -21,6 +21,14 @@ class Action:
     def __str__(self):
         return self.__repr__()
 
+    def __eq__(self, other):
+        if not isinstance(other, Action):
+            return False
+        return (self.tile_pos, self.rotation, self.meeple_pos) == (other.tile_pos, other.rotation, other.meeple_pos)
+
+    def __hash__(self):
+        return hash((self.tile_pos, self.rotation, self.meeple_pos))
+
 class CarcassonneState:
     def __init__(self, game=None):
         if game:
@@ -90,6 +98,9 @@ class CarcassonneState:
 
     def get_score(self, player_index) -> int:
         return self.players[player_index].score
+
+    def get_all_score(self):
+        return [self.players[idx].score for idx in range(len(self.players))]
 
     def get_region_score(self, player_index) -> float:
         """
@@ -215,7 +226,7 @@ class CarcassonneState:
 
         can_place_meeple = self.players[self.current_player_index].meeples > 0
 
-        for rot in range(4):
+        for rot in range(tile.rotate_max + 1):
             tile_copy = copy.deepcopy(tile)
             for _ in range(rot):
                 tile_copy.rotate()
@@ -364,3 +375,40 @@ class CarcassonneState:
         """Assign points for remaining regions at end of game."""
         # Score any remaining completed regions first, then score incomplete ones.
         assign_points_at_end_of_game(self)
+
+def move_heuristic(original_state: CarcassonneState, action: Action, player_index: int) -> float:
+    """
+    Evaluates an action by simulating it and calculating the score delta 
+    (forcing end of game scoring) between the player and their opponent.
+    Translated from the provided Java moveHeuristic logic.
+    """
+    # Simulate the action (returns a deep-copied new state with the move applied and immediate region scores tallied)
+    # This automatically handles tile rotation and meeple placements defined in the Action.
+    state = original_state.simulate_action(action)
+    
+    # Get previous scores
+    prev_scores = original_state.get_all_score() 
+    prev_score = prev_scores[player_index]
+    
+    # Assuming 2 players for opponent delta calculation
+    if len(original_state.players) > 1:
+        prev_score_op = max(prev_scores[:player_index] + prev_scores[player_index+1:])
+    else:
+        prev_score_op = 0
+
+    # Force the state to assign points for incomplete regions as if the game ended
+    state.assignPointsAtEndOfGame()
+    
+    # Get updated scores
+    updated_scores = state.get_all_score()
+    updated_score = updated_scores[player_index]
+    if len(state.players) > 1:
+        updated_score_op = max(updated_scores[:player_index] + updated_scores[player_index+1:])
+    else:
+        updated_score_op = 0
+
+    # The difference between the updated and the previous score minus the 
+    # difference between the updated and the previous score of the opponent.
+    output = (updated_score - prev_score) - (updated_score_op - prev_score_op)
+    
+    return output

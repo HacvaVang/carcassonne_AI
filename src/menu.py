@@ -231,7 +231,7 @@ class Menu:
                 players.append(MinimaxPlayer(f"AI {ai_index}", color, depth=3))
                 ai_index += 1
             else:
-                players.append(MCTSPlayer(f"AI {ai_index}", color, iterations=1000))
+                players.append(MCTSPlayer(f"AI {ai_index}", color))
                 ai_index += 1
 
         return players
