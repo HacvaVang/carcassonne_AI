@@ -1,136 +1,96 @@
-from AI_agent.ulti import CarcassonneState, Action
 import math
 import time
-import logging
+from AI_agent.ulti import CarcassonneState, Action, move_heuristic
 
-logger = logging.getLogger(__name__)
 
-def max_n(state: CarcassonneState, depth, metrics=None):
+def max_n(state: CarcassonneState, depth: int, root_idx: int, alpha: float, beta: float) -> float:
     """
-    Max-N algorithm for N-player games. Returns a tuple of scores for all players.
+    Thuật toán Minimax với cắt tỉa Alpha-Beta dành cho game nhiều người chơi.
+    Tính toán dựa trên góc nhìn của root_idx (AI).
     """
-    if depth == 0:
-        if metrics is not None:
-            metrics['limit_depth_hits'] = metrics.get('limit_depth_hits', 0) + 1
-        result = tuple(heuristic_score(state, i) for i in range(len(state.players)))
-        # print(f"Max-N hit depth limit (0). Score: {result}")
-        return result
-
-    if state.is_terminal():
-        result = tuple(state.get_score(i) for i in range(len(state.players)))
-        # print(f"Max-N hit terminal state. Score: {result}")
-        return result
-
-    if metrics is not None:
-        metrics['nodes_evaluated'] += 1
+    # 1. Điều kiện dừng: Đạt độ sâu tối đa hoặc game kết thúc
+    if depth == 0 or state.is_terminal():
+        return move_heuristic(state, Action(), root_idx)
 
     actions = state.get_possible_actions()
     if not actions:
-        return tuple(state.get_score(i) for i in range(len(state.players)))
+        return move_heuristic(state, Action(), root_idx)
 
-    best_tuple = None
-    player_idx = state.current_player_index
+    curr_player = state.current_player_index
 
-    for action in actions:
-        print(f"Max-N action: {repr(action)}, depth: {depth}")
-        next_state = state.simulate_action(action)
-        eval_tuple = max_n(next_state, depth - 1, metrics)
-        
-        if best_tuple is None or eval_tuple[player_idx] > best_tuple[player_idx]:
-            best_tuple = eval_tuple
+    # 2. Lượt của AI (Maximizing Player)
+    if curr_player == root_idx:
+        val = -math.inf
+        for a in actions:
+            # Giả lập nước đi và đệ quy
+            sim_state = state.simulate_action(a)
+            val = max(val, max_n(sim_state, depth - 1, root_idx, alpha, beta))
+            alpha = max(alpha, val)
+            if beta <= alpha:
+                break  # Cắt tỉa Beta
+        return val
 
-    return best_tuple
+    # 3. Lượt của đối thủ (Minimizing Player)
+    else:
+        val = math.inf
+        for a in actions:
+            sim_state = state.simulate_action(a)
+            val = min(val, max_n(sim_state, depth - 1, root_idx, alpha, beta))
+            beta = min(beta, val)
+            if beta <= alpha:
+                break  # Cắt tỉa Alpha
+        return val
 
 
-def get_best_action(state: CarcassonneState, depth, player_index, seed=-1):
+def get_best_action(state: CarcassonneState, depth: int, player_index: int) -> Action:
     """
-    Get the best action using Max-N algorithm.
+    Hàm thực thi chính để tìm nước đi tốt nhất.
     """
-    start_time = time.time()
-    metrics = {'nodes_evaluated': 0}
-
     actions = state.get_possible_actions()
     if not actions:
         return None
 
-    best_action : Action = None
-    best_value = -math.inf
+    # Tối ưu Depth dựa trên số lượng nước đi để tránh treo máy
+    actual_depth = depth
+    if len(actions) > 40:
+        actual_depth = 1
+    elif len(actions) > 20:
+        actual_depth = 2
 
-    for action in actions:
-        next_state = state.simulate_action(action)
-        metrics['nodes_evaluated'] += 1
-        eval_tuple = max_n(next_state, depth - 1, metrics)
-        value = eval_tuple[player_index]
-        
-        if value > best_value:
-            best_value = value
-            best_action = action
+    best_action = None
+    best_val = -math.inf
 
-    duration = time.time() - start_time
-    limit_hits = metrics.get('limit_depth_hits', 0)
-    print(f"[DEBUG] Max-N evaluated {metrics['nodes_evaluated']} nodes in {duration:.2f} seconds (Depth: {depth}). Hit Depth Limit: {limit_hits} times. Best action {repr(best_action)}")
+    print(f"\n[MINIMAX THINKING] Actions: {len(actions)} | Target Depth: {actual_depth}")
+    start_time = time.time()
+
+    # Sắp xếp actions: Ưu tiên tính toán các nước đi có Meeple trước (Heuristic search)
+    # Điều này giúp Alpha-Beta cắt tỉa hiệu quả hơn
+    actions.sort(key=lambda a: a.meeple_pos is not None, reverse=True)
+
+    for a in actions:
+        # Tính toán giá trị nước đi bằng Max-N
+        val = max_n(state.simulate_action(a), actual_depth - 1, player_index, -math.inf, math.inf)
+
+        # Chiến thuật Tie-breaking: 
+        # Nếu điểm bằng nhau, ưu tiên nước đi có Meeple (để chiếm đất sớm)
+        is_better = val > best_val
+        is_equal_but_meeple = (val == best_val and best_action and
+                               best_action.meeple_pos is None and a.meeple_pos is not None)
+
+        if is_better or is_equal_but_meeple:
+            best_val = val
+            best_action = a
+
+    end_time = time.time()
+    duration = end_time - start_time
+
+    # Debug kết quả ra Console
+    m_info = "None"
+    if best_action.meeple_pos:
+        terrain, idx = best_action.meeple_pos
+        m_info = f"{terrain.name}({idx})"
+
+    print(f"[DECISION] Time: {duration:.2f}s | Score: {best_val:.2f}")
+    print(f"           Pos: {best_action.tile_pos} | Rot: {best_action.rotation} | Meeple: {m_info}")
+
     return best_action
-
-def heuristic_score(state: CarcassonneState, player_index):
-    """
-    Heuristic = committed score + expected region value + meeple flexibility bonus.
-
-    Meeple flexibility:
-      - Each free meeple is worth more early (more regions to claim)
-      - Value tapers to 0 as the tile deck runs out
-    Out-of-meeples penalty applies when the player is fully committed with no flexibility.
-    """
-    player = state.players[player_index]
-    tiles_left = len(state.tile_deck.tiles) if hasattr(state.tile_deck, 'tiles') else 10
-    game_progress = 1.0 - (tiles_left / max(71, 1))  # 0.0 = start, 1.0 = end
-
-    heuristic_value = state.get_region_score(player_index)
-
-    # Meeple flexibility: free meeples are most valuable early in the game
-    # Each free meeple can be placed in a future region worth ~2 pts on average
-    free_meeples = player.meeples
-    flexibility_per_meeple = 2.0 * (1.0 - game_progress)  # tapers to 0 at end
-    heuristic_value += free_meeples * flexibility_per_meeple
-
-    # Hard penalty for being completely out of meeples
-    if free_meeples <= 0:
-        heuristic_value -= 3.0
-
-    return state.get_score(player_index) + heuristic_value
-
-
-def minimax(state: CarcassonneState, depth, maximizing_player_index, alpha=-math.inf, beta=math.inf):
-    """
-    Minimax algorithm with alpha-beta pruning for Carcassonne.
-    maximizing_player_index is the player whose score we want to maximize.
-    """
-    if depth == 0 or state.is_terminal():
-        return state.get_score(maximizing_player_index)
-
-    actions = state.get_possible_actions()
-
-    if not actions:
-        return state.get_score(maximizing_player_index)
-
-    if state.current_player_index == maximizing_player_index:
-        # Maximizing player's turn
-        max_eval = -math.inf
-        for action in actions:
-            next_state = state.simulate_action(action)
-            eval = minimax(next_state, depth - 1, maximizing_player_index, alpha, beta)
-            max_eval = max(max_eval, eval)
-            alpha = max(alpha, eval)
-            if beta <= alpha:
-                break
-        return max_eval
-    else:
-        # Opponent's turn - assume they minimize our score
-        min_eval = math.inf
-        for action in actions:
-            next_state = state.simulate_action(action)
-            eval = minimax(next_state, depth - 1, maximizing_player_index, alpha, beta)
-            min_eval = min(min_eval, eval)
-            beta = min(beta, eval)
-            if beta <= alpha:
-                break
-        return min_eval
