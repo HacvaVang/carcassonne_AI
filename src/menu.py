@@ -163,15 +163,15 @@ class Menu:
             if game_self.running:
                 menu.mode = "main"
 
-        def patched_update(game_self, dt):
+        def patched_update(game_self : Game, dt):
             Menu._original_game_update(game_self, dt)
 
-            if not game_self.running or getattr(game_self, "game_over", False):
+            if not game_self.running or game_self.game_over:
                 return
 
             current_player = None
-            if getattr(game_self, "players", None):
-                current_index = getattr(game_self, "current_player_index", 0)
+            if game_self.players:
+                current_index = game_self.current_player_index
                 if 0 <= current_index < len(game_self.players):
                     current_player = game_self.players[current_index]
                     game_self.current_player = current_player
@@ -179,7 +179,13 @@ class Menu:
             if current_player is None or isinstance(current_player, MCTSPlayer):
                 return
 
-            chooser = getattr(current_player, "choose_action", None)
+            if game_self.current_phase != GamePhase.PlaceTile:
+                return
+
+            if game_self.ai_thinking or game_self.pending_action:
+                return
+
+            chooser = current_player.choose_action
             if not callable(chooser):
                 return
 
@@ -187,14 +193,25 @@ class Menu:
             if not action:
                 return
 
-            if game_self.current_phase == GamePhase.PlaceTile:
-                for _ in range(action.rotation):
-                    game_self.current_tile.rotate()
-                if game_self.place_tile(action.tile_pos, game_self.current_tile):
-                    game_self.addRegionScore()
-                    game_self.changePhase()
-            elif game_self.current_phase == GamePhase.PlaceMeeple:
-                game_self.changePhase()
+            # Process AI Tile placement
+            for _ in range(action.rotation):
+                game_self.current_tile.rotate()
+
+            if game_self.place_tile(action.tile_pos, game_self.current_tile):
+                game_self.addRegionScore()
+
+                # Process AI Meeple placement
+                if action.meeple_pos:
+                    for world_pos, (terrain, region_pos) in game_self.place_positions.items():
+                        if (terrain, region_pos) == action.meeple_pos:
+                            meeple = Meeple(current_player, world_pos)
+                            game_self.place_meeple(world_pos, meeple)
+                            game_self.addRegionScore()
+                            break
+
+                # Skip to next player's turn 
+                game_self.changePhase() # PlaceTile -> PlaceMeeple
+                game_self.changePhase() # PlaceMeeple -> Next Player Turn
 
         def patched_handle_event(game_self, event):
             if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
@@ -262,7 +279,7 @@ class Menu:
         if kind == "Random bot":
             return RandomPlayer(f"RandomBot", color)
         if kind == "Minimax bot":
-            return MinimaxPlayer(f"MiniMaxBot", color, depth=4)
+            return MinimaxPlayer(f"MiniMaxBot", color, depth=2)
         return MCTSPlayer(f"MCTSBot", color, iterations=300)
 
     def _apply_configured_players(self, game):
