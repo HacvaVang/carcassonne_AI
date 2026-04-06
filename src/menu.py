@@ -260,10 +260,10 @@ class Menu:
         if kind == "Player":
             return Player(name, color)
         if kind == "Random bot":
-            return RandomPlayer(f"AI {index + 1}", color)
+            return RandomPlayer(f"RandomBot", color)
         if kind == "Minimax bot":
-            return MinimaxPlayer(f"AI {index + 1}", color, depth=3)
-        return MCTSPlayer(f"AI {index + 1}", color, iterations=500)
+            return MinimaxPlayer(f"MiniMaxBot", color, depth=4)
+        return MCTSPlayer(f"MCTSBot", color, iterations=300)
 
     def _apply_configured_players(self, game):
         game.players = self._build_players()
@@ -375,7 +375,7 @@ class Menu:
             MenuButton(f"Total Players: {self.config['total_players']}", lambda: self._cycle_total_players(1)),
         ]
 
-        total_players = int(self.config.get("total_players", 3))
+        total_players = int(self.config.get("total_players", 2))
         kinds = self._normalized_player_kinds(total_players)
 
         for idx in range(total_players):
@@ -385,7 +385,7 @@ class Menu:
             slot_rgb = tuple(min(255, c + 35) for c in base_rgb)
             buttons.append(
                 MenuButton(
-                    f"Slot {idx + 1} ({color_name}): {role}",
+                    f"{role}",
                     lambda p=idx: self._cycle_player_kind(p, 1),
                     text_color=slot_rgb,
                 )
@@ -547,7 +547,7 @@ class Menu:
         buttons = self._layout_buttons()
 
         if self.mode == "config":
-            self._draw_title("Pre-game Config", "Choose a role for each slot")
+            self._draw_title("Pre-game Config", "Choose a role for each player")
         elif self.paused_game and getattr(self.paused_game, "game_over", False):
             self._draw_title("Game Over", "Continue is disabled after the match ends")
         elif self.paused_game and not getattr(self.paused_game, "running", True):
