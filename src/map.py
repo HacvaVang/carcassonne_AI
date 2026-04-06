@@ -11,6 +11,12 @@ class Map:
         self.tileset = {}
         self.adjency_tile : set = {(0, 0)}
         
+    def clone(self):
+        new_map = Map.__new__(Map)
+        new_map.tileset = self.tileset.copy()
+        new_map.adjency_tile = self.adjency_tile.copy()
+        return new_map
+        
     def can_place_tile(self, pos : tuple, tile : Tile):
         x, y = pos
         if pos not in self.adjency_tile:

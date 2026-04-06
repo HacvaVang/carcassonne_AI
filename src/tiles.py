@@ -29,6 +29,18 @@ class Tile:
         for key, value in list(self.region.items()):
             self.region[key] = [[self.rotation_update(pos) for pos in group] for group in value]
 
+    def clone(self):
+        new_tile = Tile.__new__(Tile)
+        new_tile.tile_type = self.tile_type
+        new_tile.image = None
+        new_tile.shield = self.shield
+        new_tile.region = {k: [list(group) for group in v] for k, v in self.region.items()}
+        new_tile.edges = list(self.edges)
+        new_tile.adjency = list(self.adjency)
+        new_tile.rotate_count = self.rotate_count
+        new_tile.rotate_max = self.rotate_max
+        return new_tile
+
     def __getstate__(self):
         state = self.__dict__.copy()
         state['image'] = None

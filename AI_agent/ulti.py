@@ -69,6 +69,42 @@ class CarcassonneState:
             self.avaliable_moves = {}
             self.game_over = False
 
+    def clone(self):
+        new_state = CarcassonneState.__new__(CarcassonneState)
+        player_mapping = {}
+        new_state.players = []
+        for p in self.players:
+            new_p = p.clone()
+            player_mapping[id(p)] = new_p
+            new_state.players.append(new_p)
+            
+        new_state.current_player_index = self.current_player_index
+        new_state.current_phase = self.current_phase
+        new_state.map = self.map.clone()
+        new_state.tile_deck = self.tile_deck.clone()
+        new_state.current_tile = self.current_tile.clone() if self.current_tile else None
+        
+        new_state.regions = {}
+        region_mapping = {}
+        for terrain, regions in self.regions.items():
+            new_r_list = []
+            for r in regions:
+                new_r = r.clone(player_mapping)
+                region_mapping[id(r)] = new_r
+                new_r_list.append(new_r)
+            new_state.regions[terrain] = new_r_list
+            
+        for g in new_state.regions.get(Terrain.Grass, []):
+            if hasattr(g, 'adjency_cities'):
+                g.adjency_cities = set(region_mapping.get(id(city), city) for city in g.adjency_cities)
+                
+        new_state.complete_cities = [region_mapping.get(id(r), r) for r in self.complete_cities]
+        
+        new_state.place_positions = self.place_positions.copy()
+        new_state.avaliable_moves = self.avaliable_moves.copy()
+        new_state.game_over = self.game_over
+        return new_state
+
     def addRegionScore(self, end_phase=False):
         for terrain, regions in self.regions.items():
             if terrain == Terrain.Grass and not end_phase:
@@ -227,7 +263,7 @@ class CarcassonneState:
         can_place_meeple = self.players[self.current_player_index].meeples > 0
 
         for rot in range(tile.rotate_max + 1):
-            tile_copy = copy.deepcopy(tile)
+            tile_copy = tile.clone()
             for _ in range(rot):
                 tile_copy.rotate()
             moves = self.map.get_placeable_positon(tile_copy)
@@ -314,7 +350,7 @@ class CarcassonneState:
             self.current_phase = GamePhase.PlaceTile
 
     def simulate_action(self, action : Action):
-        next_state = copy.deepcopy(self)
+        next_state = self.clone()
         next_state.apply_action(action)
         return next_state
     
@@ -411,4 +447,17 @@ def move_heuristic(original_state: CarcassonneState, action: Action, player_inde
     # difference between the updated and the previous score of the opponent.
     output = (updated_score - prev_score) - (updated_score_op - prev_score_op)
     
+    # Include Meeple-based heuristic rewards/penalties
+    current_meeples = state.players[player_index].meeples
+    original_meeples = original_state.players[player_index].meeples
+    meeple_diff = current_meeples - original_meeples
+
+    if meeple_diff > 0:
+        output += 10 * meeple_diff  # Significant reward for retrieving tied-up meeples
+    
+    if current_meeples == 0:
+        output -= 20  # Heavy penalty for exhausting all meeples
+    elif current_meeples == 1:
+        output -= 5   # Mild penalty for dangerously low meeples
+        
     return output

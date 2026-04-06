@@ -129,6 +129,8 @@ class Menu:
             return state
 
         def game_setstate(game, state):
+            state["ai_thinking"] = False
+            state["pending_action"] = None
             game.__dict__.update(state)
             game.screen = None
             if getattr(game, "hud", None) is None:
@@ -185,7 +187,7 @@ class Menu:
             if game_self.ai_thinking or game_self.pending_action:
                 return
 
-            chooser = current_player.choose_action
+            chooser = getattr(current_player, 'choose_action', None)
             if not callable(chooser):
                 return
 
@@ -279,7 +281,9 @@ class Menu:
         if kind == "Random bot":
             return RandomPlayer(f"RandomBot", color)
         if kind == "Minimax bot":
-            return MinimaxPlayer(f"MiniMaxBot", color, depth=2)
+            total_players = int(self.config.get("total_players", 2))
+            depth = 4 if total_players == 2 else total_players
+            return MinimaxPlayer(f"MiniMaxBot", color, depth=depth)
         return MCTSPlayer(f"MCTSBot", color, iterations=300)
 
     def _apply_configured_players(self, game):

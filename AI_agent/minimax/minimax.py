@@ -15,9 +15,6 @@ def minimax_search(state: CarcassonneState, depth: int, root_idx: int, alpha: fl
     if not actions:
         return move_heuristic(state, Action(), root_idx)
 
-    # Probabilistic meeple placement limit (as in Java code)
-    # Filter actions: if they have meeple, only keep them with probability p.
-    # We do a 'pre-filter' for the search to match Java's simplified decision space.
     meeple_prob = config.get('meeple_prob', 1.0)
     if meeple_prob < 1.0:
         filtered = []
@@ -68,9 +65,17 @@ def get_best_action(state: CarcassonneState, depth: int, player_index: int, meep
     actions.sort(key=lambda a: (a.meeple_pos is not None, a.rotation), reverse=True)
 
     # Heuristic depth limiting for performance
-    actual_depth = depth
-    if len(actions) > 30: actual_depth = 1
-    elif len(actions) > 15: actual_depth = 2
+    if len(actions) > 80:
+        actual_depth = depth - 2
+
+    elif len(actions) > 40:
+        actual_depth = depth - 1
+    else:
+        actual_depth = depth
+
+    if actual_depth <= 0:
+        actual_depth = 2
+        
 
     best_action = None
     best_val = -math.inf

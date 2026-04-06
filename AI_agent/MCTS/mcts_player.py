@@ -33,7 +33,7 @@ class MCTSPlayer(Player):
                 votes.append(action)
 
         for e in range(ensemble_count):
-            t = Thread(target=run_tree, args=(game,))
+            t = Thread(target=run_tree, args=(game,), daemon=True)
             threads.append(t)
             t.start()
             

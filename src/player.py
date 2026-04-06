@@ -13,3 +13,8 @@ class Player():
 
     def place_meeple(self):
         self.meeples -= 1
+
+    def clone(self):
+        new_p = self.__class__.__new__(self.__class__)
+        new_p.__dict__.update(self.__dict__)
+        return new_p

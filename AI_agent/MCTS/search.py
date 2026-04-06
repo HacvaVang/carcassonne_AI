@@ -15,7 +15,7 @@ def mcts_search(root_state, iterations, tree_policy_type=TreePolicy.UCT, explora
 
     import random
     for i in range(iterations):
-        state = copy.deepcopy(root_state)
+        state = root_state.clone()
         
         # 1. Selection
         leaf : Node = root.tree_policy(state, tree_policy_type=tree_policy_type, exploration_const=exploration_const)
@@ -61,7 +61,8 @@ def mcts_search(root_state, iterations, tree_policy_type=TreePolicy.UCT, explora
     # Return the best action (most visited child is most robust)
     if root.children:
         # Use most-visited child as the final policy (more robust than max avg value)
-        best_child = max(root.children, key=lambda c: c.visits)
+        # If there is a tie in visits (a draw), break the tie using the highest average score
+        best_child = max(root.children, key=lambda c: (c.visits, (c.value / c.visits) if c.visits else float('-inf')))
         avg_val = best_child.value / best_child.visits if best_child.visits else 0
         print(f"MCTS search completed. Best action: {best_child.action}, visits: {best_child.visits}, avg value: {avg_val:.2f}")
         return best_child.action

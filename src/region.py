@@ -14,6 +14,19 @@ class Region:
     def addTile(self, tile_pos: tuple, region : list):
         self.tiles[tile_pos] = set(region)
         self.setCount()
+
+    def clone(self, player_mapping):
+        new_r = self.__class__.__new__(self.__class__)
+        new_r.tiles = {k: set(v) for k, v in self.tiles.items()}
+        new_r.count = self.count
+        new_r.meeples = [m.clone(player_mapping) for m in self.meeples]
+        new_r.initial_pos = self.initial_pos
+        new_r.completed_flag = self.completed_flag
+        if hasattr(self, 'shield'):
+            new_r.shield = self.shield
+        if hasattr(self, 'adjency_cities'):
+            new_r.adjency_cities = set(self.adjency_cities)
+        return new_r
         
     def is_completed(self):
         pass

@@ -30,10 +30,14 @@ class HUD:
             current_player_idx = game.current_player_index if hasattr(game, 'current_player_index') else -1
             
             for idx, player in enumerate(game.players):
+                is_current = idx == current_player_idx
+                
+                text_color = (200, 200, 200) if is_current else player.color
+                
                 # Render texts separately
-                score_text = self.score_font.render(str(player.score), True, player.color)
-                name_text = self.font.render(player.name, True, player.color)
-                meeples_text = self.font.render(f"{player.meeples}", True, player.color)
+                score_text = self.score_font.render(str(player.score), True, text_color)
+                name_text = self.font.render(player.name, True, text_color)
+                meeples_text = self.font.render(f"{player.meeples}", True, text_color)
                 
                 # Calculate scalable box width for the score alone
                 score_pad_x = 20
@@ -47,12 +51,11 @@ class HUD:
                 
                 # Draw rounded box ONLY around score
                 score_box_rect = pygame.Rect(block_x, box_y, score_box_width, box_height)
-                is_current = idx == current_player_idx
                 
                 # Highlight current player
                 if is_current:
-                    pygame.draw.rect(screen, (200, 200, 200), score_box_rect, width=0, border_radius=5)
-                    pygame.draw.rect(screen, player.color, score_box_rect, width=4, border_radius=5)
+                    pygame.draw.rect(screen, player.color, score_box_rect, width=0, border_radius=5)
+                    pygame.draw.rect(screen, (200, 200, 200), score_box_rect, width=4, border_radius=5)
                 else:
                     alpha_surface = pygame.Surface(score_box_rect.size, pygame.SRCALPHA)
                     pygame.draw.rect(alpha_surface, (255, 255, 255, 128), alpha_surface.get_rect(), width=0, border_radius=5)

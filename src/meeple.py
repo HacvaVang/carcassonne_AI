@@ -45,6 +45,13 @@ class Meeple:
             'pos': self.pos,
         }
 
+    def clone(self, player_mapping):
+        new_meeple = Meeple.__new__(Meeple)
+        new_meeple.player = player_mapping.get(id(self.player), self.player) if self.player else None
+        new_meeple.pos = self.pos
+        new_meeple.image = None
+        return new_meeple
+
     def __getstate__(self):
         state = self.__dict__.copy()
         state['image'] = None   # pygame Surfaces can't be pickled / deep-copied

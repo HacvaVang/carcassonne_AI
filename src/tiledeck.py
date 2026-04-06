@@ -20,6 +20,17 @@ class TileDeck:
         if os.path.exists(filepath):
             self.load_from_file(filepath)
 
+    def clone(self):
+        new_deck = TileDeck.__new__(TileDeck)
+        new_deck.starting_tile = self.starting_tile
+        new_deck.tileset = self.tileset.copy()
+        new_deck.count = self.count
+        if hasattr(self, 'fixed_deck') and self.fixed_deck is not None:
+            new_deck.fixed_deck = list(self.fixed_deck)
+        else:
+            new_deck.fixed_deck = None
+        return new_deck
+
     def _normalize_tile_name(self, name: str) -> str:
         return str(name).strip().upper()
 
