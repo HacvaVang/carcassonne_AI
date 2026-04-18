@@ -134,6 +134,13 @@ class HUD:
             thinking_text = self.font.render("The AI is thinking...", True, (255, 255, 255))
             screen.blit(thinking_text, (screen.get_width() // 2 - thinking_text.get_width() // 2, screen.get_height() // 2))
 
+        # Show Remote Player waiting message
+        if hasattr(game, 'players') and game.players:
+            curr_player = game.players[game.current_player_index]
+            if getattr(curr_player, "is_remote", False):
+                wait_text = self.font.render(f"Waiting for {curr_player.name}...", True, (255, 255, 255))
+                screen.blit(wait_text, (screen.get_width() // 2 - wait_text.get_width() // 2, screen.get_height() // 2))
+
         # optional: could display additional info such as remaining tiles
         if not game.players:
             text = self.font.render("No players", True, (255, 255, 255))

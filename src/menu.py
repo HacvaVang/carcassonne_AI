@@ -11,6 +11,7 @@ from src import GamePhase, Color
 from src.game import Game
 from src.hud import HUD
 from src.meeple import Meeple
+from src.network import NetworkManager
 from src.player import Player
 from src.tiles import Tile
 
@@ -26,7 +27,7 @@ class MenuButton:
 
 class Menu:
     SAVE_FILE = os.path.join(BASE_DIR, "save.pkl")
-    PLAYER_TYPES = ["Player", "Random bot", "Minimax bot", "MCTS bot"]
+    PLAYER_TYPES = ["Player", "Remote Player", "Random bot", "Minimax bot", "MCTS bot"]
     PLAYER_COLORS = ["blue", "red", "green", "yellow", "black"]
 
     _runtime_patched = False
@@ -76,6 +77,10 @@ class Menu:
 
         os.makedirs(os.path.dirname(self.SAVE_FILE), exist_ok=True)
         Menu._active_menu = self
+        
+        self.network_manager = NetworkManager()
+        self.network_manager.start()
+        
         self._patch_runtime()
 
     def _patch_runtime(self):
@@ -156,6 +161,7 @@ class Menu:
                 return
 
             menu._set_active_game(game_self)
+            game_self.network_manager = menu.network_manager
             menu._apply_configured_players(game_self)
 
             if Menu._pending_loaded_game is not None:
@@ -278,6 +284,10 @@ class Menu:
 
         if kind == "Player":
             return Player(name, color)
+        if kind == "Remote Player":
+            p = Player(name, color)
+            p.is_remote = True
+            return p
         if kind == "Random bot":
             return RandomPlayer(f"RandomBot", color)
         if kind == "Minimax bot":
@@ -287,6 +297,9 @@ class Menu:
         return MCTSPlayer(f"MCTSBot", color, iterations=300)
 
     def _apply_configured_players(self, game):
+        if "fixed_deck" in self.config:
+            game.tile_deck.fixed_deck = list(self.config["fixed_deck"])
+            game.tile_deck.count = len(game.tile_deck.fixed_deck)
         game.players = self._build_players()
         game.current_player_index = 0
         game.current_player = game.players[0] if game.players else None
@@ -385,7 +398,9 @@ class Menu:
         can_load = os.path.exists(self._get_save_path())
         return [
             MenuButton("Continue", self._continue_game, enabled=can_continue),
-            MenuButton("New Game", self._go_config),
+            MenuButton("Local Game", self._go_config),
+            MenuButton("Host LAN Game", self._go_lan_host),
+            MenuButton("Join LAN Game", self._go_lan_join),
             MenuButton("Load Game", self._load_saved_game, enabled=can_load),
             MenuButton("Save Game", self._save_game, enabled=can_save),
             MenuButton("Quit", self._quit),
@@ -412,15 +427,29 @@ class Menu:
                 )
             )
 
+        can_start = True
+        if self.mode == "lan_host":
+            can_start = len(self.network_manager.peers) > 0
+
         buttons.extend([
-            MenuButton("Start Game", self._confirm_config),
+            MenuButton("Start Game", self._confirm_config, enabled=can_start),
             MenuButton("Back", self._back_to_main),
         ])
         return buttons
 
+    def _lan_join_buttons(self):
+        buttons = []
+        for index, (addr, info) in enumerate(list(self.network_manager.discovered_hosts.items())[:4]):
+            buttons.append(MenuButton(f"Join {addr[0]}:{addr[1]}", lambda a=addr: self.network_manager.request_join(a)))
+            
+        buttons.append(MenuButton("Back", self._back_to_main))
+        return buttons
+
     def _build_buttons(self):
-        if self.mode == "config":
+        if self.mode in ("config", "lan_host"):
             return self._config_menu_buttons()
+        elif self.mode == "lan_join":
+            return self._lan_join_buttons()
         return self._main_menu_buttons()
 
     def _layout_buttons(self):
@@ -456,13 +485,39 @@ class Menu:
 
     def _go_config(self):
         self.mode = "config"
+        self.network_manager.set_host(False)
+        self.selected = 0
+        
+    def _go_lan_host(self):
+        self.mode = "lan_host"
+        self.network_manager.set_host(True)
+        self.selected = 0
+        
+    def _go_lan_join(self):
+        self.mode = "lan_join"
+        self.network_manager.set_host(False)
         self.selected = 0
 
     def _back_to_main(self):
         self.mode = "main"
+        self.network_manager.set_host(False)
         self.selected = 0
 
     def _confirm_config(self):
+        if self.mode == "lan_host":
+            from src.tiledeck import TileDeck
+            deck = TileDeck()
+            deck.generate_fixed_deck()
+            self.config["fixed_deck"] = list(deck.fixed_deck)
+            
+            msg = {
+                "type": "START_GAME",
+                "fixed_deck": self.config["fixed_deck"],
+                "player_kinds": self.config["player_kinds"],
+                "total_players": self.config["total_players"]
+            }
+            self.network_manager.broadcast_to_peers(msg)
+            
         self.mode = "main"
         self.selected = 0
         self._start_new_game()
@@ -483,6 +538,8 @@ class Menu:
                 self._set_message("No save files found", duration=3.0)
             elif "Save" in button.label:
                 self._set_message("Pause a game first to save", duration=3.0)
+            elif "Start Game" in button.label:
+                self._set_message("Wait for at least one remote player to connect.", duration=3.0)
             else:
                 self._set_message("That option is not available.", duration=3.0)
             return
@@ -529,6 +586,34 @@ class Menu:
             if self.message_timer <= 0:
                 self.message = ""
 
+        # Network lobbying logic
+        if self.mode == "lan_host":
+            self.network_manager.broadcast_lobby({
+                "hosts": len(self.network_manager.peers)
+            })
+            for msg in self.network_manager.get_messages():
+                pass
+        elif self.mode == "lan_join":
+            for msg in self.network_manager.get_messages():
+                if msg.get("type") == "START_GAME":
+                    self.config["total_players"] = msg["total_players"]
+                    
+                    remote_kinds = list(msg["player_kinds"])
+                    for i in range(len(remote_kinds)):
+                        if remote_kinds[i] == "Player":
+                            remote_kinds[i] = "Remote Player"
+                            
+                    # For simplicty, the joined client becomes "Player" on the first "Remote Player" slot
+                    for i in range(len(remote_kinds)):
+                        if remote_kinds[i] == "Remote Player":
+                            remote_kinds[i] = "Player"
+                            break
+                    self.config["player_kinds"] = remote_kinds
+                    self.config["fixed_deck"] = msg["fixed_deck"]
+                    
+                    self.mode = "main"
+                    self._start_new_game()
+
     def _draw_title(self, title, subtitle=None):
         title_surf = self.title_font.render(title, True, (240, 240, 240))
         title_rect = title_surf.get_rect(center=(self.screen.get_width() // 2, self.screen.get_height() // 8))
@@ -567,8 +652,13 @@ class Menu:
         self.screen.fill((24, 24, 24))
         buttons = self._layout_buttons()
 
-        if self.mode == "config":
-            self._draw_title("Pre-game Config", "Choose a role for each player")
+        if self.mode in ("config", "lan_host"):
+            subtitle = "Choose a role for each player"
+            if self.mode == "lan_host":
+                subtitle = f"Waiting for players to join... ({len(self.network_manager.peers)} connected)"
+            self._draw_title("Pre-game Config", subtitle)
+        elif self.mode == "lan_join":
+            self._draw_title("Join LAN Game", f"Found {len(self.network_manager.discovered_hosts)} matches. Waiting for host to start...")
         elif self.paused_game and getattr(self.paused_game, "game_over", False):
             self._draw_title("Game Over", "Continue is disabled after the match ends")
         elif self.paused_game and not getattr(self.paused_game, "running", True):

@@ -4,6 +4,7 @@ class Player():
         self.color = color
         self.score = 0
         self.meeples = 7
+        self.is_remote = False
     
     def add_points(self, points):
         self.score += points
