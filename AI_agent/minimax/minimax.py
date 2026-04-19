@@ -94,7 +94,7 @@ def get_best_action(state: CarcassonneState, depth: int, player_index: int, meep
             best_action = a
 
     duration = time.time() - start_time
-    m_info = f"{best_action.meeple_pos[0].name}({best_action.meeple_pos[1]})" if best_action.meeple_pos else "None"
+    m_info = f"Pos({best_action.meeple_pos})" if best_action.meeple_pos is not None else "None"
 
     print(f"[DECISION] Time: {duration:.2f}s | Val: {best_val:.2f}")
     print(f"           Pos: {best_action.tile_pos} | Rot: {best_action.rotation} | Meeple: {m_info}")

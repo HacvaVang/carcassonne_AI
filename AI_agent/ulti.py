@@ -295,7 +295,7 @@ class CarcassonneState:
             if terrain == Terrain.Monastery:
                 # Monastery regions can always be claimed if the tile region is free
                 for tile_region in tile_regions:
-                    free_positions.append((terrain, tile_region[0]))
+                    free_positions.append(tile_region[0])
                 continue
 
             for tile_region in tile_regions:
@@ -328,7 +328,7 @@ class CarcassonneState:
                         break
 
                 if not region_has_meeple:
-                    free_positions.append((terrain, first_pos))
+                    free_positions.append(first_pos)
 
         return free_positions
 
@@ -369,13 +369,15 @@ class CarcassonneState:
         self.map.place_tile(action.tile_pos, tile)
         self.updateRegion(action.tile_pos)
 
-        if action.meeple_pos is not None and action.meeple_pos in self.place_positions:
-            terrain, region_pos = self.place_positions[action.meeple_pos]
-            for region in self.regions[terrain][::-1]:
-                if any(region_pos in positions for positions in region.tiles.values()):
-                    meeple = Meeple(self.players[self.current_player_index], action.meeple_pos, is_simulation=True)
-                    region.addMeeple(meeple)
-                    self.players[self.current_player_index].place_meeple()
+        if action.meeple_pos is not None:
+            for terrain, region_pos in self.place_positions.values():
+                if region_pos == action.meeple_pos:
+                    for region in self.regions[terrain][::-1]:
+                        if any(region_pos in positions for positions in region.tiles.values()):
+                            meeple = Meeple(self.players[self.current_player_index], action.meeple_pos, is_simulation=True)
+                            region.addMeeple(meeple)
+                            self.players[self.current_player_index].place_meeple()
+                            break
                     break
                     
         self.addRegionScore()

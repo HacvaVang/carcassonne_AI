@@ -44,6 +44,7 @@ class Game:
         self.map = Map()
         self.camera = Camera()
         self.network_manager = None
+        self.pending_broadcast = None
 
         # Game over state (when there are no tiles left to draw)
         self.game_over = False
@@ -112,22 +113,32 @@ class Game:
 
         if getattr(self, "network_manager", None) and getattr(self.network_manager, "running", False):
             for msg in self.network_manager.get_messages():
-                if msg.get("type") == "ACTION" and getattr(self.players[self.current_player_index], "is_remote", False):
-                    act = msg.get("action")
-                    tile_pos = tuple(act["tile_pos"]) if act.get("tile_pos") else None
-                    rotation = act.get("rotation", 0)
-                    meeple_pos = None
-                    if act.get("meeple_pos"):
-                        m_terrain_val, m_region_pos = act["meeple_pos"]
-                        m_terrain = None
-                        for t in Terrain:
-                            if t.value == m_terrain_val:
-                                m_terrain = t
-                                break
-                        meeple_pos = (m_terrain, m_region_pos)
-                    
-                    remote_action = Action(tile_pos=tile_pos, rotation=rotation, meeple_pos=meeple_pos)
-                    self.pending_action = remote_action
+                mtype = msg.get("type")
+                if mtype == "ACTION":
+                    # Accept ACTION only when it is the remote player's turn
+                    if getattr(self.players[self.current_player_index], "is_remote", False):
+                        act = msg.get("action")
+                        tile_pos = tuple(act["tile_pos"]) if act.get("tile_pos") else None
+                        rotation = act.get("rotation", 0)
+                        meeple_pos = act.get("meeple_pos")  # int position or None
+                        remote_action = Action(tile_pos=tile_pos, rotation=rotation, meeple_pos=meeple_pos)
+                        self.pending_action = remote_action
+                elif mtype == "YOUR_TURN":
+                    # Only use as a fallback to unblock if our index is already out-of-date
+                    new_index = msg.get("player_index")
+                    if new_index is not None and new_index == self.current_player_index:
+                        # Same index – already in sync, nothing to do
+                        pass
+                    # Do NOT force-update index here; let ACTION → changePhase keep both sides in sync
+
+        # Auto-skip if local human player has no meeples
+        if self.current_phase == GamePhase.PlaceMeeple:
+            curr_p = self.players[self.current_player_index]
+            if type(curr_p) is Player and not getattr(curr_p, "is_remote", False) and curr_p.meeples <= 0:
+                if hasattr(self, "pending_broadcast"):
+                    self._broadcast_local_action(self.pending_broadcast["tile_pos"], self.pending_broadcast["rotation"], self.pending_broadcast["meeple_pos"])
+                    del self.pending_broadcast
+                self.changePhase()
 
         for event in self.events[:]:
             action = event.get("action", None)
@@ -145,17 +156,13 @@ class Game:
 
                     grid_pos = get_grid_position(pos, self.current_tile.image, self.camera)
                     if self.place_tile(grid_pos, self.current_tile):
-                        self._broadcast_local_action(grid_pos, self.current_tile.rotate_count, None)
+                        self.pending_broadcast = {"tile_pos": grid_pos, "rotation": self.current_tile.rotate_count, "meeple_pos": None}
                         self.addRegionScore()
                         self.changePhase()
                 elif action == "Rotate":
                     if piece is not None and hasattr(piece, "rotate"):
                         piece.rotate()
             elif self.current_phase == GamePhase.PlaceMeeple:
-                # Auto-skip if player has no meeples
-                if self.players[self.current_player_index].meeples <= 0:
-                    self.changePhase()
-                    continue
                 if action == "Place":
                     if self.can_place_meeple(pos):
                         # Snap to nearest placeholder (world coords)
@@ -168,12 +175,14 @@ class Game:
                         self.place_meeple(closest, meeple)
                         
                         terrain, region_pos = self.place_positions[closest]
-                        self._broadcast_local_action(None, 0, (terrain.value, region_pos))
+                        self.pending_broadcast["meeple_pos"] = region_pos
+                        self._broadcast_local_action(self.pending_broadcast["tile_pos"], self.pending_broadcast["rotation"], self.pending_broadcast["meeple_pos"])
                         
                         self.addRegionScore()
                         self.changePhase()
                 else:
-                    self._broadcast_local_action(None, 0, None)
+                    self.pending_broadcast["meeple_pos"] = None
+                    self._broadcast_local_action(self.pending_broadcast["tile_pos"], self.pending_broadcast["rotation"], self.pending_broadcast["meeple_pos"])
                     self.changePhase()
 
         # Handle AI turns
@@ -208,9 +217,10 @@ class Game:
 
                     # Process Unified AI Meeple placement
                     if action.meeple_pos is not None:
-                        terrain, region_pos = action.meeple_pos
+                        region_pos = action.meeple_pos
                         for placeholder_pos, (t, r_pos) in self.place_positions.items():
-                            if t == terrain and r_pos == region_pos:
+                            if r_pos == region_pos:
+                                terrain = t
                                 meeple = Meeple(self.players[self.current_player_index], placeholder_pos)
                                 # Directly add to region using world coords
                                 tw = self.current_tile.image.get_width()
@@ -224,15 +234,19 @@ class Game:
                                 self.addRegionScore()
                                 break
 
+                    # Capture whether the acting player was remote BEFORE changePhase advances the index
+                    is_remote_turn = getattr(self.players[self.current_player_index], "is_remote", False)
                     self.changePhase() # advance to PlaceMeeple
                     self.changePhase() # bypass PlaceMeeple instantly for unified AI agent turn
-                    
-                    if getattr(self, "network_manager", None) and getattr(self.network_manager, "running", False):
+
+                    # Only broadcast if this was a LOCAL AI player's action (not a received network action)
+                    if not is_remote_turn and getattr(self, "network_manager", None) and getattr(self.network_manager, "running", False):
                         act_dict = {
                             "tile_pos": action.tile_pos,
                             "rotation": action.rotation,
-                            "meeple_pos": [action.meeple_pos[0].value, action.meeple_pos[1]] if action.meeple_pos else None
+                            "meeple_pos": action.meeple_pos if action.meeple_pos is not None else None
                         }
+                        print(f"[DEBUG Action] Sending AI ACTION to peer: {act_dict}")
                         self.network_manager.broadcast_to_peers({"type": "ACTION", "action": act_dict})
 
         # always age score events
@@ -310,6 +324,11 @@ class Game:
                 self.endGame()
                 return
             self.current_phase = GamePhase.PlaceTile
+            
+            curr_player = self.players[self.current_player_index]
+            if getattr(curr_player, "is_remote", False):
+                if getattr(self, "network_manager", None) and getattr(self.network_manager, "running", False):
+                    self.network_manager.broadcast_to_peers({"type": "YOUR_TURN", "player_index": self.current_player_index})
 
     def handle_event(self, event):
         # Ignore input while AI is thinking
@@ -495,10 +514,12 @@ class Game:
 
     def _broadcast_local_action(self, tile_pos, rotation, meeple_pos):
         if getattr(self, "network_manager", None) and getattr(self.network_manager, "running", False):
+            print(f"----------------------------")
             act_dict = {
                 "tile_pos": tile_pos,
                 "rotation": rotation,
-                "meeple_pos": meeple_pos
+                "meeple_pos": meeple_pos if meeple_pos else None
             }
+            print(f"[DEBUG Action] Sending LOCAL ACTION to peer: {act_dict}")
             self.network_manager.broadcast_to_peers({"type": "ACTION", "action": act_dict})
 

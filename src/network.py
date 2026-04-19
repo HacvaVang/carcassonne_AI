@@ -5,7 +5,7 @@ import time
 from traceback import print_exc
 
 class NetworkManager:
-    def __init__(self, port=5005, broadcast_port=5006):
+    def __init__(self, port=0, broadcast_port=5006):
         self.port = port
         self.broadcast_port = broadcast_port
         self.running = False
@@ -57,6 +57,7 @@ class NetworkManager:
         self.send_to({"type": "JOIN_REQ"}, host_addr)
         
     def send_to(self, msg_dict, addr):
+        print(f"[DEBUG Network] send_to: {msg_dict} to {addr}")
         try:
             data = json.dumps(msg_dict).encode('utf-8')
             self.sock.sendto(data, addr)
@@ -64,8 +65,11 @@ class NetworkManager:
             print_exc()
 
     def broadcast_to_peers(self, msg_dict):
-        for peer in self.peers:
-            self.send_to(msg_dict, peer)
+        if self.is_host:
+            for peer in self.peers:
+                self.send_to(msg_dict, peer)
+        elif getattr(self, "host_addr", None):
+            self.send_to(msg_dict, self.host_addr)
 
     def _listen_loop(self):
         # We need a secondary socket just for receiving broadcasts if we're a client
@@ -108,13 +112,14 @@ class NetworkManager:
 
     def _handle_msg(self, msg, addr):
         mtype = msg.get("type")
+        print(f"[DEBUG Network] _handle_msg ({'HOST' if self.is_host else 'CLIENT'}): {msg} from {addr}")
         if self.is_host:
             if mtype == "JOIN_REQ":
                 if addr not in self.peers:
                     self.peers.add(addr)
                     # Tell them they are accepted
                     self.send_to({"type": "JOIN_ACK"}, addr)
-            elif mtype == "ACTION":
+            elif mtype in ["ACTION", "YOUR_TURN"]:
                 # Resend action to all other peers, except sender
                 for p in self.peers:
                     if p != addr:
@@ -124,7 +129,7 @@ class NetworkManager:
             if mtype == "JOIN_ACK":
                 print("Joined host:", addr)
                 self.host_addr = addr
-            elif mtype in ["START_GAME", "ACTION"]:
+            elif mtype in ["START_GAME", "ACTION", "YOUR_TURN"]:
                 self.incoming_messages.append(msg)
 
     def get_messages(self):

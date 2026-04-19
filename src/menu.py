@@ -208,10 +208,9 @@ class Menu:
             if game_self.place_tile(action.tile_pos, game_self.current_tile):
                 game_self.addRegionScore()
 
-                # Process AI Meeple placement
-                if action.meeple_pos:
+                if action.meeple_pos is not None:
                     for world_pos, (terrain, region_pos) in game_self.place_positions.items():
-                        if (terrain, region_pos) == action.meeple_pos:
+                        if region_pos == action.meeple_pos:
                             meeple = Meeple(current_player, world_pos)
                             game_self.place_meeple(world_pos, meeple)
                             game_self.addRegionScore()
@@ -300,6 +299,10 @@ class Menu:
         if "fixed_deck" in self.config:
             game.tile_deck.fixed_deck = list(self.config["fixed_deck"])
             game.tile_deck.count = len(game.tile_deck.fixed_deck)
+            
+            game.avaliable_moves.clear()
+            game.current_tile = game.drawTile()
+            
         game.players = self._build_players()
         game.current_player_index = 0
         game.current_player = game.players[0] if game.players else None
@@ -599,15 +602,19 @@ class Menu:
                     self.config["total_players"] = msg["total_players"]
                     
                     remote_kinds = list(msg["player_kinds"])
+                    client_slot = None
+                    for i in range(len(remote_kinds)):
+                        if remote_kinds[i] == "Remote Player":
+                            client_slot = i
+                            break
+                            
                     for i in range(len(remote_kinds)):
                         if remote_kinds[i] == "Player":
                             remote_kinds[i] = "Remote Player"
                             
-                    # For simplicty, the joined client becomes "Player" on the first "Remote Player" slot
-                    for i in range(len(remote_kinds)):
-                        if remote_kinds[i] == "Remote Player":
-                            remote_kinds[i] = "Player"
-                            break
+                    if client_slot is not None:
+                        remote_kinds[client_slot] = "Player"
+                        
                     self.config["player_kinds"] = remote_kinds
                     self.config["fixed_deck"] = msg["fixed_deck"]
                     
